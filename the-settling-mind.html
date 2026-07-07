@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Settling Mind — Saṁyama and the Spectral–Temporal Transformation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --ink:#070B16; --mist:#101830; --line:#24304F;
+    --parchment:#E8E3D5; --dim:#9AA1B5;
+    --gold:#E3B458; --goldsoft:rgba(227,180,88,0.14);
+    --violet:#8E7CF3; --cyan:#5BC8DD;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--ink); color: var(--parchment);
+    font-family: 'Inter', -apple-system, sans-serif;
+    display: flex; flex-direction: column; min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(142,124,243,0.07), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 110%, rgba(227,180,88,0.05), transparent);
+  }
+  .display { font-family: 'Cormorant Garamond', Georgia, serif; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:15px 22px; border-bottom:1px solid var(--line); flex-wrap:wrap; gap:6px; }
+  header .brand { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; color:var(--gold); }
+  header .crumb { font-size:11px; color:var(--dim); letter-spacing:0.08em; }
+  main { flex:1; display:flex; align-items:flex-start; justify-content:center; padding:32px 20px; overflow-y:auto; }
+  .slide { width:100%; max-width:920px; animation:fade 0.7s ease both; }
+  @keyframes fade { from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;} }
+  @media (prefers-reduced-motion: reduce){ .slide{animation:none;} }
+  .eyebrow { font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; font-weight:500; }
+  h1.title { font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(40px,6.6vw,68px); line-height:1.06; margin-bottom:10px; }
+  h2.title { font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(27px,5.2vw,44px); line-height:1.15; margin-bottom:18px; overflow-wrap:break-word; }
+  .subtitle { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(17px,2.5vw,25px); color:var(--gold); margin-bottom:28px; }
+  p.body { font-size:15px; line-height:1.75; color:var(--dim); margin-bottom:15px; max-width:720px; }
+  .gold{color:var(--gold);} .light{color:var(--parchment);}
+  .card { background:var(--mist); border:1px solid var(--line); border-radius:10px; padding:18px 20px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+  .card h3 { font-family:'Cormorant Garamond',serif; font-weight:500; font-size:21px; margin-bottom:8px; }
+  .card p { font-size:13.5px; color:var(--dim); line-height:1.7; }
+  .honesty { border-left:2px solid var(--gold); background:var(--goldsoft); padding:13px 17px; border-radius:0 8px 8px 0; font-size:13.5px; line-height:1.7; color:var(--parchment); max-width:720px; margin-top:12px; }
+  .honesty b { color:var(--gold); font-weight:600; letter-spacing:0.08em; font-size:11px; text-transform:uppercase; }
+  .plain { border-left:2px solid var(--cyan); background:rgba(91,200,221,0.08); padding:13px 17px; border-radius:0 8px 8px 0; font-size:13.5px; line-height:1.7; color:var(--parchment); max-width:720px; margin-top:12px; }
+  .plain b { color:var(--cyan); font-weight:600; letter-spacing:0.08em; font-size:11px; text-transform:uppercase; }
+  canvas.wave { width:100%; display:block; }
+  input[type=range]{ width:100%; accent-color:var(--gold); }
+  button { font-family:'Inter',sans-serif; cursor:pointer; }
+  button:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+  .pill { background:transparent; border:1px solid var(--gold); color:var(--gold); padding:9px 20px; border-radius:24px; font-size:13px; letter-spacing:0.04em; }
+  .pill.solid { background:var(--gold); color:var(--ink); font-weight:500; }
+  .pill:disabled { border-color:var(--line); color:var(--dim); opacity:0.4; background:transparent; cursor:default; }
+  .chip { background:transparent; border:1px solid var(--line); color:var(--dim); padding:8px 15px; border-radius:22px; font-size:13px; transition:all 0.2s ease; }
+  .chip.sel { background:var(--goldsoft); border-color:var(--gold); color:var(--parchment); }
+  .microlabel { font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--dim); margin-bottom:4px; }
+  .rangelabels { display:flex; justify-content:space-between; font-size:11.5px; color:var(--dim); margin-top:5px; gap:8px; flex-wrap:wrap; }
+  .bhumi { border-radius:8px; padding:11px 13px; background:var(--mist); border:1px solid var(--line); }
+  .bhumi.hi { background:var(--goldsoft); border-color:var(--gold); }
+  .bhumi .n { font-family:'Cormorant Garamond',serif; font-size:19px; }
+  .bhumi .g { font-size:11.5px; color:var(--dim); margin-top:3px; line-height:1.5; }
+  .arcrow { display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--line); }
+  .arcnum { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; color:var(--gold); min-width:32px; }
+  .arcrow .t { font-size:14.5px; color:var(--parchment); font-weight:500; margin-bottom:4px; }
+  .arcrow .g { font-size:13px; color:var(--dim); line-height:1.7; }
+  footer { display:flex; align-items:center; justify-content:space-between; padding:13px 20px; border-top:1px solid var(--line); gap:10px; flex-wrap:wrap; }
+  .dots { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+  .dots button { width:8px; height:8px; border-radius:4px; border:none; background:var(--line); padding:0; transition:all 0.25s ease; }
+  .dots button.sel { width:24px; background:var(--gold); }
+  .dots button:hover { background:var(--gold); }
+  .spectrumbar { height:10px; border-radius:5px; opacity:0.85; background:linear-gradient(90deg,var(--violet),var(--cyan),var(--gold)); }
+  .speclabels { display:flex; justify-content:space-between; margin-top:8px; font-size:11px; color:var(--dim); letter-spacing:0.03em; gap:8px; flex-wrap:wrap; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  td { padding:11px 4px; border-bottom:1px solid var(--line); line-height:1.6; color:var(--dim); vertical-align:top; }
+  td.n { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; color:var(--gold); white-space:nowrap; padding-right:14px; }
+  td.tag { font-size:10.5px; color:var(--dim); letter-spacing:0.05em; text-align:right; white-space:nowrap; padding-left:10px; }
+  .eqline { font-family:'Cormorant Garamond',serif; letter-spacing:0.02em; text-align:center; color:var(--parchment); }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">The Settling Mind</div>
+  <div class="crumb" id="crumb"></div>
+</header>
+<main><div class="slide" id="slide"></div></main>
+<footer>
+  <button class="pill" id="prev">← Previous</button>
+  <div class="dots" id="dots"></div>
+  <button class="pill solid" id="next">Next →</button>
+</footer>
+
+<script>
+(function () {
+  var C = { gold:"#E3B458", parchment:"#E8E3D5", dim:"#9AA1B5", violet:"#8E7CF3", cyan:"#5BC8DD" };
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- stage data ---------- */
+  var STAGES = [
+    { key:"viksipta", roman:"Vikṣipta", en:"The Dispersed Mind", sutra:"the ordinary condition", bhumi:"vikṣipta · distracted",
+      gloss:"Attention scattered across countless competing vṛttis — pulled a hundred directions at once.",
+      domainNote:"Time: jagged, restless. Spectrum: broadband — energy smeared across every frequency, no dominant tone.",
+      rwf:"RWF reading: no single object-wave chosen; fₘ unstable, G(t) erratic, n(t) high. Beats everywhere at once.",
+      noise:1, coherence:0, gated:false, flat:false, peakH:0, peakW:0.2, floor:0.82, lumpy:true },
+    { key:"dharana", roman:"Dhāraṇā", en:"Binding to One Point", sutra:"YS 3.1 · deśa-bandhaś cittasya dhāraṇā", bhumi:"gathering the vikṣipta mind",
+      gloss:"The mind is tied to a single object — but effortfully, and the hold keeps breaking and being renewed.",
+      domainNote:"Time: one tone attempted, but chopped by interruption. Spectrum: a broad peak rising over a lowered floor.",
+      rwf:"RWF reading: one object-wave chosen; tuning begins. Δf is still large — the beat at |fₛ − fₘ| is rapid, and contact feels effortful.",
+      noise:0.4, coherence:0.55, gated:true, flat:false, peakH:0.66, peakW:0.14, floor:0.34, lumpy:true },
+    { key:"dhyana", roman:"Dhyāna", en:"The Unbroken Flow", sutra:"YS 3.2 · tatra pratyaya-ekatānatā dhyānam", bhumi:"ekāgra · one-pointed",
+      gloss:"The returning becomes unnecessary: cognition flows toward the object in one continuous thread (ekatānatā).",
+      domainNote:"Time: a smooth, sustained tone. Spectrum: the line sharpens — because unbroken duration IS spectral purity.",
+      rwf:"RWF reading: fₘ closing on fₛ — the beat slows and softens. Friction becomes flow; the envelope approaches constancy.",
+      noise:0.1, coherence:0.9, gated:false, flat:false, peakH:0.9, peakW:0.05, floor:0.1, lumpy:false },
+    { key:"samadhi", roman:"Samādhi", en:"Only the Object Shines", sutra:"YS 3.3 · svarūpa-śūnyam iva", bhumi:"ekāgra, deepened · sabīja",
+      gloss:"The act of meditating vanishes; the object alone shines, 'as if empty of its own form.'",
+      domainNote:"Time: a single pure frequency. Spectrum: one sharp line — fully delocalized in time, no waveform-shape left to point to.",
+      rwf:"RWF reading: Δf = 0 and Δφ = 0 → R(t) = 2A·cos(2π fₛ t). The beat has ceased; the knowing runs at the rhythm of the known, at full gathered amplitude.",
+      noise:0, coherence:1, gated:false, flat:false, peakH:1, peakW:0.017, floor:0.02, lumpy:false },
+    { key:"nirodha", roman:"Nirodha", en:"The Vṛtti-less Mind", sutra:"YS 1.2 · yogaś citta-vṛtti-nirodhaḥ", bhumi:"niruddha · nirbīja",
+      gloss:"Even the single pure vṛtti subsides. Not blankness — the luminous ground remains: prakāśa without a ripple.",
+      domainNote:"Time: stillness. Spectrum: no oscillation — yet the field is not dark. The seeded gives way to the seedless.",
+      rwf:"RWF reading: the substrate — the medium in which both waves arose, never a term in the equation. Beyond it lies the involution the equation can only point toward: 9 → 0.",
+      noise:0, coherence:0, gated:false, flat:true, peakH:0, peakW:0, floor:0, lumpy:false }
+  ];
+
+  function lump(x){
+    var v = 0.5 + 0.28*Math.sin(13.1*x+1.3) + 0.22*Math.sin(7.7*x+4.1) + 0.16*Math.sin(23.3*x+0.7) + 0.12*Math.sin(3.9*x+2.2);
+    return Math.max(0, Math.min(1, v));
+  }
+
+  /* ---------- animation registry ---------- */
+  var anims = [], rafId = null, t0 = null;
+  function loop(ts){
+    if (t0 === null) t0 = ts;
+    var t = (ts - t0)/1000;
+    for (var i=0;i<anims.length;i++) anims[i](t);
+    rafId = requestAnimationFrame(loop);
+  }
+  function startAnims(){ if (!reduced && anims.length && rafId===null) rafId = requestAnimationFrame(loop); }
+  function clearAnims(){ anims = []; if (rafId!==null){ cancelAnimationFrame(rafId); rafId=null; } t0=null; }
+
+  function fit(cv, h){
+    var dpr = window.devicePixelRatio || 1;
+    var w = cv.clientWidth || 320;
+    cv.width = w*dpr; cv.height = h*dpr;
+    cv.style.height = h + "px";
+    var ctx = cv.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return { ctx:ctx, w:w, h:h };
+  }
+
+  /* ---------- waveform (time domain) ---------- */
+  function drawWave(cv, stage, phase, h){
+    var f = fit(cv, h), ctx=f.ctx, w=f.w; h=f.h;
+    var mid = h/2;
+    ctx.clearRect(0,0,w,h);
+    if (stage.flat){
+      var g = ctx.createLinearGradient(0,0,0,h);
+      g.addColorStop(0,"rgba(227,180,88,0)"); g.addColorStop(0.5,"rgba(227,180,88,0.10)"); g.addColorStop(1,"rgba(227,180,88,0)");
+      ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+      ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(w,mid);
+      ctx.strokeStyle=C.gold; ctx.lineWidth=1.4; ctx.globalAlpha=0.7; ctx.stroke(); ctx.globalAlpha=1;
+      return;
+    }
+    ctx.beginPath();
+    for (var x=0;x<=w;x++){
+      var nx=x/w, y=0;
+      var gate = stage.gated ? (Math.sin(nx*Math.PI*2*3+0.6) > -0.25 ? 1 : 0.08) : 1;
+      y += stage.coherence*gate*Math.sin(nx*Math.PI*2*9+phase);
+      if (stage.noise>0){
+        y += stage.noise*0.55*Math.sin(nx*Math.PI*2*27+phase*1.7+1.1);
+        y += stage.noise*0.4*Math.sin(nx*Math.PI*2*41+phase*0.9+3.3);
+        y += stage.noise*0.3*Math.sin(nx*Math.PI*2*63+phase*2.3+0.5);
+        y += stage.noise*0.22*Math.sin(nx*Math.PI*2*17+phase*1.3+5.0);
+      }
+      var norm = (stage.coherence + stage.noise*1.4) || 1;
+      var yy = mid - (y/norm)*(h*0.4);
+      x===0 ? ctx.moveTo(x,yy) : ctx.lineTo(x,yy);
+    }
+    ctx.strokeStyle=C.gold; ctx.lineWidth=1.5;
+    ctx.globalAlpha = 0.5 + 0.5*Math.max(stage.coherence, 1-stage.noise);
+    ctx.stroke(); ctx.globalAlpha=1;
+    ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(w,mid);
+    ctx.strokeStyle="rgba(154,161,181,0.15)"; ctx.lineWidth=1; ctx.stroke();
+  }
+
+  /* ---------- spectrum (frequency domain) ---------- */
+  function drawSpectrum(cv, stage, h){
+    var f = fit(cv, h), ctx=f.ctx, w=f.w; h=f.h;
+    ctx.clearRect(0,0,w,h);
+    var base = h-8;
+    if (stage.flat){
+      var g = ctx.createLinearGradient(0,0,w,0);
+      g.addColorStop(0,"rgba(142,124,243,0.05)"); g.addColorStop(0.5,"rgba(91,200,221,0.06)"); g.addColorStop(1,"rgba(227,180,88,0.05)");
+      ctx.fillStyle=g; ctx.fillRect(0,base-4,w,4);
+      ctx.font = "italic 13px 'Cormorant Garamond', serif";
+      ctx.fillStyle = C.dim; ctx.textAlign="center";
+      ctx.fillText("no vṛtti — the field at rest", w/2, h/2);
+      return;
+    }
+    var nbars=96, bw=w/nbars;
+    for (var i=0;i<nbars;i++){
+      var x=i/(nbars-1);
+      var peak = stage.peakH*Math.exp(-Math.pow(x-0.5,2)/(2*stage.peakW*stage.peakW));
+      var floor = stage.floor*(stage.lumpy ? (0.5+0.5*lump(x)) : 1);
+      var amp = Math.min(1, Math.max(peak, floor));
+      var barH = amp*(h-20);
+      var hue = 262 - x*220;
+      ctx.fillStyle = "hsl("+hue+", 62%, "+(58-amp*6)+"%)";
+      ctx.globalAlpha = 0.35 + amp*0.5;
+      ctx.fillRect(i*bw+bw*0.15, base-barH, bw*0.7, barH);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  /* dual view builder: returns html + registers animation */
+  var uid = 0;
+  function dualView(stage, hh){
+    hh = hh || 110;
+    var idT = "w"+(++uid), idS = "s"+(++uid);
+    setTimeout(function(){
+      var cvT = document.getElementById(idT), cvS = document.getElementById(idS);
+      if (!cvT || !cvS) return;
+      drawSpectrum(cvS, stage, hh);
+      if (reduced || stage.flat){ drawWave(cvT, stage, 0, hh); if(stage.flat) return; }
+      anims.push(function(t){ drawWave(cvT, stage, t*2.2, hh); });
+      startAnims();
+    }, 0);
+    return '<div class="card" style="padding:15px 16px;">'
+      + '<div class="microlabel">Time domain — the waveform of the mind</div>'
+      + '<canvas class="wave" id="'+idT+'"></canvas>'
+      + '<div style="height:1px;background:var(--line);margin:11px 0;"></div>'
+      + '<div class="microlabel">Frequency domain — its spectrum</div>'
+      + '<canvas class="wave" id="'+idS+'"></canvas></div>';
+  }
+
+  /* ---------- slides ---------- */
+
+  function sCover(el){
+    el.innerHTML = '<div style="text-align:center;max-width:860px;margin:0 auto;">'
+      + '<div class="eyebrow">A Research Exploration · Ritam Wellbeing Framework</div>'
+      + '<h1 class="title">The Settling Mind</h1>'
+      + '<div class="subtitle">Saṁyama and the Spectral–Temporal Transformation</div>'
+      + '<div style="max-width:560px;margin:0 auto 16px auto;" id="coverDual"></div>'
+      + '<div class="display" id="coverName" style="font-size:24px;font-style:italic;color:var(--gold);margin-bottom:16px;"></div>'
+      + '<p class="body" style="font-size:13.5px;max-width:560px;margin:0 auto;">One mind, watched two ways at once. As it settles from the <span class="light">dispersed</span> to the <span class="light">one-pointed</span> to the <span class="light">vṛtti-less</span>, the restless waveform resolves into a single pure line — and then into stillness.</p></div>';
+    var cur = -1;
+    function setStage(i){
+      if (i===cur) return; cur=i;
+      clearAnims();
+      document.getElementById("coverDual").innerHTML = dualView(STAGES[i], 100);
+      document.getElementById("coverName").textContent = STAGES[i].roman;
+      startAnims();
+    }
+    setStage(reduced ? 3 : 0);
+    if (!reduced){
+      anims.push(function(t){
+        var idx = Math.floor((t/9 % 1) * STAGES.length);
+        if (idx !== cur) setStage(Math.min(STAGES.length-1, idx));
+      });
+      startAnims();
+    }
+  }
+
+  function sProblem(el){
+    var bh = [["Kṣipta","disturbed, thrown about",0],["Mūḍha","dull, stupefied",0],["Vikṣipta","distracted — occasionally gathered",0],["Ekāgra","one-pointed",1],["Niruddha","restrained — vṛtti-less",1]];
+    var cells = bh.map(function(b){
+      return '<div class="bhumi'+(b[2]?" hi":"")+'"><div class="n" style="color:'+(b[2]?"var(--gold)":"var(--parchment)")+'">'+b[0]+'</div><div class="g">'+b[1]+'</div></div>';
+    }).join("");
+    el.innerHTML = '<div class="eyebrow">01 · The Starting Condition</div>'
+      + '<h2 class="title">Yoga is the stilling of the mind\u2019s fluctuations</h2>'
+      + '<p class="body">Patañjali\u2019s second sūtra defines the whole path in four words: <span class="gold">yogaś citta-vṛtti-nirodhaḥ</span> — yoga is the <span class="light">nirodha</span> (cessation, restraint) of the <span class="light">vṛttis</span>, the whirls of the citta. Everything that follows is method for one movement: from a mind of many whirls to a mind of none.</p>'
+      + '<p class="body">You know the starting condition from the inside. Watch any ordinary hour: a message arrives, a memory surfaces, a worry loops, a plan forms and dissolves — attention pulled from one small event to the next, each with a beginning and an end, none staying. That, precisely, is what the tradition means by a mind of many vṛttis.</p>'
+      + '<p class="body">Classical Yoga names five conditions the citta can occupy — its <span class="gold">bhūmis</span>. The path runs through the last two:</p>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 18px 0;max-width:760px;">'+cells+'</div>'
+      + '<p class="body">The question this presentation asks: what <em>is</em> that movement, from dispersed to one-pointed to still — described precisely? A vṛtti is a <span class="light">temporal event</span>; the settled mind approaches the <span class="light">spectral pole</span>. The whole discipline of saṁyama is an <span class="gold">inverse transform</span>.</p>';
+  }
+
+  function sDual(el){
+    el.innerHTML = '<div class="eyebrow">02 · Two Ways to See One Mind</div>'
+      + '<h2 class="title">The waveform and the spectrum</h2>'
+      + '<p class="body">Any signal can be described two ways, equally completely: as a <span class="light">waveform in time</span> (what happens, moment to moment) and as a <span class="light">spectrum of frequencies</span> (what steady tones compose it). They are bound by an uncertainty principle — and the two poles are exact opposites:</p>'
+      + '<div class="grid" style="margin:6px 0 18px 0;">'
+      + '<div class="card"><h3>The temporal pole</h3><p>A sharp, momentary event — a single vṛtti. To build something so localized in time requires <span class="light">many frequencies at once</span>. The dispersed mind lives here: countless brief whirls, spread across the whole spectrum. <span class="gold">Busy in time, scattered in frequency.</span></p></div>'
+      + '<div class="card"><h3>The spectral pole</h3><p>A pure single frequency — unchanging, spanning all time without beginning or end. It has <span class="light">no temporal \u201cshape\u201d</span> to point to. The settled mind approaches this: one steady tone. <span class="gold">Still in time, single in frequency.</span></p></div></div>'
+      + '<div class="plain"><b>In plain words · </b>If you have ever sat in a bhajan hall, you already know both poles by ear. A <span class="light">tablā stroke</span> is a temporal event: sharp, located, gone. The <span class="light">tanpurā drone</span> is a spectral being: one unbroken tone that seems to come from nowhere and never moves. Every moment of your mental life is woven of both kinds — events that pass, and a steadiness they pass within.</div>'
+      + '<p class="body" style="margin-top:16px;">So the arc of meditation has a precise signal-shape: <span class="gold">move the mind from the temporal pole toward the spectral pole</span> — from many scattered whirls toward one pure, unbroken tone. But before we walk that path, we must meet the law that governs it — because the two poles cannot be held at once, and that impossibility is the deepest reason the path works.</p>';
+  }
+
+  /* ----- Gabor limit ----- */
+  function sGabor(el){
+    el.innerHTML = '<div class="eyebrow">03 · The Law of the Trade-off</div>'
+      + '<h2 class="title">The Gabor limit — why you cannot have both</h2>'
+      + '<p class="body">In 1946 the physicist <span class="light">Dennis Gabor</span> proved something remarkable about every possible signal: sharpness in time and sharpness in frequency <span class="gold">cannot both be had</span>. Formally, <span class="gold">Δt · Δf ≥ 1/4π</span>. Localize an event more precisely in time, and its frequency content necessarily spreads; define a tone more purely in frequency, and it must extend longer in time. This is not a limitation of our instruments — it is the geometry of the two descriptions themselves. (The following year, Gabor invented <span class="light">holography</span>, the physics at the heart of our companion presentation. Both decks descend from one mind.)</p>'
+      + '<div class="card" style="max-width:760px;">'
+      + '<canvas class="wave" id="gC"></canvas>'
+      + '<input type="range" id="gR" min="0.06" max="1" step="0.01" value="0.35" style="margin-top:14px;" aria-label="Move the wave packet along the time-frequency trade-off"/>'
+      + '<div class="rangelabels"><span>← the momentary event</span><span>the changeless tone →</span></div>'
+      + '<div style="margin-top:16px;">'
+      + '<div style="font-size:11.5px;color:var(--dim);margin-bottom:3px;">Δt — spread in time</div>'
+      + '<div style="height:10px;border-radius:5px;background:var(--line);"><div id="gDt" style="height:10px;border-radius:5px;background:var(--gold);transition:width 0.15s ease;"></div></div>'
+      + '<div style="font-size:11.5px;color:var(--dim);margin:10px 0 3px 0;">Δf — spread in frequency</div>'
+      + '<div style="height:10px;border-radius:5px;background:var(--line);"><div id="gDf" style="height:10px;border-radius:5px;background:var(--cyan);transition:width 0.15s ease;"></div></div></div>'
+      + '<p id="gL" style="font-size:13px;color:var(--parchment);margin-top:14px;line-height:1.65;"></p></div>'
+      + '<div class="plain"><b>In plain words · </b>You cannot fully count the drumbeats and fully rest in the drone in the same act of attention. To know the changeless, the mind must loosen its grip on the momentary — not because tradition commands it, but because the mathematics of attention-as-signal permits nothing else.</div>';
+    function drawPacket(s){
+      var cv = document.getElementById("gC");
+      var f = fit(cv, 130), ctx=f.ctx, w=f.w, h=f.h;
+      var mid=h/2, sg=s*w*0.5, freq=20, x, g, y;
+      ctx.clearRect(0,0,w,h);
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ g=Math.exp(-Math.pow(x-w/2,2)/(2*sg*sg)); y=mid-g*(h*0.4); x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      for (x=w;x>=0;x--){ g=Math.exp(-Math.pow(x-w/2,2)/(2*sg*sg)); ctx.lineTo(x,mid+g*(h*0.4)); }
+      ctx.closePath(); ctx.fillStyle="rgba(227,180,88,0.06)"; ctx.fill();
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ g=Math.exp(-Math.pow(x-w/2,2)/(2*sg*sg)); y=mid-Math.sin((x/w)*Math.PI*2*freq)*g*(h*0.4); x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.strokeStyle=C.gold; ctx.lineWidth=1.6; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(w,mid);
+      ctx.strokeStyle="rgba(154,161,181,0.18)"; ctx.lineWidth=1; ctx.stroke();
+    }
+    function update(s){
+      drawPacket(s);
+      document.getElementById("gDt").style.width = Math.max(4, s*100) + "%";
+      document.getElementById("gDf").style.width = Math.max(4, Math.min(1, 0.0625/s)*100) + "%";
+      var lbl = s<0.12 ? "Sharp in time, spread in frequency — the mode of the momentary event."
+        : s>0.8 ? "Spread in time, sharp in frequency — the mode of the changeless tone."
+        : "Between the poles: every gain on one side is paid for on the other.";
+      document.getElementById("gL").innerHTML = lbl + ' The product Δt · Δf never falls below the limit — and the smooth Gaussian packet shown here is the unique shape that holds it <em>exactly</em>. Gabor called these minimal packets <span class="gold">\u201clogons\u201d</span>: nature\u2019s own quanta of information.';
+    }
+    document.getElementById("gR").addEventListener("input", function(){ update(parseFloat(this.value)); });
+    update(0.35);
+  }
+
+  /* ----- Aparā / Parā vidyā ----- */
+  function sVidya(el){
+    el.innerHTML = '<div class="eyebrow">04 · The Upaniṣadic Frame</div>'
+      + '<h2 class="title">Two knowledges: aparā and parā</h2>'
+      + '<p class="body">The Muṇḍaka Upaniṣad (1.1.4–5) opens with a student asking: what is that, by knowing which, all this is known? The teacher\u2019s answer begins with a distinction — <span class="gold">dve vidye</span>, two knowledges are to be known: <span class="light">aparā</span>, the lower, and <span class="light">parā</span>, the higher, that by which the Imperishable (akṣara) is attained.</p>'
+      + '<div class="grid" style="margin:6px 0 18px 0;">'
+      + '<div class="card"><h3>Aparā vidyā — the temporal mode</h3><p>Knowledge <em>of the many</em>: sciences, arts, skills, texts — everything learned by observing what changes. The Upaniṣad places even the Vedas, as recited texts, here. Indispensable, honourable — and structurally bound to the <span class="gold">temporal pole</span>: it knows by tracking events, differences, particulars.</p></div>'
+      + '<div class="card"><h3>Parā vidyā — the spectral mode</h3><p>Knowing turned toward <em>what does not change</em>. It is not gained by adding information but by <span class="gold">settling</span> — the mind relinquishing its grip on the momentary until the changeless stands revealed. Its direction is the <span class="gold">spectral pole</span>; its fulfilment, as we will see, lies even beyond it.</p></div></div>'
+      + '<div style="max-width:760px;"><div class="spectrumbar"></div>'
+      + '<div class="speclabels"><span>parā · knowing the changeless</span><span>aparā · knowing the changing</span></div></div>'
+      + '<p class="body" style="margin-top:18px;">Here is what the Gabor limit contributes, and it is the hinge of this whole presentation: the two knowledges are <span class="gold">conjugate</span>. A mind maximally engaged with temporal particulars cannot, in the same act, rest in the changeless — not from weakness of will, but by the same law that binds every signal. The two modes trade off <span class="light">exactly</span>. This transforms how we read meditation: saṁyama is not a withdrawal from knowledge but <span class="gold">a deliberate movement along the trade-off</span> — spending temporal sharpness to purchase spectral purity, step by step: dhāraṇā, dhyāna, samādhi.</p>'
+      + '<p class="body" style="font-size:13.5px;">One refinement to hold: strictly, even the purest tone is still an object of knowledge — still aparā\u2019s outermost refinement. Parā vidyā <em>completes</em> only when the last tone is recognised as the medium it was always sounding in. That final step is where this presentation ends, at nirodha.</p>';
+  }
+
+  /* ----- slide 3: equation ----- */
+  var EQ_TERMS = [
+    { sym:"ψₓ(t)", name:"the object-wave", gloss:"What is actually present in the world — the external signal with its own intrinsic frequency fₛ, before any mental engagement. The one factor you cannot directly change." },
+    { sym:"∗ h(t)", name:"the saṁskāric filter", gloss:"Chitta's impulse response. Convolution (∗) means every arrival is reshaped by the echo of every arrival before it. Conditioning pre-shapes what a moment is allowed to look like." },
+    { sym:"G(t)", name:"the gain", gloss:"Attention's intensity of engagement, modulated through the body — breath, arousal, posture. The most clinically accessible component of the equation." },
+    { sym:"ψₘ(t)", name:"the attention wave", gloss:"Manas's tuning: the frequency fₘ of attention's engagement, and a phase carrying the standing tilt Δφ — ahaṁkāra brought to the meeting, not produced by it." },
+    { sym:"n(t)", name:"the noise floor", gloss:"Drift from Ritam (anṛta) at the spectral level. When the system is well-fitted, n(t) is small and experience is signal-dominated; when misfitted, it grows." },
+    { sym:"ψexp(t)", name:"the lived moment", gloss:"What you actually live through — the resultant of the meeting, plus noise: one vṛtti with a content layer (carrier) and a clarity layer (envelope)." },
+    { sym:"R(t)", name:"the resultant — the vṛtti", gloss:"The whole wave-form that arises when knower and known meet. Patañjali's citta-vṛtti is exactly this: a wave of the mind-field. Nothing new is created in the meeting — the two waves remain fully themselves, and the felt structure is the pattern of their togetherness." },
+    { sym:"carrier", name:"the content layer", gloss:"The fast oscillation at the mean frequency (fₛ + fₘ)/2. The content of every experience is jointly authored — never the object alone, never the mind alone, but their meeting point. As fₘ tunes toward fₛ, the content becomes progressively truer to what is actually there." },
+    { sym:"envelope", name:"the clarity layer", gloss:"The slow modulation whose felt beat runs at |fₛ − fₘ| — the felt flicker of duality, subject and object not-quite-aligned. Large Δf: rapid beat, friction, effort. Small Δf: soft slow swell, flow. Δf = 0: constant fullness. Citta-vṛtti-nirodha is the stilling of exactly this fluctuation." },
+    { sym:"Δφ", name:"the standing tilt — ahaṁkāra", gloss:"Not produced by the meeting but brought to it: the habitual posture of 'I and mine' the attention wave carries into every encounter. It scales the resultant's fullness by cos(Δφ/2) — the larger the tilt of self-reference, the less of the world is allowed to arrive." }
+  ];
+
+  function drawDecomp(cv, mode, h){
+    var f=fit(cv,h), ctx=f.ctx, w=f.w; h=f.h;
+    var mid=h/2, amp=h*0.38, fbeat=1.5, fcarr=14;
+    ctx.clearRect(0,0,w,h);
+    ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(w,mid);
+    ctx.strokeStyle="rgba(154,161,181,0.15)"; ctx.lineWidth=1; ctx.stroke();
+    var x, nx, env, y, sign;
+    if (mode==="resultant"){
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ nx=x/w; env=Math.abs(Math.cos(Math.PI*fbeat*nx))*amp; y=mid-env; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      for (x=w;x>=0;x--){ nx=x/w; env=Math.abs(Math.cos(Math.PI*fbeat*nx))*amp; ctx.lineTo(x,mid+env); }
+      ctx.closePath(); ctx.fillStyle="rgba(227,180,88,0.07)"; ctx.fill();
+      ctx.setLineDash([5,4]);
+      [1,-1].forEach(function(s){
+        ctx.beginPath();
+        for (x=0;x<=w;x++){ nx=x/w; env=Math.abs(Math.cos(Math.PI*fbeat*nx))*amp; y=mid-s*env; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+        ctx.strokeStyle="rgba(227,180,88,0.65)"; ctx.lineWidth=1.1; ctx.stroke();
+      });
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ nx=x/w; env=Math.abs(Math.cos(Math.PI*fbeat*nx)); y=mid-Math.cos(2*Math.PI*fcarr*nx)*env*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.strokeStyle=C.gold; ctx.lineWidth=1.6; ctx.stroke();
+    } else if (mode==="envelope"){
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ nx=x/w; y=mid-Math.abs(Math.cos(Math.PI*fbeat*nx))*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.strokeStyle=C.gold; ctx.lineWidth=1.6; ctx.stroke();
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ nx=x/w; y=mid+Math.abs(Math.cos(Math.PI*fbeat*nx))*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.strokeStyle="rgba(227,180,88,0.35)"; ctx.lineWidth=1.1; ctx.stroke();
+    } else {
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ nx=x/w; y=mid-Math.cos(2*Math.PI*fcarr*nx)*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.strokeStyle="rgba(232,227,213,0.9)"; ctx.lineWidth=1.3; ctx.stroke();
+    }
+  }
+
+  function sEquation(el){
+    var chips = EQ_TERMS.map(function(t,i){ return '<button class="chip" data-i="'+i+'">'+t.sym+'</button>'; }).join("");
+    el.innerHTML = '<div class="eyebrow">05 · The Course\u2019s Own Instrument</div>'
+      + '<h2 class="title">The Ritam Mind Wave Equation</h2>'
+      + '<p class="body">Modules 3 and 4 of this course develop a precise instrument for reading any moment of mental life — the <span class="gold">Ritam Mind Wave Equation</span>, developed by Swami Tadananda at the Ramakrishna Vedanta Centre, New Zealand, as the centrepiece of the Ritam Wellbeing Framework. It has two sides: the <span class="light">inputs that meet</span>, and the <span class="light">resultant their meeting forms</span>.</p>'
+      + '<div class="plain"><b>In plain words · </b>Don\u2019t let the symbols intimidate you — the equation says something you already know: what you experience is never the world by itself. It is the world (ψₓ), coloured by your past (h), met by your attention (ψₘ) at whatever intensity your body allows (G), with some static (n) on the line. The mathematics simply makes each ingredient precise enough to work with.</div>'
+      + '<div class="microlabel">The inputs — two waves meeting in one field</div>'
+      + '<div class="card" style="max-width:760px;text-align:center;">'
+      + '<div class="eqline" style="font-size:clamp(16px,3vw,24px);">ψ<sub style="font-size:0.6em;">exp</sub>(t) = [ψₓ(t) ∗ h(t)] + G(t) · ψₘ(t) + n(t)</div>'
+      + '<div style="font-size:12px;color:var(--dim);margin-top:8px;">the conditioned object-wave S(t), meeting the attention wave A(t), with noise</div></div>'
+      + '<div class="microlabel" style="margin-top:18px;">The output — one resultant, two nested layers (equal-amplitude teaching case)</div>'
+      + '<div class="card" style="max-width:760px;">'
+      + '<div class="eqline" style="font-size:clamp(13px,2.5vw,20px);margin-bottom:14px;">R(t) = 2A · <span class="gold">cos(2π·(fₛ − fₘ)/2·t)</span> · <span class="light">cos(2π·(fₛ + fₘ)/2·t)</span></div>'
+      + '<div class="rangelabels" style="margin:0 0 2px 0;"><span class="light" style="font-weight:500;">R(t) — the resultant: the vṛtti</span><span>the whole wave-form of the meeting</span></div>'
+      + '<canvas class="wave" id="dR"></canvas>'
+      + '<div class="display" style="text-align:center;color:var(--dim);font-size:18px;margin:5px 0;font-style:italic;">=</div>'
+      + '<div class="rangelabels" style="margin:0 0 2px 0;"><span class="gold" style="font-weight:500;">envelope — the clarity layer</span><span>beat felt at |fₛ − fₘ| · the flicker of duality</span></div>'
+      + '<canvas class="wave" id="dE"></canvas>'
+      + '<div class="display" style="text-align:center;color:var(--dim);font-size:18px;margin:5px 0;font-style:italic;">×</div>'
+      + '<div class="rangelabels" style="margin:0 0 2px 0;"><span class="light" style="font-weight:500;">carrier — the content layer</span><span>at the mean frequency (fₛ + fₘ)/2 · jointly authored</span></div>'
+      + '<canvas class="wave" id="dC"></canvas></div>'
+      + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px 0;max-width:760px;">'+chips+'</div>'
+      + '<div class="card" style="max-width:760px;min-height:92px;" id="eqDetail"></div>';
+    drawDecomp(document.getElementById("dR"), "resultant", 86);
+    drawDecomp(document.getElementById("dE"), "envelope", 60);
+    drawDecomp(document.getElementById("dC"), "carrier", 60);
+    var detail = document.getElementById("eqDetail");
+    var def = '<p style="font-size:13.5px;color:var(--dim);line-height:1.7;">Tap any term to read it. The resultant R(t) as a whole is <span class="light">the vṛtti</span>: not a layer of the experience but the entire wave-form of the meeting. Its two layers are the two dimensions you can feel in any mental event — <span class="gold">what it is about</span> (the carrier) and <span class="gold">how clearly it is being met</span> (the envelope). These two layers are the thread we follow through every stage of saṁyama ahead.</p>';
+    detail.innerHTML = def;
+    var sel = null;
+    el.querySelectorAll(".chip").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = parseInt(btn.dataset.i);
+        sel = (sel===i) ? null : i;
+        el.querySelectorAll(".chip").forEach(function(b,j){ b.classList.toggle("sel", j===sel); });
+        detail.innerHTML = (sel===null) ? def
+          : '<div class="display" style="font-size:22px;color:var(--gold);margin-bottom:6px;">'+EQ_TERMS[sel].sym+' — '+EQ_TERMS[sel].name+'</div><p style="font-size:13.5px;color:var(--dim);line-height:1.7;">'+EQ_TERMS[sel].gloss+'</p>';
+      });
+    });
+  }
+
+  /* ----- slide 4: transformer ----- */
+  function sTransformer(el){
+    el.innerHTML = '<div class="eyebrow">06 · The Transformation — step through it</div>'
+      + '<h2 class="title" style="font-size:clamp(25px,4.6vw,38px);">From the dispersed to the vṛtti-less</h2>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;align-items:start;">'
+      + '<div><div id="trDual"></div>'
+      + '<input type="range" id="trRange" min="0" max="'+(STAGES.length-1)+'" step="1" value="0" style="margin-top:16px;" aria-label="Step through the five stages"/>'
+      + '<div id="trNames" style="display:flex;justify-content:space-between;margin-top:6px;"></div></div>'
+      + '<div id="trDetail"></div></div>';
+    var names = document.getElementById("trNames");
+    STAGES.forEach(function(st,i){
+      var b = document.createElement("button");
+      b.style.cssText = "background:transparent;border:none;font-size:11px;padding:2px 4px;cursor:pointer;";
+      b.textContent = st.roman;
+      b.addEventListener("click", function(){ setI(i); document.getElementById("trRange").value = i; });
+      names.appendChild(b);
+    });
+    var cur = -1;
+    function setI(i){
+      if (i===cur) return; cur = i;
+      clearAnims();
+      var s = STAGES[i];
+      document.getElementById("trDual").innerHTML = dualView(s, 120);
+      document.getElementById("trDetail").innerHTML =
+        '<div style="font-size:11px;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;">'+s.bhumi+'</div>'
+        + '<div class="display" style="font-size:32px;color:var(--gold);margin:4px 0 2px 0;">'+s.roman+'</div>'
+        + '<div class="display" style="font-size:19px;font-style:italic;color:var(--parchment);margin-bottom:10px;">'+s.en+'</div>'
+        + (s.sutra ? '<div style="font-size:12.5px;color:var(--gold);margin-bottom:10px;">'+s.sutra+'</div>' : '')
+        + '<p style="font-size:14px;color:var(--dim);line-height:1.75;margin-bottom:12px;">'+s.gloss+'</p>'
+        + '<div style="border-top:1px solid var(--line);padding-top:10px;">'
+        + '<p style="font-size:12.5px;color:var(--parchment);line-height:1.7;">'+s.domainNote+'</p>'
+        + '<p style="font-size:12px;color:var(--gold);line-height:1.7;margin-top:8px;">'+s.rwf+'</p></div>';
+      names.querySelectorAll("button").forEach(function(b,j){
+        b.style.color = j===i ? "var(--gold)" : "var(--dim)";
+        b.style.fontWeight = j===i ? "600" : "400";
+      });
+      startAnims();
+    }
+    document.getElementById("trRange").addEventListener("input", function(){ setI(parseInt(this.value)); });
+    setI(0);
+  }
+
+  /* ----- slide 5: dharana ----- */
+  function sDharana(el){
+    el.innerHTML = '<div class="eyebrow">07 · The First Stage</div>'
+      + '<h2 class="title">Dhāraṇā — binding the mind to one place</h2>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">'
+      + '<div>'
+      + '<p class="body"><span class="gold">deśa-bandhaś cittasya dhāraṇā</span> — dhāraṇā is the binding (bandha) of the citta to a single place (deśa). A breath, a mantra, a point of light. The practice is simple to state and hard to do: whenever the mind wanders, bring it back. Again. And again.</p>'
+      + '<p class="body">Notice its defining feature: <span class="light">it is interrupted</span>. The hold keeps breaking; the return keeps being renewed. In signal terms this is a <span class="gold">gated tone</span> — a single frequency, chopped into fragments by the interruptions.</p>'
+      + '<div class="plain" style="margin-bottom:14px;"><b>In plain words · </b>Teachers often compare it to training a puppy: you set it on the mat, it wanders, you bring it back — gently, without scolding, a thousand times. The bringing-back <em>is</em> the practice. Nothing has gone wrong when the mind wanders; wandering is simply where this stage begins.</div>'
+      + '<p class="body" style="font-size:14px;">The exact mathematics: <span class="light">a chopped tone is not spectrally pure</span>. Gating a frequency smears it across a band — the choppier the fragments, the broader the smear. The dhāraṇā mind still feels noisy even while \u201cconcentrating\u201d: the interruptions themselves generate spectral spread.</p>'
+      + '<p class="body" style="font-size:13px;color:var(--gold);">In the equation: Δf = |fₛ − fₘ| is still large, so the resultant\u2019s <span class="light">envelope</span> beats rapidly — the felt friction of effortful contact — while the <span class="light">carrier</span> still runs far from the object\u2019s own rhythm: the content is co-authored, but not yet true to what is there.</p>'
+      + '</div><div>'+dualView(STAGES[1], 120)+'</div></div>';
+    startAnims();
+  }
+
+  /* ----- slide 6: continuity is purity ----- */
+  function sHeart(el){
+    el.innerHTML = '<div class="eyebrow">08 · The Heart of the Matter</div>'
+      + '<h2 class="title" style="font-size:clamp(26px,4.8vw,40px);">Continuity <em>is</em> purity</h2>'
+      + '<p class="body">The single most important idea in this whole inquiry, and it is exact, not poetic. The only difference between dhāraṇā and dhyāna is <span class="light">continuity</span> — whether the hold on the object breaks. And by the mathematics of the transform, <span class="gold">unbroken duration is precisely what spectral purity requires</span>. Drag the control: close the interruptions, and watch the spectral line sharpen on its own.</p>'
+      + '<div class="card" style="max-width:760px;">'
+      + '<div class="microlabel">Time domain</div><canvas class="wave" id="hW"></canvas>'
+      + '<div style="height:1px;background:var(--line);margin:11px 0;"></div>'
+      + '<div class="microlabel">Frequency domain</div><canvas class="wave" id="hS"></canvas>'
+      + '<input type="range" id="hR" min="0.05" max="1" step="0.01" value="0.35" style="margin-top:14px;" aria-label="Increase continuity of attention"/>'
+      + '<div class="rangelabels"><span>← interrupted · effortful</span><span>unbroken · effortless →</span></div>'
+      + '<p id="hL" style="font-size:13.5px;color:var(--parchment);margin-top:12px;min-height:38px;line-height:1.6;"></p></div>'
+      + '<p class="body" style="margin-top:18px;font-size:14px;">This reframes the whole effort of practice. You are not straining to <em>produce</em> a pure state. You are only <span class="light">closing the gaps</span> — and purity is what a continuous signal already is.</p>';
+    var range = document.getElementById("hR"), label = document.getElementById("hL");
+    var stage = {};
+    function build(cont){
+      stage = { gated: cont<0.6, coherence:0.5+0.5*cont, noise:0.35*(1-cont), flat:false,
+        peakH:0.55+0.45*cont, peakW:0.16*(1-cont)+0.014, floor:0.32*(1-cont), lumpy:cont<0.7 };
+      drawSpectrum(document.getElementById("hS"), stage, 105);
+      label.textContent = cont>0.82 ? "Unbroken. The line is nearly pure — this is dhyāna arriving."
+        : cont<0.25 ? "Choppy. Interruptions smear the tone across a wide band — this is effortful dhāraṇā."
+        : "Steadying. As the breaks close, the spectral line narrows.";
+    }
+    build(0.35);
+    range.addEventListener("input", function(){ build(parseFloat(this.value)); });
+    if (reduced) drawWave(document.getElementById("hW"), stage, 0, 105);
+    else { anims.push(function(t){ drawWave(document.getElementById("hW"), stage, t*2.2, 105); }); startAnims(); }
+  }
+
+  /* ----- slide 7: dhyana ----- */
+  function sDhyana(el){
+    el.innerHTML = '<div class="eyebrow">09 · The Second Stage</div>'
+      + '<h2 class="title">Dhyāna — the one continuous thread</h2>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">'
+      + '<div>'
+      + '<p class="body"><span class="gold">tatra pratyaya-ekatānatā dhyānam</span> — there, in that same place, the unbroken flow of cognition is dhyāna. The key word is <span class="light">ekatānatā</span>: \u201cone-stretched-ness,\u201d a single thread pulled taut and continuous, like oil poured in an unbroken line.</p>'
+      + '<p class="body">Dhāraṇā and dhyāna share the same object; only the continuity differs. But that difference is everything: continuity converts a smeared band into a <span class="gold">sharp spectral line</span>. The mind is now genuinely one-pointed: <span class="light">ekāgra</span>. One tone, sustained.</p>'
+      + '<p class="body" style="font-size:13.5px;">This is where the classical bhūmi and the signal picture meet exactly: ekāgra — one-pointed — <em>is</em> a spectrum with one point. The name was always describing the frequency domain.</p>'
+      + '<p class="body" style="font-size:13px;color:var(--gold);">In the equation: as fₘ closes on fₛ, the <span class="light">envelope\u2019s</span> beat slows and softens — friction becomes flow — and the <span class="light">carrier</span> drifts toward the object\u2019s own frequency: the content of experience becomes progressively truer to what is actually there.</p>'
+      + '</div><div>'+dualView(STAGES[2], 120)+'</div></div>';
+    startAnims();
+  }
+
+  /* ----- slide 8: beat explorer ----- */
+  function sBeat(el){
+    el.innerHTML = '<div class="eyebrow">10 · The Last Distance — tune the meeting</div>'
+      + '<h2 class="title" style="font-size:clamp(25px,4.6vw,38px);">The beat of duality, and its cessation</h2>'
+      + '<p class="body">Two waves — the conditioned object-wave (violet) and the attention wave (cyan) — superpose into one golden resultant: <span class="light">the vṛtti</span>. Its envelope beats at <span class="gold">|fₛ − fₘ|</span>: the felt flicker of subject-and-object not-quite-aligned. Dhyāna closes Δf. What remains is the standing tilt Δφ — <span class="light">ahaṁkāra</span> — which scales the fullness by <span class="gold">cos(Δφ/2)</span>. Close both, and watch what happens.</p>'
+      + '<div class="card" style="max-width:760px;">'
+      + '<canvas class="wave" id="bC"></canvas>'
+      + '<div class="rangelabels" style="margin-top:12px;"><span>Δf — the tuning gap (dhāraṇā → dhyāna closes this)</span><span id="bDfL"></span></div>'
+      + '<input type="range" id="bDf" min="0" max="2.4" step="0.01" value="1.6" aria-label="Tuning gap"/>'
+      + '<div class="rangelabels" style="margin-top:8px;"><span>Δφ — the standing tilt of self-reference</span><span id="bDpL"></span></div>'
+      + '<input type="range" id="bDp" min="0" max="2.4" step="0.01" value="1.0" aria-label="Standing phase tilt"/>'
+      + '<div id="bMsg" style="margin-top:12px;padding:11px 15px;border-radius:8px;border:1px solid var(--line);transition:all 0.4s ease;"></div></div>'
+      + '<div class="plain" style="margin-top:16px;"><b>In plain words · </b>This is something you can literally hear. When two tanpurā strings are slightly out of tune, the air carries a slow wah–wah–wah — that <em>is</em> the beat, at exactly |f₁ − f₂|. A musician tunes by listening for it: as the strings approach unison the wah slows, softens, and finally vanishes into one steady tone. Samādhi, in this model, is the mind tuning itself the way a musician tunes a string — until the beat of duality disappears.</div>'
+      + '<p class="body" style="margin-top:16px;font-size:14px;">Notice how this completes the earlier slide. <span class="light">Continuity</span> purifies each wave\u2019s own line; <span class="light">tuning</span> brings the two lines together. Saṁyama does both — and citta-vṛtti-nirodha, in the equation\u2019s terms, is not the destruction of the resultant but <span class="gold">the settling of its clarity layer into constancy</span>.</p>';
+    var df=1.6, dp=1.0;
+    function draw(){
+      var cv = document.getElementById("bC");
+      var f=fit(cv,150), ctx=f.ctx, w=f.w, h=f.h, mid=h/2;
+      ctx.clearRect(0,0,w,h);
+      var fs=11, fm=fs-df, amp=h*0.22, x, nx, y;
+      if (df>0.001 || dp>0.001){
+        ctx.beginPath();
+        for (x=0;x<=w;x++){ nx=x/w; var e=2*Math.abs(Math.cos(Math.PI*df*nx*6 - dp/2))*amp; y=mid-e; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+        for (x=w;x>=0;x--){ nx=x/w; var e2=2*Math.abs(Math.cos(Math.PI*df*nx*6 - dp/2))*amp; ctx.lineTo(x,mid+e2); }
+        ctx.closePath(); ctx.fillStyle="rgba(227,180,88,0.07)"; ctx.fill();
+      }
+      ctx.globalAlpha=0.28;
+      [[C.violet,fs,0],[C.cyan,fm,dp]].forEach(function(cfg){
+        ctx.beginPath();
+        for (x=0;x<=w;x++){ nx=x/w; y=mid-Math.cos(2*Math.PI*cfg[1]*nx*0.6+cfg[2])*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+        ctx.strokeStyle=cfg[0]; ctx.lineWidth=1; ctx.stroke();
+      });
+      ctx.globalAlpha=1;
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ nx=x/w; y=mid-(Math.cos(2*Math.PI*fs*nx*0.6)+Math.cos(2*Math.PI*fm*nx*0.6+dp))*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.strokeStyle=C.gold; ctx.lineWidth=1.7; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(w,mid);
+      ctx.strokeStyle="rgba(154,161,181,0.15)"; ctx.lineWidth=1; ctx.stroke();
+    }
+    function update(){
+      draw();
+      var resonant = df<0.06 && dp<0.08;
+      document.getElementById("bDfL").textContent =
+        df>1.2 ? "rapid beat — friction, effort" : df>0.4 ? "slowing beat — steadying" :
+        df>0.06 ? "soft slow swell — flow" : "no beat — constant fullness";
+      document.getElementById("bDpL").textContent = "fullness × " + Math.cos(dp/2).toFixed(2);
+      var msg = document.getElementById("bMsg");
+      msg.style.background = resonant ? "var(--goldsoft)" : "transparent";
+      msg.style.borderColor = resonant ? "var(--gold)" : "var(--line)";
+      msg.innerHTML = resonant
+        ? '<p style="font-size:13.5px;color:var(--parchment);line-height:1.7;"><span class="display gold" style="font-size:17px;">R(t) = 2A · cos(2π fₛ t)</span><br/>The beat has ceased. The envelope is constant fullness; the content runs at the object\u2019s own rhythm; the tilt is released, not destroyed. <span class="gold">No instrument can find two waves in the resultant anymore.</span> This is the mathematical structure of samādhi — the mind \u201cas if empty of its own form, the object alone shining.\u201d</p>'
+        : '<p style="font-size:13px;color:var(--dim);line-height:1.7;">The two component waves remain fully themselves; the felt structure is the pattern of their togetherness. Bring both controls to zero to complete the meeting.</p>';
+    }
+    document.getElementById("bDf").addEventListener("input", function(){ df=parseFloat(this.value); update(); });
+    document.getElementById("bDp").addEventListener("input", function(){ dp=parseFloat(this.value); update(); });
+    update();
+  }
+
+  /* ----- slide 9: samadhi ----- */
+  function sSamadhi(el){
+    el.innerHTML = '<div class="eyebrow">11 · The Third Stage</div>'
+      + '<h2 class="title">Samādhi — only the object shines</h2>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">'
+      + '<div>'+dualView(STAGES[3], 120)+'</div>'
+      + '<div>'
+      + '<p class="body"><span class="gold">tad eva-artha-mātra-nirbhāsaṁ svarūpa-śūnyam iva samādhiḥ</span> — when that same meditation shines forth as the <span class="light">object alone</span>, as if empty of its own form, that is samādhi. The sense of \u201cI am meditating,\u201d the act, the effort — all fall away.</p>'
+      + '<p class="body">The phrase <span class="light">svarūpa-śūnyam iva</span> is startlingly exact in the spectral picture: a perfectly pure frequency has <span class="gold">no temporal waveform to point to</span> — no shape, no beginning, no event. It has become empty of the form a thing-in-time would have.</p>'
+      + '<p class="body">And the Ritam Mind Wave Equation says the same from the two-wave side: at full alignment (Δf = 0, Δφ = 0) the resultant is <span class="gold">R(t) = 2A·cos(2π fₛ t)</span> — a single wave at the <span class="light">object\u2019s own frequency</span>, at full gathered amplitude. The attention wave\u2019s own form has vanished into the object\u2019s rhythm. \u201cEmpty of its own form\u201d is not poetry here; it is what the mathematics of the resultant literally shows.</p>'
+      + '<div class="plain"><b>In plain words · </b>You have tasted the direction of this, even if not its depth. Absorbed in music, in a sunset, in work that takes you whole — afterwards you say \u201cI lost myself in it.\u201d For those minutes there was no commentary, no watcher watching; there was only the music. Samādhi is that structure, carried to completion and made stable.</div>'
+      + '<p class="body" style="font-size:13.5px;">This is samādhi <span class="light">with seed</span> (sabīja): pure, single, luminous — but still resting on one object. One line remains in the spectrum. There is one more step.</p>'
+      + '</div></div>';
+    startAnims();
+  }
+
+  /* ----- slide 10: samyama ----- */
+  function sSamyama(el){
+    var rows = [
+      ["Dhāraṇā","binds the dispersed mind — Δf large, the envelope beats hard, the carrier far from the object\u2019s rhythm","vikṣipta → gathering"],
+      ["Dhyāna","sustains the tuning unbroken — the beat slows, the carrier closes on fₛ","ekāgra · one-pointed"],
+      ["Samādhi","Δf = 0, Δφ = 0 — the beat ceases; one wave at the object\u2019s own frequency, with seed","sabīja"],
+      ["Nirodha","even the resultant subsides into the medium — seedless","niruddha · nirbīja"]
+    ].map(function(r){ return '<tr><td class="n">'+r[0]+'</td><td style="color:var(--parchment);">'+r[1]+'</td><td class="tag">'+r[2]+'</td></tr>'; }).join("");
+    el.innerHTML = '<div class="eyebrow">12 · The Three as One</div>'
+      + '<h2 class="title">Saṁyama, and the last step beyond the seed</h2>'
+      + '<p class="body"><span class="gold">trayam ekatra saṁyamaḥ</span> — the three together, upon one object, is saṁyama. Dhāraṇā, dhyāna, and samādhi are not three separate techniques but <span class="light">one continuous deepening</span>, named at three depths. Seen as a transform, saṁyama is the complete journey from the temporal pole to the spectral pole, run on a single object until only its pure tone remains.</p>'
+      + '<div style="max-width:760px;margin:8px 0 16px 0;overflow-x:auto;"><table>'+rows+'</table></div>'
+      + '<p class="body">The move from samādhi to nirodha is the move from <span class="gold">sabīja</span> (with seed) to <span class="gold">nirbīja</span> (seedless): from resting on one pure object to the subsiding of even that. The last vṛtti — the pure one — dissolves. What remains is not a finer object, but no object at all.</p>';
+  }
+
+  /* ----- slide 11: nirodha ----- */
+  function sNirodha(el){
+    el.innerHTML = '<div class="eyebrow">13 · The Vṛtti-less Mind</div>'
+      + '<h2 class="title">Nirodha — stillness that is not absence</h2>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">'
+      + '<div>'
+      + '<p class="body">When even the single pure vṛtti subsides, the waveform goes flat and the spectrum falls silent. It is tempting to read this as blankness. The tradition insists otherwise, and this is the crucial point for a course on wellbeing: <span class="gold">nirodha is fullness, not vacancy</span>.</p>'
+      + '<p class="body">The oscillation ceases — but the <span class="light">medium that carried it remains</span>, and remains luminous. The Ritam Mind Wave Equation makes this placement exact: the witness never appears as a term in the equation at all. It is the <span class="gold">medium of the whole equation</span> — the shared field whose existence is the very condition for the two waves to superpose. Experience appears <em>in</em> it, never <em>as</em> it. In Kashmir Śaivism\u2019s language: <span class="gold">prakāśa without a single ripple of vimarśa\u2019s movement</span>.</p>'
+      + '<p class="body" style="font-size:13.5px;">This is why the deepest silence is called <span class="light">anāhata</span> — \u201cunstruck.\u201d Not the absence of sound, but sound\u2019s source, before any striking. The dispersed mind has become the still mind; the still mind has become the ground it always was.</p>'
+      + '</div><div>'+dualView(STAGES[4], 120)+'</div></div>'
+      + '<div class="honesty"><b>The honesty line · </b>The Fourier correspondence is mathematically exact: closing the interruptions in a tone genuinely does narrow its spectral line — that part is signal processing, not metaphor. Meditation research is <em>suggestive</em> here too: focused practice is associated with greater synchronization and coherence of neural rhythms. But that the mind literally <em>is</em> a signal being transformed remains a model, and the deepest, seedless state lies beyond what current neuroscience can map. A pure frequency shares timelessness with the witness, yet a frequency is still describable, still jaḍa. The mathematics illuminates the <em>shape</em> of the path; it does not, by itself, prove what rests at its end.</div>';
+    startAnims();
+  }
+
+  /* ----- slide 12: close ----- */
+  function sClose(el){
+    var arc = [
+      ["The dispersed mind is broadband","Countless brief vṛttis, spread across every frequency — busy in time, scattered in spectrum. This is where practice begins."],
+      ["The Gabor limit makes the path lawful","Δt · Δf ≥ 1/4π: sharpness in time and sharpness in frequency cannot both be had. Aparā vidyā (knowing the changing) and parā vidyā (knowing the changeless) are conjugate modes — meditation is deliberate movement along the trade-off."],
+      ["Dhāraṇā gathers; dhyāna sustains","Binding to one object narrows the band; making the hold unbroken sharpens it to a line. Continuity is the whole secret — and continuity is purity."],
+      ["The equation names the mechanism","Experience is two waves superposing: ψexp = [ψₓ ∗ h(t)] + G(t)·ψₘ(t) + n(t). The beat at |fₛ − fₘ| is the felt flicker of duality; the carrier is the co-created content; Δφ is the standing tilt of self-reference."],
+      ["Samādhi is the completed meeting","Δf = 0, Δφ = 0 → R(t) = 2A·cos(2π fₛ t): one wave at the object\u2019s own frequency, at full gathered amplitude. \u201cEmpty of its own form\u201d — the attention wave\u2019s form has vanished into the object\u2019s rhythm."],
+      ["Nirodha is the medium","Even the single resultant subsides. The witness was never a term in the equation — it is the field both waves arose in. Sabīja gives way to nirbīja; the involution beyond (9 → 0) is what the equation was always pointing toward."],
+      ["The path is an inverse transform","The whole of saṁyama moves the mind from the temporal pole toward the spectral — closing the gaps, closing the tuning, releasing the tilt — and then beyond the last tone into what was carrying it all along."]
+    ].map(function(a,i){
+      return '<div class="arcrow"><div class="arcnum">'+["i","ii","iii","iv","v","vi","vii"][i]+'</div><div><div class="t">'+a[0]+'</div><div class="g">'+a[1]+'</div></div></div>';
+    }).join("");
+    el.innerHTML = '<div class="eyebrow">14 · The Path, Entire</div>'
+      + '<h2 class="title">One movement, precisely described</h2>'
+      + '<div style="max-width:780px;">'
+      + '<div class="spectrumbar"></div>'
+      + '<div class="speclabels"><span>spectral pole · the one pure tone → the ground</span><span>temporal pole · the dispersed mind</span></div>'
+      + '<div style="margin-top:22px;">'+arc+'</div>'
+      + '<p style="font-size:12.5px;color:var(--dim);margin-top:20px;line-height:1.7;"><span class="gold">For practice:</span> the reframing is gentle and usable — you are not forcing a special state, only closing the gaps in attention. Purity is what a continuous, unhurried signal already is.<br/><br/>Companion to <em>The Light &amp; the Field</em>. The Ritam Mind Wave Equation is the original contribution of Swami Tadananda, Ramakrishna Vedanta Centre, New Zealand, developed in Modules 3–4 of <em>The Mind in the Light of Modern and Spiritual Sciences</em> under the Ritam Wellbeing Framework. Correspondences here are structural and, where noted, mathematically exact; neuroscientific parallels are suggestive, not conclusive; the nature of the ground that remains is a matter the mathematics frames but does not settle.</p></div>';
+  }
+
+  /* ---------- shell ---------- */
+  var SLIDES = [
+    ["The Settling Mind", sCover],
+    ["The Starting Condition", sProblem],
+    ["Two Ways to See One Mind", sDual],
+    ["The Gabor Limit", sGabor],
+    ["Aparā and Parā Vidyā", sVidya],
+    ["The Ritam Mind Wave Equation", sEquation],
+    ["The Transformation", sTransformer],
+    ["Dhāraṇā", sDharana],
+    ["Continuity is Purity", sHeart],
+    ["Dhyāna", sDhyana],
+    ["The Beat of Duality", sBeat],
+    ["Samādhi", sSamadhi],
+    ["Saṁyama", sSamyama],
+    ["Nirodha", sNirodha],
+    ["The Path, Entire", sClose]
+  ];
+
+  var idx = 0;
+  var crumb = document.getElementById("crumb");
+  var dots = document.getElementById("dots");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+
+  SLIDES.forEach(function(s,i){
+    var d = document.createElement("button");
+    d.setAttribute("aria-label", s[0]);
+    d.addEventListener("click", function(){ show(i); });
+    dots.appendChild(d);
+  });
+
+  function show(i){
+    clearAnims();
+    idx = Math.min(SLIDES.length-1, Math.max(0, i));
+    var old = document.getElementById("slide");
+    var fresh = old.cloneNode(false);
+    old.parentNode.replaceChild(fresh, old);
+    SLIDES[idx][1](fresh);
+    crumb.textContent = String(idx+1).padStart(2,"0") + " / " + String(SLIDES.length).padStart(2,"0") + " · " + SLIDES[idx][0];
+    prev.disabled = idx===0;
+    next.disabled = idx===SLIDES.length-1;
+    dots.querySelectorAll("button").forEach(function(b,j){ b.classList.toggle("sel", j===idx); });
+    fresh.scrollIntoView({ block:"start" });
+  }
+
+  prev.addEventListener("click", function(){ show(idx-1); });
+  next.addEventListener("click", function(){ show(idx+1); });
+  window.addEventListener("keydown", function(e){
+    if (e.key==="ArrowRight" || e.key==="ArrowDown") show(idx+1);
+    if (e.key==="ArrowLeft" || e.key==="ArrowUp") show(idx-1);
+  });
+  var rto = null;
+  window.addEventListener("resize", function(){
+    clearTimeout(rto); rto = setTimeout(function(){ show(idx); }, 200);
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>
