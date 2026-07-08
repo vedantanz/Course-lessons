@@ -262,6 +262,25 @@
     }
   }
 
+  /* ----- Orientation (front matter, unnumbered) ----- */
+  function sOrient(el){
+    el.innerHTML = '<div class="eyebrow">Orientation · How to read this</div>'
+      + '<h2 class="title">Before we begin</h2>'
+      + '<p class="body">Meditation is usually described in poetic or mystical language. This presentation tries something unusual: it shows that the inward journey of meditation — from a <span class="light">busy, scattered mind</span> to a <span class="light">quiet, gathered one</span> — has a precise shape, one that the ordinary mathematics of waves can describe. Not to reduce it or explain it away, but to see its structure clearly. <span class="gold">No prior knowledge of mathematics or Sanskrit is assumed.</span></p>'
+      + '<div class="microlabel" style="margin-top:8px;">The journey, in five plain steps</div>'
+      + '<div style="max-width:760px;margin:4px 0 16px 0;">'
+      + '<div class="tl"><div class="yr" style="min-width:120px;">scattered</div><div class="ev">the ordinary mind, pulled in many directions at once</div></div>'
+      + '<div class="tl"><div class="yr" style="min-width:120px;">Dhāraṇā</div><div class="ev">gently tying attention to a single point — and bringing it back each time it strays</div></div>'
+      + '<div class="tl"><div class="yr" style="min-width:120px;">Dhyāna</div><div class="ev">the holding becomes unbroken — attention flows to the object like an even stream</div></div>'
+      + '<div class="tl"><div class="yr" style="min-width:120px;">Samādhi</div><div class="ev">the sense of \u201cI am doing this\u201d fades; only the object remains, shining</div></div>'
+      + '<div class="tl"><div class="yr" style="min-width:120px;">Nirodha</div><div class="ev">even that settles into a still, luminous quiet — not blankness, but fullness</div></div>'
+      + '</div>'
+      + '<div class="grid" style="margin-bottom:14px;">'
+      + '<div class="card"><h3>You will meet two languages</h3><p>One is the <span class="light">contemplative tradition</span> — Yoga and Vedānta, with words like <em>vṛtti</em> and <em>saṁyama</em>. The other is the <span class="light">science of signals</span> — waves, frequency, the work of Dennis Gabor. Each technical word is explained in plain language the moment it appears, and gathered in a glossary at the very end.</p></div>'
+      + '<div class="card"><h3>Three coloured cards guide you</h3><p><span style="color:var(--cyan);">Cyan \u201cin plain words\u201d</span> cards restate an idea with an everyday image. <span class="gold">Gold cards</span> hold either a key equation or an \u201chonesty line\u201d — a frank note on what the science does and does not claim. Ordinary grey cards carry the main thread.</p></div></div>'
+      + '<div class="plain"><b>In plain words · </b>If a slide ever feels too technical, read only its cyan and grey cards and move on — the thread will still carry you. The mathematics is there to make the tradition\u2019s claims <em>precise</em>, never to gatekeep them.</div>';
+  }
+
   function sProblem(el){
     var bh = [["Kṣipta","disturbed, thrown about",0],["Mūḍha","dull, stupefied",0],["Vikṣipta","distracted — occasionally gathered",0],["Ekāgra","one-pointed",1],["Niruddha","restrained — vṛtti-less",1]];
     var cells = bh.map(function(b){
@@ -325,7 +344,7 @@
       var lbl = s<0.12 ? "Sharp in time, spread in frequency — the mode of the momentary event."
         : s>0.8 ? "Spread in time, sharp in frequency — the mode of the changeless tone."
         : "Between the poles: every gain on one side is paid for on the other.";
-      document.getElementById("gL").innerHTML = lbl + ' The product Δt · Δf never falls below the limit — and the smooth Gaussian packet shown here is the unique shape that holds it <em>exactly</em>. Gabor called these minimal packets <span class="gold">\u201clogons\u201d</span>: nature\u2019s own quanta of information.';
+      document.getElementById("gL").innerHTML = lbl + ' The product Δt · Δf never falls below the limit — and the smooth Gaussian packet shown here is the unique shape that holds it <em>exactly</em>. Gabor called these minimal packets <span class="gold">\u201clogons\u201d</span>: nature\u2019s own quanta of information. This carrier-in-envelope shape will return — as the very anatomy of the vṛtti itself.';
     }
     document.getElementById("gR").addEventListener("input", function(){ update(parseFloat(this.value)); });
     update(0.35);
@@ -336,11 +355,25 @@
     el.innerHTML = '<div class="eyebrow">04 · The Upaniṣadic Frame</div>'
       + '<h2 class="title">Two knowledges: aparā and parā</h2>'
       + '<p class="body">The Muṇḍaka Upaniṣad (1.1.4–5) opens with a student asking: what is that, by knowing which, all this is known? The teacher\u2019s answer begins with a distinction — <span class="gold">dve vidye</span>, two knowledges are to be known: <span class="light">aparā</span>, the lower, and <span class="light">parā</span>, the higher, that by which the Imperishable (akṣara) is attained.</p>'
+      + '<div class="card" style="max-width:760px;margin:6px 0 12px 0;border-color:var(--gold);">'
+      + '<div class="microlabel">The question — verse 3</div>'
+      + '<p class="display" style="font-size:clamp(13px,1.9vw,16px);color:var(--gold);line-height:1.9;margin-top:6px;">शौनको ह वै महाशालोऽङ्गिरसं विधिवदुपसन्नः पप्रच्छ । कस्मिन्नु भगवो विज्ञाते सर्वमिदं विज्ञातं भवतीति ॥ ३ ॥</p>'
+      + '<p style="font-size:12.5px;color:var(--parchment);line-height:1.7;margin-top:8px;">Śaunaka, the great householder, approached the sage Aṅgiras in the proper manner and asked: <span class="light">\u201cRevered sir, what is that, by knowing which, all this becomes known?\u201d</span></p>'
+      + '<p style="font-size:11.5px;color:var(--dim);line-height:1.7;margin-top:8px;">One of the great questions of the Upaniṣads: is there a single knowledge that, once grasped, yields everything? The verses that follow are Aṅgiras\u2019s answer.</p></div>'
+      + '<div class="card" style="max-width:760px;margin:0 0 16px 0;">'
+      + '<div class="microlabel">The answer — verses 4–6</div>'
+      + '<p class="display" style="font-size:clamp(13px,1.9vw,16px);color:var(--gold);line-height:1.9;margin-top:6px;">'
+      + 'तस्मै स होवाच । द्वे विद्ये वेदितव्ये इति ह स्म यद्ब्रह्मविदो वदन्ति परा चैवापरा च ॥ ४ ॥<br/>'
+      + 'तत्रापरा ऋग्वेदो यजुर्वेदः सामवेदोऽथर्ववेदः शिक्षा कल्पो व्याकरणं निरुक्तं छन्दो ज्योतिषमिति । अथ परा यया तदक्षरमधिगम्यते ॥ ५ ॥<br/>'
+      + 'यत्तदद्रेश्यमग्राह्यमगोत्रमवर्णमचक्षुःश्रोत्रं तदपाणिपादम् । नित्यं विभुं सर्वगतं सुसूक्ष्मं तदव्ययं यद्भूतयोनिं परिपश्यन्ति धीराः ॥ ६ ॥</p>'
+      + '<p style="font-size:12.5px;color:var(--dim);line-height:1.7;margin-top:10px;">To him he said: <span class="light">two knowledges are to be known</span> — so say the knowers of Brahman — the higher (parā) and the lower (aparā). (5) The lower is the four Vedas and their six auxiliary sciences; the higher is that by which the <span class="gold">Imperishable</span> (akṣara) is attained. (6) That which is unseeable, ungraspable, without lineage or colour, without eye or ear, without hand or foot; eternal, all-pervading, subtlest of the subtle, undecaying — the womb of all beings, which the wise perceive everywhere.</p>'
+      + '</div>'
       + '<div class="grid" style="margin:6px 0 18px 0;">'
       + '<div class="card"><h3>Aparā vidyā — the temporal mode</h3><p>Knowledge <em>of the many</em>: sciences, arts, skills, texts — everything learned by observing what changes. The Upaniṣad places even the Vedas, as recited texts, here. Indispensable, honourable — and structurally bound to the <span class="gold">temporal pole</span>: it knows by tracking events, differences, particulars.</p></div>'
       + '<div class="card"><h3>Parā vidyā — the spectral mode</h3><p>Knowing turned toward <em>what does not change</em>. It is not gained by adding information but by <span class="gold">settling</span> — the mind relinquishing its grip on the momentary until the changeless stands revealed. Its direction is the <span class="gold">spectral pole</span>; its fulfilment, as we will see, lies even beyond it.</p></div></div>'
       + '<div style="max-width:760px;"><div class="spectrumbar"></div>'
       + '<div class="speclabels"><span>parā · knowing the changeless</span><span>aparā · knowing the changing</span></div></div>'
+      + '<div class="plain"><b>In plain words · </b>Aparā vidyā is like learning the <em>words</em> of a song — endless, always more to add. Parā vidyā is like finally hearing the <em>silence</em> the song is sung into. One is knowledge you accumulate; the other is knowledge you arrive at by growing quiet. Both matter — but they are gained in opposite ways.</div>'
       + '<p class="body" style="margin-top:18px;">Here is what the Gabor limit contributes, and it is the hinge of this whole presentation: the two knowledges are <span class="gold">conjugate</span>. A mind maximally engaged with temporal particulars cannot, in the same act, rest in the changeless — not from weakness of will, but by the same law that binds every signal. The two modes trade off <span class="light">exactly</span>. This transforms how we read meditation: saṁyama is not a withdrawal from knowledge but <span class="gold">a deliberate movement along the trade-off</span> — spending temporal sharpness to purchase spectral purity, step by step: dhāraṇā, dhyāna, samādhi.</p>'
       + '<p class="body" style="font-size:13.5px;">One refinement to hold: strictly, even the purest tone is still an object of knowledge — still aparā\u2019s outermost refinement. Parā vidyā <em>completes</em> only when the last tone is recognised as the medium it was always sounding in. That final step is where this presentation ends, at nirodha.</p>';
   }
@@ -399,7 +432,7 @@
     var chips = EQ_TERMS.map(function(t,i){ return '<button class="chip" data-i="'+i+'">'+t.sym+'</button>'; }).join("");
     el.innerHTML = '<div class="eyebrow">05 · The Course\u2019s Own Instrument</div>'
       + '<h2 class="title">The Ritam Mind Wave Equation</h2>'
-      + '<p class="body">Modules 3 and 4 of this course develop a precise instrument for reading any moment of mental life — the <span class="gold">Ritam Mind Wave Equation</span>, developed by Swami Tadananda at the Ramakrishna Vedanta Centre, New Zealand, as the centrepiece of the Ritam Wellbeing Framework. It has two sides: the <span class="light">inputs that meet</span>, and the <span class="light">resultant their meeting forms</span>.</p>'
+      + '<p class="body">Module 3 of the course \u201cAdvanced: The Mind in the Light of Modern and Spiritual Sciences\u201d develops a precise instrument for reading any moment of mental life — the <span class="gold">Ritam Mind Wave Equation</span>, developed by Swami Tadananda at the Ramakrishna Vedanta Centre, New Zealand, as the centrepiece of the Ritam Wellbeing Framework. It has two sides: the <span class="light">inputs that meet</span>, and the <span class="light">resultant their meeting forms</span>.</p>'
       + '<div class="plain"><b>In plain words · </b>Don\u2019t let the symbols intimidate you — the equation says something you already know: what you experience is never the world by itself. It is the world (ψₓ), coloured by your past (h), met by your attention (ψₘ) at whatever intensity your body allows (G), with some static (n) on the line. The mathematics simply makes each ingredient precise enough to work with.</div>'
       + '<div class="microlabel">The inputs — two waves meeting in one field</div>'
       + '<div class="card" style="max-width:760px;text-align:center;">'
@@ -484,7 +517,7 @@
       + '<h2 class="title">Dhāraṇā — binding the mind to one place</h2>'
       + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">'
       + '<div>'
-      + '<p class="body"><span class="gold">deśa-bandhaś cittasya dhāraṇā</span> — dhāraṇā is the binding (bandha) of the citta to a single place (deśa). A breath, a mantra, a point of light. The practice is simple to state and hard to do: whenever the mind wanders, bring it back. Again. And again.</p>'
+      + '<p class="body"><span class="gold">देशबन्धश्चित्तस्य धारणा ॥ ३.१ ॥</span> — <em>deśabandhaś cittasya dhāraṇā</em>: dhāraṇā is the binding (bandha) of the citta to a single place (deśa). A breath, a mantra, a point of light. The practice is simple to state and hard to do: whenever the mind wanders, bring it back. Again. And again.</p>'
       + '<p class="body">Notice its defining feature: <span class="light">it is interrupted</span>. The hold keeps breaking; the return keeps being renewed. In signal terms this is a <span class="gold">gated tone</span> — a single frequency, chopped into fragments by the interruptions.</p>'
       + '<div class="plain" style="margin-bottom:14px;"><b>In plain words · </b>Teachers often compare it to training a puppy: you set it on the mat, it wanders, you bring it back — gently, without scolding, a thousand times. The bringing-back <em>is</em> the practice. Nothing has gone wrong when the mind wanders; wandering is simply where this stage begins.</div>'
       + '<p class="body" style="font-size:14px;">The exact mathematics: <span class="light">a chopped tone is not spectrally pure</span>. Gating a frequency smears it across a band — the choppier the fragments, the broader the smear. The dhāraṇā mind still feels noisy even while \u201cconcentrating\u201d: the interruptions themselves generate spectral spread.</p>'
@@ -528,7 +561,7 @@
       + '<h2 class="title">Dhyāna — the one continuous thread</h2>'
       + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">'
       + '<div>'
-      + '<p class="body"><span class="gold">tatra pratyaya-ekatānatā dhyānam</span> — there, in that same place, the unbroken flow of cognition is dhyāna. The key word is <span class="light">ekatānatā</span>: \u201cone-stretched-ness,\u201d a single thread pulled taut and continuous, like oil poured in an unbroken line.</p>'
+      + '<p class="body"><span class="gold">तत्र प्रत्ययैकतानता ध्यानम् ॥ ३.२ ॥</span> — <em>tatra pratyayaikatānatā dhyānam</em>: there, in that same place, the unbroken flow of cognition is dhyāna. The key word is <span class="light">ekatānatā</span>: \u201cone-stretched-ness,\u201d a single thread pulled taut and continuous, like oil poured in an unbroken line.</p>'
       + '<p class="body">Dhāraṇā and dhyāna share the same object; only the continuity differs. But that difference is everything: continuity converts a smeared band into a <span class="gold">sharp spectral line</span>. The mind is now genuinely one-pointed: <span class="light">ekāgra</span>. One tone, sustained.</p>'
       + '<p class="body" style="font-size:13.5px;">This is where the classical bhūmi and the signal picture meet exactly: ekāgra — one-pointed — <em>is</em> a spectrum with one point. The name was always describing the frequency domain.</p>'
       + '<p class="body" style="font-size:13px;color:var(--gold);">In the equation: as fₘ closes on fₛ, the <span class="light">envelope\u2019s</span> beat slows and softens — friction becomes flow — and the <span class="light">carrier</span> drifts toward the object\u2019s own frequency: the content of experience becomes progressively truer to what is actually there.</p>'
@@ -541,6 +574,11 @@
     el.innerHTML = '<div class="eyebrow">10 · The Last Distance — tune the meeting</div>'
       + '<h2 class="title" style="font-size:clamp(25px,4.6vw,38px);">The beat of duality, and its cessation</h2>'
       + '<p class="body">Two waves — the conditioned object-wave (violet) and the attention wave (cyan) — superpose into one golden resultant: <span class="light">the vṛtti</span>. Its envelope beats at <span class="gold">|fₛ − fₘ|</span>: the felt flicker of subject-and-object not-quite-aligned. Dhyāna closes Δf. What remains is the standing tilt Δφ — <span class="light">ahaṁkāra</span> — which scales the fullness by <span class="gold">cos(Δφ/2)</span>. Close both, and watch what happens.</p>'
+      + '<div class="card" style="max-width:760px;text-align:center;padding:16px 18px;">'
+      + '<div class="microlabel">the resultant, with the phase tilt included</div>'
+      + '<div class="eqline" style="font-size:clamp(12px,2.2vw,18px);margin-top:6px;">R(t) = 2A · <span class="gold">cos(2π·(fₛ − fₘ)/2·t − Δφ/2)</span> · <span class="light">cos(2π·(fₛ + fₘ)/2·t + Δφ/2)</span></div>'
+      + '<div class="rangelabels" style="justify-content:center;gap:24px;margin-top:8px;"><span class="gold">envelope — beats at |fₛ − fₘ|, tilted by Δφ</span><span class="light">carrier — the mean frequency</span></div>'
+      + '<div style="font-size:12px;color:var(--dim);line-height:1.6;margin-top:10px;">When Δf = 0 the envelope stops moving and its height fixes at <span class="light">2A · cos(Δφ/2)</span> — a constant fullness set by the tilt alone. When Δφ = 0 as well, this collapses to <span class="gold">R(t) = 2A · cos(2π fₛ t)</span>: one pure wave at the object\u2019s own frequency.</div></div>' 
       + '<div class="card" style="max-width:760px;">'
       + '<canvas class="wave" id="bC"></canvas>'
       + '<div class="rangelabels" style="margin-top:12px;"><span>Δf — the tuning gap (dhāraṇā → dhyāna closes this)</span><span id="bDfL"></span></div>'
@@ -595,13 +633,118 @@
   }
 
   /* ----- slide 9: samadhi ----- */
+  /* ----- Two aspects within every vṛtti ----- */
+  function drawAspect(cv, mode, h){
+    var f=fit(cv,h), ctx=f.ctx, w=f.w; h=f.h;
+    var mid=h/2, amp=h*0.36, fbeat=1.5, fcarr=15, x, nx, y;
+    ctx.clearRect(0,0,w,h);
+    ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(w,mid);
+    ctx.strokeStyle="rgba(154,161,181,0.15)"; ctx.lineWidth=1; ctx.stroke();
+    if (mode==="carrier"){
+      ctx.beginPath();
+      for (x=0;x<=w;x++){ nx=x/w; y=mid-Math.cos(2*Math.PI*fcarr*nx)*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      ctx.strokeStyle="rgba(232,227,213,0.9)"; ctx.lineWidth=1.4; ctx.stroke();
+    } else {
+      ctx.setLineDash([5,4]);
+      [1,-1].forEach(function(s){
+        ctx.beginPath();
+        for (x=0;x<=w;x++){ nx=x/w; y=mid-s*Math.abs(Math.cos(Math.PI*fbeat*nx))*amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+        ctx.strokeStyle=C.gold; ctx.lineWidth=1.4; ctx.stroke();
+      });
+      ctx.setLineDash([]);
+    }
+  }
+  function sAspects(el){
+    el.innerHTML = '<div class="eyebrow">11 · The Duality Within the Moment</div>'
+      + '<h2 class="title">The two aspects within every vṛtti</h2>'
+      + '<p class="body">Look closely at the resultant. R(t) = envelope × carrier is not merely <em>like</em> a Gabor logon — it <span class="light">is</span> one: the same carrier-in-envelope grain Gabor proved to be the elementary unit of information. So the whole duality of this presentation is recapitulated <span class="gold">inside every single moment of experience</span> — the map of the path is also the anatomy of each step on it. This is <span class="light">sarvaṁ sarvātmakam</span> in miniature: the whole enfolded in each part.</p>'
+      + '<div class="grid" style="margin:6px 0 18px 0;">'
+      + '<div class="card"><h3>The carrier — the spectral aspect</h3><canvas class="wave" id="aC"></canvas><p style="margin-top:8px;">The steady, tone-like factor — the drone <em>inside</em> the experience. Not spectral because it is slow (it is the fast one) but because it is <span class="light">changeless in character</span>: one frequency, a sharp line. Its poles run <span class="gold">projection ↔ fidelity</span>: as Δf closes, the carrier trues to the object\u2019s own rhythm — the content becomes faithful to what is there.</p></div>'
+      + '<div class="card"><h3>The envelope — the temporal aspect</h3><canvas class="wave" id="aE"></canvas><p style="margin-top:8px;">The waxing-and-waning factor — the one that carries <span class="light">vikāra</span>, arising and passing. Its poles run <span class="gold">flicker ↔ fullness</span>: rapid beating is the saṁsāric texture of moment-chopped experience; as the beat slows to zero the envelope becomes constant — and exits the temporal domain altogether.</p></div></div>'
+      + '<p class="body" style="font-size:14px;">And the elegance: both purify on the <span class="gold">single parameter Δf</span>. As attention\u2019s frequency closes on the object\u2019s, the carrier slides toward truth <em>and</em> the envelope settles toward constancy, at once. One tuning, two liberations — which is why the tradition prescribes one practice, not two.</p>'
+      + '<div class="plain"><b>In plain words · </b>Think of AM radio. A steady <span class="light">carrier</span> wave holds the station\u2019s identity; all the changing music rides in the <span class="light">envelope</span>; and your receiver throws the carrier away and keeps only the song — that discarding is called \u201cdemodulation.\u201d Ordinary experience does exactly this: we live in the song of changing events and never notice the steady hum beneath. Meditation is demodulation run in reverse — <span class="gold">the world listens to the song and ignores the carrier; the yogi tunes to the carrier until the song falls silent.</span></div>'
+      + '<div class="grid" style="margin-top:14px;">'
+      + '<div class="card" style="background:transparent;"><h3 style="color:var(--gold);font-size:18px;">Spanda, in miniature</h3><p style="font-size:12.5px;">The envelope opens and closes once per beat — a swell (unmeṣa) and a subsiding (nimeṣa) per lobe. The envelope <em>is</em> spanda at the scale of a single vṛtti; samādhi is that pulse of duality resting in its own fullness.</p></div>'
+      + '<div class="card" style="background:transparent;"><h3 style="color:var(--gold);font-size:18px;">The kṣaṇa — the moment</h3><p style="font-size:12.5px;">Yoga holds that experience is not a smooth stream but a rapid succession of discrete moments — <span class="light">kṣaṇa</span> — much as a film is still frames run fast. Patañjali prescribes saṁyama upon the moment and its succession (kṣaṇa-tat-kramayoḥ saṁyamāt, YS 3.52) as a high practice yielding discriminative insight. The Buddhist Abhidharma developed the same doctrine in fine detail. The envelope supplies the mechanism the texts describe but could not draw: each swell-and-subside carves the continuous meeting of knower and known into one packet — one felt moment. The kṣaṇas of experience are the <span class="light">logons of the mind-wave</span>.</p></div>'
+      + '<div class="card" style="background:transparent;"><h3 style="color:var(--gold);font-size:18px;">The brain\u2019s own version</h3><p style="font-size:12.5px;">The brain literally builds experience this way. In <span class="light">phase-amplitude coupling</span> (PAC), the phase of a slow rhythm gates the strength of a fast one — the slow wave is the envelope, the fast burst the carrier. The best-studied pair is <span class="light">theta</span> (~4–8 Hz) carrying <span class="light">gamma</span> (~30–140 Hz) in the hippocampus, where it organises the encoding of memory, one item per gamma cycle nested in the theta phase. Canolty &amp; colleagues first showed gamma power locked to theta phase in the human cortex (<em>Science</em>, 2006), reviewed in Canolty &amp; Knight (2010); Tort et al. (2010) gave the standard \u201cmodulation index\u201d for measuring it. This is exactly Module 3\u2019s cross-frequency coupling — slow vāsanā-rhythms shaping fast surface activity — and a striking real-world echo of R(t) = envelope × carrier.</p></div></div>'
+      + '<div class="note" style="margin-top:14px;"><b>The honesty line · </b>Phase-amplitude coupling is a robust, replicated finding in neuroscience — that part is not speculative. What remains a <em>model</em> is the identification of a brain rhythm with a vṛtti, and of PAC with the Ritam Mind Wave Equation\u2019s resultant. The architectures rhyme; the equivalence is a bridge we draw, not a result neuroscience has established.</div>'
+      + '<div style="border-top:1px solid var(--line);margin-top:18px;padding-top:16px;">'
+      + '<p class="display" style="font-size:clamp(14px,2vw,18px);color:var(--gold);line-height:1.7;max-width:720px;">या निशा सर्वभूतानां तस्यां जागर्ति संयमी ।<br/>यस्यां जाग्रति भूतानि सा निशा पश्यतो मुनेः ॥</p>'
+      + '<p class="display" style="font-size:clamp(17px,2.5vw,21px);font-style:italic;color:var(--parchment);line-height:1.55;max-width:720px;margin-top:12px;">\u201cThat which is night for all beings, in that the self-controlled one (saṁyamī) is awake; that in which beings are awake is night for the seeing sage.\u201d</p>'
+      + '<div style="font-size:12.5px;color:var(--gold);margin-top:8px;">Bhagavad Gītā 2.69</div>'
+      + '<p class="body" style="font-size:13.5px;margin-top:12px;">The verse maps exactly. What all beings are awake to is the <span class="light">envelope</span> — the song of changing events, their \u201cday.\u201d The <span class="light">carrier</span>, the changeless hum beneath, is their unseen \u201cnight.\u201d The sage\u2019s wakefulness is inverted: awake to the changeless, asleep to the flicker. And the word Kṛṣṇa chooses for the sage is <span class="gold">saṁyamī</span> — the one established in the very discipline this presentation anatomizes. The Gabor limit adds only the reason the two wakefulnesses must <em>exclude</em> each other rather than combine: they are conjugate, by law.</p>'
+      + '<div class="note"><b>The honesty line · </b>Śaṅkara reads 2.69 as the contrast between Self-knowledge and absorption in sense-objects. The carrier-envelope language here is a structural translation of that same contrast into the equation\u2019s terms — faithful to the commentarial meaning, but ours, not the text\u2019s own.</div></div>';
+    drawAspect(document.getElementById("aC"), "carrier", 70);
+    drawAspect(document.getElementById("aE"), "envelope", 70);
+  }
+
+  /* ----- Aham & Idam ----- */
+  function sAhamIdam(el){
+    el.innerHTML = '<div class="eyebrow">12 \u00b7 Self, World, and the Seam Between</div>'
+      + '<h2 class="title">The full \u201cI\u201d, the little \u201cI\u201d, and the world</h2>'
+      + '<p class="body">In every waking moment there seem to be just two things: a <span class="light">\u201cme\u201d here</span> and a <span class="light">\u201cthis\u201d there</span> \u2014 with a subtle seam between them, a faint sense of facing the world across a gap. Kashmir \u015aaivism looks closer and finds not two things but <span class="gold">three</span>.</p>'
+      + '<div class="grid" style="margin:6px 0 16px 0;">'
+      + '<div class="card"><h3 style="color:var(--gold);">P\u016br\u1e47\u0101hant\u0101 \u2014 the full \u201cI\u201d</h3><p>Pure awareness itself: the light in which everything appears. Changeless, needing no object, never a \u201cthis.\u201d This is the true subject \u2014 the <span class="light">spectral</span> witness. You never see it, because it is what is seeing.</p></div>'
+      + '<div class="card"><h3 style="color:var(--cyan);">Idam \u2014 \u201cthis\u201d</h3><p>Whatever is arising now: a sound, a thought, a feeling. A particular content, here for a moment, then gone. The <span class="light">temporal</span> object \u2014 the changing.</p></div>'
+      + '<div class="card"><h3 style="color:var(--violet);">The little \u201cI\u201d \u2014 \u201cI and mine\u201d</h3><p>Not the witness, but a <span class="light">ripple pretending to be the subject</span>: the tilt of self-reference (\u0394\u03c6) laid over every experience. Sri Ramakrishna calls it plainly \u2014 <span class="gold">\u201cI and mine is M\u0101y\u0101.\u201d</span></p></div></div>'
+      + '<p class="body">So the seam you feel is not between the witness and the world. It is between <span class="light">two contractions</span> \u2014 a little \u201cI\u201d and a \u201cthis,\u201d both ripples, both in time \u2014 while the full \u201cI\u201d is the still light they both appear in. Settle the mind, and watch the seam heal:</p>'
+      + '<div class="card" style="max-width:760px;">'
+      + '<canvas class="wave" id="knotC"></canvas>'
+      + '<input type="range" id="knotR" min="0" max="1" step="0.01" value="0.05" style="margin-top:12px;" aria-label="Settle the mind from scattered to full"/>'
+      + '<div class="rangelabels"><span>\u2190 scattered, contracted</span><span>settled, full \u2192</span></div>'
+      + '<div style="margin-top:12px;"><div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);"><span>fullness let through \u2014 cos(\u0394\u03c6/2)</span><span id="knotPct"></span></div>'
+      + '<div style="height:10px;border-radius:5px;background:var(--line);margin-top:3px;"><div id="knotBar" style="height:10px;border-radius:5px;background:var(--gold);transition:width 0.1s ease;"></div></div></div>'
+      + '<p id="knotL" style="font-size:13.5px;color:var(--parchment);margin-top:14px;min-height:42px;line-height:1.6;"></p></div>'
+      + '<p class="body" style="margin-top:16px;">As the mind settles, the object\u2019s restlessness quiets (\u0394f \u2192 0) <em>and</em> the tilt of \u201cI and mine\u201d relaxes (\u0394\u03c6 \u2192 0). Both temporal contractions dissolve \u2014 and what remains is not blankness but <span class="gold">p\u016br\u1e47\u0101hant\u0101</span>, the full I-ness the little \u201cI\u201d was always only a shrunken reflection of.</p>'
+      + '<div style="border-top:1px solid var(--line);margin-top:18px;padding-top:16px;">'
+      + '<p class="display" style="font-size:clamp(16px,2.3vw,20px);font-style:italic;color:var(--parchment);line-height:1.6;max-width:720px;">\u201cThe Pure Mind, the Pure Buddhi, and the Pure \u0100tman are one and the same.\u201d<br/>\u201cI and mine \u2014 that is M\u0101y\u0101.\u201d</p>'
+      + '<div style="font-size:12.5px;color:var(--gold);margin-top:8px;">Sri Ramakrishna</div>'
+      + '<p class="body" style="font-size:13px;margin-top:10px;">The first names the destination \u2014 mind, intellect and Self, once purified of the tilt, revealed as one light. The second names what must go: \u201cI and mine,\u201d the \u0394\u03c6 tilt, M\u0101y\u0101 itself. Bring the tilt to zero (cos(\u0394\u03c6/2) = 1) and reality arrives whole.</p></div>'
+      + '<div class="note"><b>The honesty line \u00b7 </b>That the little \u201cI\u201d <em>is</em> the phase tilt \u0394\u03c6, and M\u0101y\u0101, is a bridge we draw \u2014 faithful to the felt experience, but our model, not the tradition\u2019s own words. And the deepest claim \u2014 that the full light <em>knows itself</em> \u2014 is the one thing no equation reaches. The mathematics escorts us to the threshold; the realized teacher reports what is on the other side.</div>';
+    function draw(t){
+      var cv=document.getElementById("knotC"); var f=fit(cv,290), ctx=f.ctx, w=f.w, h=f.h;
+      var cx=w/2, cy=h/2;
+      ctx.clearRect(0,0,w,h);
+      var fade = t>0.85 ? (t-0.85)/0.15 : 0;
+      var glowA = Math.min(0.6, 0.05 + 0.42*t + 0.28*fade);
+      var g = ctx.createRadialGradient(cx,cy,8, cx,cy, Math.max(w,h)*0.55);
+      g.addColorStop(0,"rgba(227,180,88,"+glowA+")"); g.addColorStop(1,"rgba(227,180,88,0)");
+      ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+      var gap=(w*0.20)*(1-t), discR=Math.min(h*0.24, w*0.13), tilt=(h*0.14)*(1-t);
+      var ahamX=cx-gap, ahamY=cy-tilt, idamX=cx+gap, idamY=cy, discOp=1-0.9*fade;
+      if(gap>2){ ctx.globalAlpha=discOp*Math.min(1,gap/(w*0.08)); ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(cx,cy-discR*1.1); ctx.lineTo(cx,cy+discR*1.1); ctx.strokeStyle="rgba(154,161,181,0.5)"; ctx.lineWidth=1; ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=1; }
+      ctx.globalAlpha=discOp;
+      ctx.beginPath(); ctx.arc(idamX,idamY,discR,0,7); ctx.fillStyle="rgba(91,200,221,0.20)"; ctx.fill(); ctx.strokeStyle=C.cyan; ctx.lineWidth=1.4; ctx.stroke();
+      ctx.beginPath(); ctx.arc(ahamX,ahamY,discR,0,7); ctx.fillStyle="rgba(142,124,243,0.20)"; ctx.fill(); ctx.strokeStyle=C.violet; ctx.lineWidth=1.4; ctx.stroke();
+      ctx.font="italic 15px 'Cormorant Garamond', serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+      ctx.fillStyle=C.violet; ctx.fillText("I", ahamX, ahamY);
+      ctx.fillStyle=C.cyan; ctx.fillText("this", idamX, idamY);
+      ctx.globalAlpha=1;
+      if(fade>0){ ctx.globalAlpha=Math.min(1,fade); ctx.font="italic 18px 'Cormorant Garamond', serif"; ctx.fillStyle=C.gold; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("p\u016br\u1e47\u0101hant\u0101", cx, cy); ctx.globalAlpha=1; }
+    }
+    function update(t){
+      draw(t);
+      var phi=2.2*(1-t), full=Math.cos(phi/2);
+      document.getElementById("knotBar").style.width=Math.round(full*100)+"%";
+      document.getElementById("knotPct").textContent=Math.round(full*100)+"%";
+      document.getElementById("knotL").innerHTML =
+        t<0.18 ? "<b style=\"color:var(--parchment);\">Scattered.</b> Many \u201cthis\u201des clamour; the \u201cI\u201d is pulled thin between them."
+        : t<0.42 ? "<b style=\"color:var(--parchment);\">Dh\u0101ra\u1e47\u0101.</b> One \u201cthis\u201d is chosen. The \u201cI\u201d reaches for it, effortfully; the seam is wide."
+        : t<0.66 ? "<b style=\"color:var(--parchment);\">Dhy\u0101na.</b> The reaching eases into flow. The seam is still there, but quiet."
+        : t<0.9 ? "<b style=\"color:var(--parchment);\">Sam\u0101dhi.</b> Only \u201cthis\u201d shines; the little \u201cI\u201d grows transparent; the seam almost closes."
+        : "<b style=\"color:var(--gold);\">P\u016br\u1e47\u0101hant\u0101.</b> No \u201cthis\u201d to hold, no \u201cI\u201d set against it \u2014 the full light, resting in itself.";
+    }
+    document.getElementById("knotR").addEventListener("input", function(){ update(parseFloat(this.value)); });
+    update(0.05);
+  }
+
   function sSamadhi(el){
-    el.innerHTML = '<div class="eyebrow">11 · The Third Stage</div>'
+    el.innerHTML = '<div class="eyebrow">13 · The Third Stage</div>'
       + '<h2 class="title">Samādhi — only the object shines</h2>'
       + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">'
       + '<div>'+dualView(STAGES[3], 120)+'</div>'
       + '<div>'
-      + '<p class="body"><span class="gold">tad eva-artha-mātra-nirbhāsaṁ svarūpa-śūnyam iva samādhiḥ</span> — when that same meditation shines forth as the <span class="light">object alone</span>, as if empty of its own form, that is samādhi. The sense of \u201cI am meditating,\u201d the act, the effort — all fall away.</p>'
+      + '<p class="body"><span class="gold">तदेवार्थमात्रनिर्भासं स्वरूपशून्यमिव समाधिः ॥ ३.३ ॥</span> — <em>tad evārthamātra-nirbhāsaṁ svarūpa-śūnyam iva samādhiḥ</em>: when that same meditation shines forth as the <span class="light">object alone</span>, as if empty of its own form, that is samādhi. The sense of \u201cI am meditating,\u201d the act, the effort — all fall away.</p>'
       + '<p class="body">The phrase <span class="light">svarūpa-śūnyam iva</span> is startlingly exact in the spectral picture: a perfectly pure frequency has <span class="gold">no temporal waveform to point to</span> — no shape, no beginning, no event. It has become empty of the form a thing-in-time would have.</p>'
       + '<p class="body">And the Ritam Mind Wave Equation says the same from the two-wave side: at full alignment (Δf = 0, Δφ = 0) the resultant is <span class="gold">R(t) = 2A·cos(2π fₛ t)</span> — a single wave at the <span class="light">object\u2019s own frequency</span>, at full gathered amplitude. The attention wave\u2019s own form has vanished into the object\u2019s rhythm. \u201cEmpty of its own form\u201d is not poetry here; it is what the mathematics of the resultant literally shows.</p>'
       + '<div class="plain"><b>In plain words · </b>You have tasted the direction of this, even if not its depth. Absorbed in music, in a sunset, in work that takes you whole — afterwards you say \u201cI lost myself in it.\u201d For those minutes there was no commentary, no watcher watching; there was only the music. Samādhi is that structure, carried to completion and made stable.</div>'
@@ -618,7 +761,7 @@
       ["Samādhi","Δf = 0, Δφ = 0 — the beat ceases; one wave at the object\u2019s own frequency, with seed","sabīja"],
       ["Nirodha","even the resultant subsides into the medium — seedless","niruddha · nirbīja"]
     ].map(function(r){ return '<tr><td class="n">'+r[0]+'</td><td style="color:var(--parchment);">'+r[1]+'</td><td class="tag">'+r[2]+'</td></tr>'; }).join("");
-    el.innerHTML = '<div class="eyebrow">12 · The Three as One</div>'
+    el.innerHTML = '<div class="eyebrow">14 · The Three as One</div>'
       + '<h2 class="title">Saṁyama, and the last step beyond the seed</h2>'
       + '<p class="body"><span class="gold">trayam ekatra saṁyamaḥ</span> — the three together, upon one object, is saṁyama. Dhāraṇā, dhyāna, and samādhi are not three separate techniques but <span class="light">one continuous deepening</span>, named at three depths. Seen as a transform, saṁyama is the complete journey from the temporal pole to the spectral pole, run on a single object until only its pure tone remains.</p>'
       + '<div style="max-width:760px;margin:8px 0 16px 0;overflow-x:auto;"><table>'+rows+'</table></div>'
@@ -627,7 +770,7 @@
 
   /* ----- slide 11: nirodha ----- */
   function sNirodha(el){
-    el.innerHTML = '<div class="eyebrow">13 · The Vṛtti-less Mind</div>'
+    el.innerHTML = '<div class="eyebrow">15 · The Vṛtti-less Mind</div>'
       + '<h2 class="title">Nirodha — stillness that is not absence</h2>'
       + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">'
       + '<div>'
@@ -640,6 +783,43 @@
   }
 
   /* ----- slide 12: close ----- */
+  /* ----- Glossary (back matter, unnumbered) ----- */
+  function sGlossary(el){
+    function dl(pairs){
+      return pairs.map(function(p){
+        return '<div style="padding:9px 0;border-bottom:1px solid var(--line);"><span class="display" style="color:var(--gold);font-size:17px;font-style:italic;">'+p[0]+'</span><div style="font-size:12.5px;color:var(--dim);line-height:1.6;margin-top:2px;">'+p[1]+'</div></div>';
+      }).join("");
+    }
+    var contemplative = [
+      ["citta","the mind-field — the whole surface on which thoughts arise"],
+      ["vṛtti","a \u201cwhirl\u201d: a single thought or movement of the mind"],
+      ["saṁyama","the three inner practices — dhāraṇā, dhyāna, samādhi — applied together to one object"],
+      ["dhāraṇā","binding attention to a single point"],
+      ["dhyāna","the unbroken flow of that attention"],
+      ["samādhi","absorption in which only the object shines; \u201cwith seed\u201d (sabīja) rests on one object"],
+      ["nirodha","the settling, or cessation, of the whirls; \u201cseedless\u201d (nirbīja)"],
+      ["aparā / parā vidyā","lower knowledge (of the changing) / higher knowledge (of the changeless)"],
+      ["vikāra","change, modification — the mark of the temporal"],
+      ["spanda","the subtle pulse of consciousness; unmeṣa / nimeṣa = its opening / closing"]
+    ];
+    var signal = [
+      ["frequency","how fast a wave repeats; heard as pitch"],
+      ["spectrum","the recipe of frequencies that make up a signal"],
+      ["time / frequency domain","the two complete ways to describe one signal — when it happens vs. what tones compose it"],
+      ["Gabor limit","Δt · Δf ≥ 1/4π — you cannot be perfectly sharp in both time and frequency at once"],
+      ["logon (Gabor atom)","the most efficient grain of information: a carrier inside an envelope"],
+      ["carrier","the steady, fast tone inside a signal packet — its \u201cwhat\u201d"],
+      ["envelope","the slow swell that shapes the packet — its \u201cwhen\u201d"],
+      ["beat","the slow throb heard when two close tones combine, at |f\u2081 \u2212 f\u2082|"]
+    ];
+    el.innerHTML = '<div class="eyebrow">Reference · Key terms at a glance</div>'
+      + '<h2 class="title">Glossary</h2>'
+      + '<p class="body">Every term below is introduced in plain language where it first appears; this is simply a place to look one up again.</p>'
+      + '<div class="grid" style="align-items:start;">'
+      + '<div><div class="microlabel" style="margin-bottom:6px;">From the contemplative tradition</div>'+dl(contemplative)+'</div>'
+      + '<div><div class="microlabel" style="margin-bottom:6px;">From the science of signals</div>'+dl(signal)+'</div></div>';
+  }
+
   function sClose(el){
     var arc = [
       ["The dispersed mind is broadband","Countless brief vṛttis, spread across every frequency — busy in time, scattered in spectrum. This is where practice begins."],
@@ -652,7 +832,7 @@
     ].map(function(a,i){
       return '<div class="arcrow"><div class="arcnum">'+["i","ii","iii","iv","v","vi","vii"][i]+'</div><div><div class="t">'+a[0]+'</div><div class="g">'+a[1]+'</div></div></div>';
     }).join("");
-    el.innerHTML = '<div class="eyebrow">14 · The Path, Entire</div>'
+    el.innerHTML = '<div class="eyebrow">16 · The Path, Entire</div>'
       + '<h2 class="title">One movement, precisely described</h2>'
       + '<div style="max-width:780px;">'
       + '<div class="spectrumbar"></div>'
@@ -664,6 +844,7 @@
   /* ---------- shell ---------- */
   var SLIDES = [
     ["The Settling Mind", sCover],
+    ["Before We Begin", sOrient],
     ["The Starting Condition", sProblem],
     ["Two Ways to See One Mind", sDual],
     ["The Gabor Limit", sGabor],
@@ -674,10 +855,13 @@
     ["Continuity is Purity", sHeart],
     ["Dhyāna", sDhyana],
     ["The Beat of Duality", sBeat],
+    ["Two Aspects Within Every Vṛtti", sAspects],
+    ["Aham and Idam", sAhamIdam],
     ["Samādhi", sSamadhi],
     ["Saṁyama", sSamyama],
     ["Nirodha", sNirodha],
-    ["The Path, Entire", sClose]
+    ["The Path, Entire", sClose],
+    ["Glossary", sGlossary]
   ];
 
   var idx = 0;

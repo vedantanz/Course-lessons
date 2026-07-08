@@ -324,6 +324,61 @@ const SlideCover = () => {
   );
 };
 
+const SlideOrient = () => (
+  <div className="sm-fade">
+    <Eyebrow>Orientation · How to read this</Eyebrow>
+    <SlideTitle>Before we begin</SlideTitle>
+    <Body>
+      Meditation is usually described in poetic or mystical language. This presentation tries something
+      unusual: it shows that the inward journey of meditation — from a <Light>busy, scattered mind</Light> to
+      a <Light>quiet, gathered one</Light> — has a precise shape, one that the ordinary mathematics of waves
+      can describe. Not to reduce it or explain it away, but to see its structure clearly.
+      <Gold> No prior knowledge of mathematics or Sanskrit is assumed.</Gold>
+    </Body>
+    <div className="sm-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim, marginTop: 8, marginBottom: 4 }}>
+      The journey, in five plain steps
+    </div>
+    <div style={{ maxWidth: 760, margin: "4px 0 16px 0" }}>
+      {[
+        ["scattered", "the ordinary mind, pulled in many directions at once"],
+        ["Dhāraṇā", "gently tying attention to a single point — and bringing it back each time it strays"],
+        ["Dhyāna", "the holding becomes unbroken — attention flows to the object like an even stream"],
+        ["Samādhi", "the sense of \u201cI am doing this\u201d fades; only the object remains, shining"],
+        ["Nirodha", "even that settles into a still, luminous quiet — not blankness, but fullness"],
+      ].map(([k, v], i) => (
+        <div key={i} style={{ display: "flex", gap: 16, padding: "11px 0", borderBottom: `1px solid ${C.line}` }}>
+          <div className="sm-display" style={{ fontStyle: "italic", color: C.gold, fontSize: 18, minWidth: 116 }}>{k}</div>
+          <div className="sm-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.6 }}>{v}</div>
+        </div>
+      ))}
+    </div>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 14 }}>
+      <Card>
+        <div className="sm-display" style={{ fontSize: 21, color: C.parchment, marginBottom: 8 }}>You will meet two languages</div>
+        <p className="sm-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          One is the <Light>contemplative tradition</Light> — Yoga and Vedānta, with words like <em>vṛtti</em>
+          and <em>saṁyama</em>. The other is the <Light>science of signals</Light> — waves, frequency, the
+          work of Dennis Gabor. Each technical word is explained in plain language the moment it appears, and
+          gathered in a glossary at the very end.
+        </p>
+      </Card>
+      <Card>
+        <div className="sm-display" style={{ fontSize: 21, color: C.parchment, marginBottom: 8 }}>Three coloured cards guide you</div>
+        <p className="sm-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          <span style={{ color: C.cyan }}>Cyan "in plain words"</span> cards restate an idea with an everyday
+          image. <Gold>Gold cards</Gold> hold either a key equation or an "honesty line" — a frank note on what
+          the science does and does not claim. Ordinary grey cards carry the main thread.
+        </p>
+      </Card>
+    </div>
+    <PlainWords>
+      If a slide ever feels too technical, read only its cyan and grey cards and move on — the thread will
+      still carry you. The mathematics is here to make the tradition's claims <em>precise</em>, never to
+      gatekeep them.
+    </PlainWords>
+  </div>
+);
+
 const SlideProblem = () => (
   <div className="sm-fade">
     <Eyebrow>01 · The Starting Condition</Eyebrow>
@@ -494,7 +549,8 @@ const SlideGabor = () => {
         <p className="sm-body" style={{ fontSize: 13, color: C.parchment, marginTop: 14, marginBottom: 0, lineHeight: 1.65 }}>
           {label} The product Δt · Δf never falls below the limit — and the smooth Gaussian packet shown here
           is the unique shape that holds it <em>exactly</em>. Gabor called these minimal packets
-          <Gold> "logons"</Gold>: nature's own quanta of information.
+          <Gold> "logons"</Gold>: nature's own quanta of information. This carrier-in-envelope shape will
+          return — as the very anatomy of the vṛtti itself.
         </p>
       </Card>
       <PlainWords>
@@ -517,6 +573,40 @@ const SlideVidya = () => (
       to be known: <Light>aparā</Light>, the lower, and <Light>parā</Light>, the higher, that by which the
       Imperishable (akṣara) is attained.
     </Body>
+    <Card style={{ maxWidth: 760, margin: "6px 0 12px 0", borderColor: C.gold }}>
+      <div className="sm-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim }}>
+        The question — verse 3
+      </div>
+      <p className="sm-display" style={{ fontSize: "clamp(13px, 1.9vw, 16px)", color: C.gold, lineHeight: 1.9, marginTop: 6 }}>
+        शौनको ह वै महाशालोऽङ्गिरसं विधिवदुपसन्नः पप्रच्छ । कस्मिन्नु भगवो विज्ञाते सर्वमिदं विज्ञातं भवतीति ॥ ३ ॥
+      </p>
+      <p className="sm-body" style={{ fontSize: 12.5, color: C.parchment, lineHeight: 1.7, marginTop: 8 }}>
+        Śaunaka, the great householder, approached the sage Aṅgiras in the proper manner and asked:
+        <Light> "Revered sir, what is that, by knowing which, all this becomes known?"</Light>
+      </p>
+      <p className="sm-body" style={{ fontSize: 11.5, color: C.dim, lineHeight: 1.7, marginTop: 8 }}>
+        One of the great questions of the Upaniṣads: is there a single knowledge that, once grasped, yields
+        everything? The verses that follow are Aṅgiras's answer.
+      </p>
+    </Card>
+    <Card style={{ maxWidth: 760, margin: "0 0 16px 0" }}>
+      <div className="sm-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim }}>
+        The answer — verses 4–6
+      </div>
+      <p className="sm-display" style={{ fontSize: "clamp(13px, 1.9vw, 16px)", color: C.gold, lineHeight: 1.9, marginTop: 6 }}>
+        तस्मै स होवाच । द्वे विद्ये वेदितव्ये इति ह स्म यद्ब्रह्मविदो वदन्ति परा चैवापरा च ॥ ४ ॥<br />
+        तत्रापरा ऋग्वेदो यजुर्वेदः सामवेदोऽथर्ववेदः शिक्षा कल्पो व्याकरणं निरुक्तं छन्दो ज्योतिषमिति । अथ परा यया तदक्षरमधिगम्यते ॥ ५ ॥<br />
+        यत्तदद्रेश्यमग्राह्यमगोत्रमवर्णमचक्षुःश्रोत्रं तदपाणिपादम् । नित्यं विभुं सर्वगतं सुसूक्ष्मं तदव्ययं यद्भूतयोनिं परिपश्यन्ति धीराः ॥ ६ ॥
+      </p>
+      <p className="sm-body" style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.7, marginTop: 10 }}>
+        To him he said: <Light>two knowledges are to be known</Light> — so say the knowers of Brahman — the
+        higher (parā) and the lower (aparā). (5) The lower is the four Vedas and their six auxiliary sciences;
+        the higher is that by which the <Gold>Imperishable</Gold> (akṣara) is attained. (6) That which is
+        unseeable, ungraspable, without lineage or colour, without eye or ear, without hand or foot; eternal,
+        all-pervading, subtlest of the subtle, undecaying — the womb of all beings, which the wise perceive
+        everywhere.
+      </p>
+    </Card>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, margin: "6px 0 18px 0" }}>
       <Card>
         <div className="sm-display" style={{ fontSize: 22, color: C.parchment, marginBottom: 6 }}>Aparā vidyā — the temporal mode</div>
@@ -540,6 +630,11 @@ const SlideVidya = () => (
     <div style={{ maxWidth: 760 }}>
       <SpectrumBar labels={["parā · knowing the changeless", "aparā · knowing the changing"]} />
     </div>
+    <PlainWords>
+      Aparā vidyā is like learning the <em>words</em> of a song — endless, always more to add. Parā vidyā is
+      like finally hearing the <em>silence</em> the song is sung into. One is knowledge you accumulate; the
+      other is knowledge you arrive at by growing quiet. Both matter — but they are gained in opposite ways.
+    </PlainWords>
     <Body style={{ marginTop: 18 }}>
       Here is what the Gabor limit contributes, and it is the hinge of this whole presentation: the two
       knowledges are <Gold>conjugate</Gold>. A mind maximally engaged with temporal particulars cannot, in
@@ -659,7 +754,7 @@ const SlideEquation = () => {
       <Eyebrow>05 · The Course's Own Instrument</Eyebrow>
       <SlideTitle>The Ritam Mind Wave Equation</SlideTitle>
       <Body>
-        Modules 3 and 4 of this course develop a precise instrument for reading any moment of mental
+        Module 3 of the course “Advanced: The Mind in the Light of Modern and Spiritual Sciences” develops a precise instrument for reading any moment of mental
         life — the <Gold>Ritam Mind Wave Equation</Gold>, developed by Swami Tadananda at the Ramakrishna
         Vedanta Centre, New Zealand, as the centrepiece of the Ritam Wellbeing Framework. It has two
         sides: the <Light>inputs that meet</Light>, and the <Light>resultant their meeting forms</Light>.
@@ -835,6 +930,23 @@ const SlideBeat = () => {
         standing tilt Δφ — <Light>ahaṁkāra</Light>, the posture of "I and mine" brought to every meeting,
         which scales the fullness by <Gold>cos(Δφ/2)</Gold>. Close both, and watch what happens.
       </Body>
+      <Card style={{ maxWidth: 760, textAlign: "center", padding: "16px 18px", marginBottom: 14 }}>
+        <div className="sm-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim }}>
+          the resultant, with the phase tilt included
+        </div>
+        <div className="sm-display" style={{ fontSize: "clamp(12px, 2.2vw, 18px)", color: C.parchment, letterSpacing: "0.02em", marginTop: 6 }}>
+          R(t) = 2A · <span style={{ color: C.gold }}>cos(2π·(fₛ − fₘ)/2·t − Δφ/2)</span> · <span style={{ color: C.parchment }}>cos(2π·(fₛ + fₘ)/2·t + Δφ/2)</span>
+        </div>
+        <div className="sm-body" style={{ display: "flex", justifyContent: "center", gap: 24, fontSize: 11.5, marginTop: 8, flexWrap: "wrap" }}>
+          <span style={{ color: C.gold }}>envelope — beats at |fₛ − fₘ|, tilted by Δφ</span>
+          <span style={{ color: C.parchment }}>carrier — the mean frequency</span>
+        </div>
+        <div className="sm-body" style={{ fontSize: 12, color: C.dim, lineHeight: 1.6, marginTop: 10 }}>
+          When Δf = 0 the envelope stops moving and its height fixes at <Light>2A · cos(Δφ/2)</Light> — a
+          constant fullness set by the tilt alone. When Δφ = 0 as well, this collapses to
+          <Gold> R(t) = 2A · cos(2π fₛ t)</Gold>: one pure wave at the object's own frequency.
+        </div>
+      </Card>
       <Card style={{ maxWidth: 760 }}>
         <BeatCanvas df={df} dphi={dphi} />
         <div style={{ marginTop: 14 }}>
@@ -953,7 +1065,7 @@ const SlideDharana = () => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "start" }}>
       <div>
         <Body>
-          <Gold>deśa-bandhaś cittasya dhāraṇā</Gold> — dhāraṇā is the binding (bandha) of the citta to a
+          <Gold>देशबन्धश्चित्तस्य धारणा ॥ ३.१ ॥</Gold> — <em>deśabandhaś cittasya dhāraṇā</em>: dhāraṇā is the binding (bandha) of the citta to a
           single place (deśa). A breath, a mantra, a point of light. The practice is simple to state and hard
           to do: whenever the mind wanders, bring it back. Again. And again.
         </Body>
@@ -1047,7 +1159,7 @@ const SlideDhyana = () => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "start" }}>
       <div>
         <Body>
-          <Gold>tatra pratyaya-ekatānatā dhyānam</Gold> — there, in that same place, the unbroken flow of
+          <Gold>तत्र प्रत्ययैकतानता ध्यानम् ॥ ३.२ ॥</Gold> — <em>tatra pratyayaikatānatā dhyānam</em>: there, in that same place, the unbroken flow of
           cognition is dhyāna. The key word is <Light>ekatānatā</Light>: literally "one-stretched-ness," a
           single thread pulled taut and continuous, like oil poured in an unbroken line.
         </Body>
@@ -1072,15 +1184,298 @@ const SlideDhyana = () => (
   </div>
 );
 
+/* ---------- The Two Aspects Within Every Vṛtti ---------- */
+function AspectCanvas({ mode, height = 70 }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = cv.clientWidth || 320, h = height;
+    cv.width = w * dpr; cv.height = h * dpr;
+    const ctx = cv.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const mid = h / 2, amp = h * 0.36, fbeat = 1.5, fcarr = 15;
+    ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(w, mid);
+    ctx.strokeStyle = "rgba(154,161,181,0.15)"; ctx.lineWidth = 1; ctx.stroke();
+    let x, nx, y;
+    if (mode === "carrier") {
+      ctx.beginPath();
+      for (x = 0; x <= w; x++) { nx = x / w; y = mid - Math.cos(2 * Math.PI * fcarr * nx) * amp; x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      ctx.strokeStyle = "rgba(232,227,213,0.9)"; ctx.lineWidth = 1.4; ctx.stroke();
+    } else {
+      ctx.setLineDash([5, 4]);
+      [1, -1].forEach((s) => {
+        ctx.beginPath();
+        for (x = 0; x <= w; x++) { nx = x / w; y = mid - s * Math.abs(Math.cos(Math.PI * fbeat * nx)) * amp; x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+        ctx.strokeStyle = C.gold; ctx.lineWidth = 1.4; ctx.stroke();
+      });
+      ctx.setLineDash([]);
+    }
+  }, [mode, height]);
+  return <canvas ref={ref} style={{ width: "100%", height, display: "block" }} aria-hidden="true" />;
+}
+
+const SlideAspects = () => (
+  <div className="sm-fade">
+    <Eyebrow>11 · The Duality Within the Moment</Eyebrow>
+    <SlideTitle>The two aspects within every vṛtti</SlideTitle>
+    <Body>
+      Look closely at the resultant. R(t) = envelope × carrier is not merely <em>like</em> a Gabor logon —
+      it <Light>is</Light> one: the same carrier-in-envelope grain Gabor proved to be the elementary unit of
+      information. So the whole duality of this presentation is recapitulated <Gold>inside every single
+      moment of experience</Gold> — the map of the path is also the anatomy of each step on it. This is
+      <Light> sarvaṁ sarvātmakam</Light> in miniature: the whole enfolded in each part.
+    </Body>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, margin: "6px 0 18px 0" }}>
+      <Card>
+        <div className="sm-display" style={{ fontSize: 21, color: C.parchment, marginBottom: 4 }}>The carrier — the spectral aspect</div>
+        <AspectCanvas mode="carrier" />
+        <p className="sm-body" style={{ fontSize: 13, color: C.dim, lineHeight: 1.7, marginTop: 8 }}>
+          The steady, tone-like factor — the drone <em>inside</em> the experience. Not spectral because it is
+          slow (it is the fast one) but because it is <Light>changeless in character</Light>: one frequency,
+          a sharp line. Its poles run <Gold>projection ↔ fidelity</Gold>: as Δf closes, the carrier trues to
+          the object's own rhythm — the content becomes faithful to what is there.
+        </p>
+      </Card>
+      <Card>
+        <div className="sm-display" style={{ fontSize: 21, color: C.parchment, marginBottom: 4 }}>The envelope — the temporal aspect</div>
+        <AspectCanvas mode="envelope" />
+        <p className="sm-body" style={{ fontSize: 13, color: C.dim, lineHeight: 1.7, marginTop: 8 }}>
+          The waxing-and-waning factor — the one that carries <Light>vikāra</Light>, arising and passing.
+          Its poles run <Gold>flicker ↔ fullness</Gold>: rapid beating is the saṁsāric texture of
+          moment-chopped experience; as the beat slows to zero the envelope becomes constant — and exits the
+          temporal domain altogether.
+        </p>
+      </Card>
+    </div>
+    <Body style={{ fontSize: 14 }}>
+      And the elegance: both purify on the <Gold>single parameter Δf</Gold>. As attention's frequency closes
+      on the object's, the carrier slides toward truth <em>and</em> the envelope settles toward constancy, at
+      once. One tuning, two liberations — which is why the tradition prescribes one practice, not two.
+    </Body>
+    <PlainWords>
+      Think of AM radio. A steady <Light>carrier</Light> wave holds the station's identity; all the changing
+      music rides in the <Light>envelope</Light>; and your receiver throws the carrier away and keeps only
+      the song — that discarding is called "demodulation." Ordinary experience does exactly this: we live in
+      the song of changing events and never notice the steady hum beneath. Meditation is demodulation run in
+      reverse — <Gold>the world listens to the song and ignores the carrier; the yogi tunes to the carrier
+      until the song falls silent.</Gold>
+    </PlainWords>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14, marginTop: 14 }}>
+      <Card style={{ background: "transparent" }}>
+        <div className="sm-display" style={{ fontSize: 18, color: C.gold, marginBottom: 6 }}>Spanda, in miniature</div>
+        <p className="sm-body" style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          The envelope opens and closes once per beat — a swell (unmeṣa) and a subsiding (nimeṣa) per lobe.
+          The envelope <em>is</em> spanda at the scale of a single vṛtti; samādhi is that pulse of duality
+          resting in its own fullness.
+        </p>
+      </Card>
+      <Card style={{ background: "transparent" }}>
+        <div className="sm-display" style={{ fontSize: 18, color: C.gold, marginBottom: 6 }}>The kṣaṇa — the moment</div>
+        <p className="sm-body" style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          Yoga holds that experience is not a smooth stream but a rapid succession of discrete moments —
+          <Light> kṣaṇa</Light> — much as a film is still frames run fast. Patañjali prescribes saṁyama upon
+          the moment and its succession (kṣaṇa-tat-kramayoḥ saṁyamāt, YS 3.52) as a high practice yielding
+          discriminative insight; the Buddhist Abhidharma developed the same doctrine in fine detail. The
+          envelope supplies the mechanism the texts describe but could not draw: each swell-and-subside carves
+          the continuous meeting of knower and known into one packet — one felt moment. The kṣaṇas of
+          experience are the <Light>logons of the mind-wave</Light>.
+        </p>
+      </Card>
+      <Card style={{ background: "transparent" }}>
+        <div className="sm-display" style={{ fontSize: 18, color: C.gold, marginBottom: 6 }}>The brain's own version</div>
+        <p className="sm-body" style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          The brain literally builds experience this way. In <Light>phase-amplitude coupling</Light> (PAC), the
+          phase of a slow rhythm gates the strength of a fast one — the slow wave is the envelope, the fast
+          burst the carrier. The best-studied pair is <Light>theta</Light> (~4–8 Hz) carrying
+          <Light> gamma</Light> (~30–140 Hz) in the hippocampus, where it organises the encoding of memory:
+          one item per gamma cycle, nested in the theta phase. Canolty &amp; colleagues first showed gamma
+          power locked to theta phase in the human cortex (<em>Science</em>, 2006), reviewed in Canolty &amp;
+          Knight (2010); Tort et al. (2010) gave the standard "modulation index" for measuring it. This is
+          exactly Module 3's cross-frequency coupling — slow vāsanā-rhythms shaping fast surface activity —
+          and a striking real-world echo of R(t) = envelope × carrier.
+        </p>
+      </Card>
+    </div>
+    <HonestyNote>
+      Phase-amplitude coupling is a robust, replicated finding in neuroscience — that part is not speculative.
+      What remains a <em>model</em> is the identification of a brain rhythm with a vṛtti, and of PAC with the
+      Ritam Mind Wave Equation's resultant. The architectures rhyme; the equivalence is a bridge we draw, not
+      a result neuroscience has established.
+    </HonestyNote>
+    <div style={{ borderTop: `1px solid ${C.line}`, marginTop: 18, paddingTop: 16 }}>
+      <p className="sm-display" style={{ fontSize: "clamp(14px, 2vw, 18px)", color: C.gold, lineHeight: 1.7, maxWidth: 720, margin: 0 }}>
+        या निशा सर्वभूतानां तस्यां जागर्ति संयमी ।<br />
+        यस्यां जाग्रति भूतानि सा निशा पश्यतो मुनेः ॥
+      </p>
+      <p className="sm-display" style={{ fontSize: "clamp(17px, 2.5vw, 21px)", fontStyle: "italic", color: C.parchment, lineHeight: 1.55, maxWidth: 720, margin: "12px 0 0 0" }}>
+        "That which is night for all beings, in that the self-controlled one (saṁyamī) is awake; that in
+        which beings are awake is night for the seeing sage."
+      </p>
+      <div className="sm-body" style={{ fontSize: 12.5, color: C.gold, marginTop: 8 }}>Bhagavad Gītā 2.69</div>
+      <Body style={{ fontSize: 13.5, marginTop: 12 }}>
+        The verse maps exactly. What all beings are awake to is the <Light>envelope</Light> — the song of
+        changing events, their "day." The <Light>carrier</Light>, the changeless hum beneath, is their unseen
+        "night." The sage's wakefulness is inverted: awake to the changeless, asleep to the flicker. And the
+        word Kṛṣṇa chooses for the sage is <Gold>saṁyamī</Gold> — the one established in the very discipline
+        this presentation anatomizes. The Gabor limit adds only the reason the two wakefulnesses must
+        <em> exclude</em> each other rather than combine: they are conjugate, by law.
+      </Body>
+      <HonestyNote>
+        Śaṅkara reads 2.69 as the contrast between Self-knowledge and absorption in sense-objects. The
+        carrier-envelope language here is a structural translation of that same contrast into the equation's
+        terms — faithful to the commentarial meaning, but ours, not the text's own.
+      </HonestyNote>
+    </div>
+  </div>
+);
+
+/* ---------- Aham & Idam ---------- */
+function KnotCanvas({ t, height = 290 }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    const dpr = window.devicePixelRatio || 1, w = cv.clientWidth || 320, h = height;
+    cv.width = w * dpr; cv.height = h * dpr;
+    const ctx = cv.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const cx = w / 2, cy = h / 2;
+    const fade = t > 0.85 ? (t - 0.85) / 0.15 : 0;
+    const glowA = Math.min(0.6, 0.05 + 0.42 * t + 0.28 * fade);
+    const g = ctx.createRadialGradient(cx, cy, 8, cx, cy, Math.max(w, h) * 0.55);
+    g.addColorStop(0, `rgba(227,180,88,${glowA})`); g.addColorStop(1, "rgba(227,180,88,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    const gap = (w * 0.20) * (1 - t), discR = Math.min(h * 0.24, w * 0.13), tilt = (h * 0.14) * (1 - t);
+    const ahamX = cx - gap, ahamY = cy - tilt, idamX = cx + gap, idamY = cy, discOp = 1 - 0.9 * fade;
+    if (gap > 2) {
+      ctx.globalAlpha = discOp * Math.min(1, gap / (w * 0.08));
+      ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(cx, cy - discR * 1.1); ctx.lineTo(cx, cy + discR * 1.1);
+      ctx.strokeStyle = "rgba(154,161,181,0.5)"; ctx.lineWidth = 1; ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    ctx.globalAlpha = discOp;
+    ctx.beginPath(); ctx.arc(idamX, idamY, discR, 0, 7); ctx.fillStyle = "rgba(91,200,221,0.20)"; ctx.fill(); ctx.strokeStyle = C.cyan; ctx.lineWidth = 1.4; ctx.stroke();
+    ctx.beginPath(); ctx.arc(ahamX, ahamY, discR, 0, 7); ctx.fillStyle = "rgba(142,124,243,0.20)"; ctx.fill(); ctx.strokeStyle = C.violet; ctx.lineWidth = 1.4; ctx.stroke();
+    ctx.font = "italic 15px 'Cormorant Garamond', serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = C.violet; ctx.fillText("I", ahamX, ahamY);
+    ctx.fillStyle = C.cyan; ctx.fillText("this", idamX, idamY);
+    ctx.globalAlpha = 1;
+    if (fade > 0) {
+      ctx.globalAlpha = Math.min(1, fade);
+      ctx.font = "italic 18px 'Cormorant Garamond', serif"; ctx.fillStyle = C.gold; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText("pūrṇāhantā", cx, cy); ctx.globalAlpha = 1;
+    }
+  }, [t, height]);
+  return <canvas ref={ref} style={{ width: "100%", height, display: "block" }} aria-hidden="true" />;
+}
+
+const SlideAhamIdam = () => {
+  const [t, setT] = useState(0.05);
+  const phi = 2.2 * (1 - t), full = Math.cos(phi / 2);
+  const felt =
+    t < 0.18 ? ["Scattered.", C.parchment, "Many “this”es clamour; the “I” is pulled thin between them."] :
+    t < 0.42 ? ["Dhāraṇā.", C.parchment, "One “this” is chosen. The “I” reaches for it, effortfully; the seam is wide."] :
+    t < 0.66 ? ["Dhyāna.", C.parchment, "The reaching eases into flow. The seam is still there, but quiet."] :
+    t < 0.9 ? ["Samādhi.", C.parchment, "Only “this” shines; the little “I” grows transparent; the seam almost closes."] :
+    ["Pūrṇāhantā.", C.gold, "No “this” to hold, no “I” set against it — the full light, resting in itself."];
+  return (
+    <div className="sm-fade">
+      <Eyebrow>12 · Self, World, and the Seam Between</Eyebrow>
+      <SlideTitle>The full "I", the little "I", and the world</SlideTitle>
+      <Body>
+        In every waking moment there seem to be just two things: a <Light>"me" here</Light> and a
+        <Light> "this" there</Light> — with a subtle seam between them, a faint sense of facing the world
+        across a gap. Kashmir Śaivism looks closer and finds not two things but <Gold>three</Gold>.
+      </Body>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 14, margin: "6px 0 16px 0" }}>
+        <Card>
+          <div className="sm-display" style={{ fontSize: 20, color: C.gold, marginBottom: 6 }}>Pūrṇāhantā — the full "I"</div>
+          <p className="sm-body" style={{ fontSize: 13, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+            Pure awareness itself: the light in which everything appears. Changeless, needing no object, never
+            a "this." This is the true subject — the <Light>spectral</Light> witness. You never see it,
+            because it is what is seeing.
+          </p>
+        </Card>
+        <Card>
+          <div className="sm-display" style={{ fontSize: 20, color: C.cyan, marginBottom: 6 }}>Idam — "this"</div>
+          <p className="sm-body" style={{ fontSize: 13, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+            Whatever is arising now: a sound, a thought, a feeling. A particular content, here for a moment,
+            then gone. The <Light>temporal</Light> object — the changing.
+          </p>
+        </Card>
+        <Card>
+          <div className="sm-display" style={{ fontSize: 20, color: C.violet, marginBottom: 6 }}>The little "I" — "I and mine"</div>
+          <p className="sm-body" style={{ fontSize: 13, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+            Not the witness, but a <Light>ripple pretending to be the subject</Light>: the tilt of
+            self-reference (Δφ) laid over every experience. Sri Ramakrishna calls it plainly —
+            <Gold> "I and mine is Māyā."</Gold>
+          </p>
+        </Card>
+      </div>
+      <Body>
+        So the seam you feel is not between the witness and the world. It is between <Light>two
+        contractions</Light> — a little "I" and a "this," both ripples, both in time — while the full "I" is
+        the still light they both appear in. Settle the mind, and watch the seam heal:
+      </Body>
+      <Card style={{ maxWidth: 760 }}>
+        <KnotCanvas t={t} />
+        <input type="range" min={0} max={1} step={0.01} value={t}
+          onChange={(e) => setT(parseFloat(e.target.value))}
+          style={{ width: "100%", marginTop: 12 }} aria-label="Settle the mind from scattered to full" />
+        <div className="sm-body" style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: C.dim, marginTop: 5 }}>
+          <span>← scattered, contracted</span><span>settled, full →</span>
+        </div>
+        <div style={{ marginTop: 12 }}>
+          <div className="sm-body" style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: C.dim }}>
+            <span>fullness let through — cos(Δφ/2)</span><span>{Math.round(full * 100)}%</span>
+          </div>
+          <div style={{ height: 10, borderRadius: 5, background: C.line, marginTop: 3 }}>
+            <div style={{ height: 10, borderRadius: 5, width: `${Math.round(full * 100)}%`, background: C.gold, transition: "width 0.1s ease" }} />
+          </div>
+        </div>
+        <p className="sm-body" style={{ fontSize: 13.5, color: C.parchment, marginTop: 14, minHeight: 42, lineHeight: 1.6 }}>
+          <span style={{ color: felt[1], fontWeight: 600 }}>{felt[0]}</span> {felt[2]}
+        </p>
+      </Card>
+      <Body style={{ marginTop: 16 }}>
+        As the mind settles, the object's restlessness quiets (Δf → 0) <em>and</em> the tilt of "I and mine"
+        relaxes (Δφ → 0). Both temporal contractions dissolve — and what remains is not blankness but
+        <Gold> pūrṇāhantā</Gold>, the full I-ness the little "I" was always only a shrunken reflection of.
+      </Body>
+      <div style={{ borderTop: `1px solid ${C.line}`, marginTop: 18, paddingTop: 16 }}>
+        <p className="sm-display" style={{ fontSize: "clamp(16px, 2.3vw, 20px)", fontStyle: "italic", color: C.parchment, lineHeight: 1.6, maxWidth: 720, margin: 0 }}>
+          "The Pure Mind, the Pure Buddhi, and the Pure Ātman are one and the same."<br />
+          "I and mine — that is Māyā."
+        </p>
+        <div className="sm-body" style={{ fontSize: 12.5, color: C.gold, marginTop: 8 }}>Sri Ramakrishna</div>
+        <Body style={{ fontSize: 13, marginTop: 10 }}>
+          The first names the destination — mind, intellect and Self, once purified of the tilt, revealed as
+          one light. The second names what must go: "I and mine," the Δφ tilt, Māyā itself. Bring the tilt to
+          zero (cos(Δφ/2) = 1) and reality arrives whole.
+        </Body>
+      </div>
+      <HonestyNote>
+        That the little "I" <em>is</em> the phase tilt Δφ, and Māyā, is a bridge we draw — faithful to the
+        felt experience, but our model, not the tradition's own words. And the deepest claim — that the full
+        light <em>knows itself</em> — is the one thing no equation reaches. The mathematics escorts us to the
+        threshold; the realized teacher reports what is on the other side.
+      </HonestyNote>
+    </div>
+  );
+};
+
 const SlideSamadhi = () => (
   <div className="sm-fade">
-    <Eyebrow>11 · The Third Stage</Eyebrow>
+    <Eyebrow>13 · The Third Stage</Eyebrow>
     <SlideTitle>Samādhi — only the object shines</SlideTitle>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "start" }}>
       <DualView stage={STAGES[3]} tall />
       <div>
         <Body>
-          <Gold>tad eva-artha-mātra-nirbhāsaṁ svarūpa-śūnyam iva samādhiḥ</Gold> — when that same meditation
+          <Gold>तदेवार्थमात्रनिर्भासं स्वरूपशून्यमिव समाधिः ॥ ३.३ ॥</Gold> — <em>tad evārthamātra-nirbhāsaṁ svarūpa-śūnyam iva samādhiḥ</em>: when that same meditation
           shines forth as the <Light>object alone</Light>, as if empty of its own form, that is samādhi. The
           sense of "I am meditating," the act, the effort — all fall away. Only the object remains, luminous.
         </Body>
@@ -1114,7 +1509,7 @@ const SlideSamadhi = () => (
 
 const SlideSamyama = () => (
   <div className="sm-fade">
-    <Eyebrow>12 · The Three as One</Eyebrow>
+    <Eyebrow>14 · The Three as One</Eyebrow>
     <SlideTitle>Saṁyama, and the last step beyond the seed</SlideTitle>
     <Body>
       <Gold>trayam ekatra saṁyamaḥ</Gold> — the three together, upon one object, is saṁyama. Dhāraṇā, dhyāna,
@@ -1148,7 +1543,7 @@ const SlideSamyama = () => (
 
 const SlideNirodha = () => (
   <div className="sm-fade">
-    <Eyebrow>13 · The Vṛtti-less Mind</Eyebrow>
+    <Eyebrow>15 · The Vṛtti-less Mind</Eyebrow>
     <SlideTitle>Nirodha — stillness that is not absence</SlideTitle>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "start" }}>
       <div>
@@ -1187,9 +1582,57 @@ const SlideNirodha = () => (
   </div>
 );
 
+const GLOSS_CONTEMPLATIVE = [
+  ["citta", "the mind-field — the whole surface on which thoughts arise"],
+  ["vṛtti", "a \u201cwhirl\u201d: a single thought or movement of the mind"],
+  ["saṁyama", "the three inner practices — dhāraṇā, dhyāna, samādhi — applied together to one object"],
+  ["dhāraṇā", "binding attention to a single point"],
+  ["dhyāna", "the unbroken flow of that attention"],
+  ["samādhi", "absorption in which only the object shines; \u201cwith seed\u201d (sabīja) rests on one object"],
+  ["nirodha", "the settling, or cessation, of the whirls; \u201cseedless\u201d (nirbīja)"],
+  ["aparā / parā vidyā", "lower knowledge (of the changing) / higher knowledge (of the changeless)"],
+  ["vikāra", "change, modification — the mark of the temporal"],
+  ["spanda", "the subtle pulse of consciousness; unmeṣa / nimeṣa = its opening / closing"],
+];
+const GLOSS_SIGNAL = [
+  ["frequency", "how fast a wave repeats; heard as pitch"],
+  ["spectrum", "the recipe of frequencies that make up a signal"],
+  ["time / frequency domain", "the two complete ways to describe one signal — when it happens vs. what tones compose it"],
+  ["Gabor limit", "Δt · Δf ≥ 1/4π — you cannot be perfectly sharp in both time and frequency at once"],
+  ["logon (Gabor atom)", "the most efficient grain of information: a carrier inside an envelope"],
+  ["carrier", "the steady, fast tone inside a signal packet — its \u201cwhat\u201d"],
+  ["envelope", "the slow swell that shapes the packet — its \u201cwhen\u201d"],
+  ["beat", "the slow throb heard when two close tones combine, at |f₁ − f₂|"],
+];
+const GlossCol = ({ title, items }) => (
+  <div>
+    <div className="sm-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim, marginBottom: 6 }}>{title}</div>
+    {items.map(([t, d], i) => (
+      <div key={i} style={{ padding: "9px 0", borderBottom: `1px solid ${C.line}` }}>
+        <span className="sm-display" style={{ color: C.gold, fontSize: 17, fontStyle: "italic" }}>{t}</span>
+        <div className="sm-body" style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.6, marginTop: 2 }}>{d}</div>
+      </div>
+    ))}
+  </div>
+);
+const SlideGlossary = () => (
+  <div className="sm-fade">
+    <Eyebrow>Reference · Key terms at a glance</Eyebrow>
+    <SlideTitle>Glossary</SlideTitle>
+    <Body>
+      Every term below is introduced in plain language where it first appears; this is simply a place to look
+      one up again.
+    </Body>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, alignItems: "start" }}>
+      <GlossCol title="From the contemplative tradition" items={GLOSS_CONTEMPLATIVE} />
+      <GlossCol title="From the science of signals" items={GLOSS_SIGNAL} />
+    </div>
+  </div>
+);
+
 const SlideClose = () => (
   <div className="sm-fade">
-    <Eyebrow>14 · The Path, Entire</Eyebrow>
+    <Eyebrow>16 · The Path, Entire</Eyebrow>
     <SlideTitle>One movement, precisely described</SlideTitle>
     <div style={{ maxWidth: 780 }}>
       <SpectrumBar labels={["spectral pole · the one pure tone → the ground", "temporal pole · the dispersed mind"]} />
@@ -1233,6 +1676,7 @@ const SlideClose = () => (
    ============================================================ */
 const SLIDES = [
   { id: "cover", label: "The Settling Mind", el: SlideCover },
+  { id: "orient", label: "Before We Begin", el: SlideOrient },
   { id: "problem", label: "The Starting Condition", el: SlideProblem },
   { id: "dual", label: "Two Ways to See One Mind", el: SlideDualIdea },
   { id: "gabor", label: "The Gabor Limit", el: SlideGabor },
@@ -1243,10 +1687,13 @@ const SLIDES = [
   { id: "heart", label: "Continuity is Purity", el: SlideHeart },
   { id: "dhyana", label: "Dhyāna", el: SlideDhyana },
   { id: "beat", label: "The Beat of Duality", el: SlideBeat },
+  { id: "aspects", label: "Two Aspects Within Every Vṛtti", el: SlideAspects },
+  { id: "ahamidam", label: "Aham and Idam", el: SlideAhamIdam },
   { id: "samadhi", label: "Samādhi", el: SlideSamadhi },
   { id: "samyama", label: "Saṁyama", el: SlideSamyama },
   { id: "nirodha", label: "Nirodha", el: SlideNirodha },
   { id: "close", label: "The Path, Entire", el: SlideClose },
+  { id: "glossary", label: "Glossary", el: SlideGlossary },
 ];
 
 export default function TheSettlingMind() {
