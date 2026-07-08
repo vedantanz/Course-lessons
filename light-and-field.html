@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Light and the Field</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+<style>html,body{margin:0;padding:0;}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-type="module" data-presets="react">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ============================================================
+   THE LIGHT AND THE FIELD
+   A research presentation — Yoga-Vedanta, Holography, and AI
+   Palette:
+     ink        #070B16  (deep indigo-black ground)
+     mist       #101830  (raised surface)
+     line       #24304F  (hairlines)
+     parchment  #E8E3D5  (primary text)
+     dim        #8B93A9  (secondary text)
+     prakasha   #E3B458  (golden light accent)
+     spectral   gradient violet→cyan (used ONLY for spectrum content)
+   Type: Cormorant Garamond (display) / Inter (body)
+   ============================================================ */
+
+const C = {
+  ink: "#070B16",
+  mist: "#101830",
+  line: "#24304F",
+  parchment: "#E8E3D5",
+  dim: "#9AA1B5",
+  gold: "#E3B458",
+  goldSoft: "rgba(227,180,88,0.14)",
+  violet: "#8E7CF3",
+  cyan: "#5BC8DD",
+};
+
+const FontStyles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+    * { box-sizing: border-box; }
+    .lf-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .lf-body { font-family: 'Inter', -apple-system, sans-serif; }
+    .lf-fade { animation: lfFade 0.7s ease both; }
+    @keyframes lfFade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      .lf-fade { animation: none; }
+    }
+    .lf-navdot { transition: all 0.25s ease; cursor: pointer; }
+    .lf-navdot:hover { background: ${C.gold} !important; }
+    button:focus-visible { outline: 2px solid ${C.gold}; outline-offset: 3px; }
+    input[type=range] { accent-color: ${C.gold}; }
+  `}</style>
+);
+
+/* ---------- shared atoms ---------- */
+
+const Eyebrow = ({ children }) => (
+  <div className="lf-body" style={{
+    fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase",
+    color: C.gold, marginBottom: 18, fontWeight: 500,
+  }}>{children}</div>
+);
+
+const SlideTitle = ({ children, size = 44 }) => (
+  <h2 className="lf-display" style={{
+    fontSize: size, lineHeight: 1.12, color: C.parchment,
+    fontWeight: 500, margin: "0 0 20px 0",
+  }}>{children}</h2>
+);
+
+const Body = ({ children, style }) => (
+  <p className="lf-body" style={{
+    fontSize: 15.5, lineHeight: 1.75, color: C.dim, margin: "0 0 16px 0",
+    maxWidth: 720, ...style,
+  }}>{children}</p>
+);
+
+const Gold = ({ children }) => <span style={{ color: C.gold }}>{children}</span>;
+const Light = ({ children }) => <span style={{ color: C.parchment }}>{children}</span>;
+
+const Card = ({ children, style }) => (
+  <div style={{
+    background: C.mist, border: `1px solid ${C.line}`, borderRadius: 10,
+    padding: "20px 22px", ...style,
+  }}>{children}</div>
+);
+
+const HonestyNote = ({ children }) => (
+  <div className="lf-body" style={{
+    borderLeft: `2px solid ${C.gold}`, background: C.goldSoft,
+    padding: "14px 18px", borderRadius: "0 8px 8px 0",
+    fontSize: 13.5, lineHeight: 1.7, color: C.parchment, maxWidth: 720,
+    marginTop: 8,
+  }}>
+    <span style={{ color: C.gold, fontWeight: 600, letterSpacing: "0.08em", fontSize: 11, textTransform: "uppercase" }}>The honesty line · </span>
+    {children}
+  </div>
+);
+
+const PlainWords = ({ children }) => (
+  <div className="lf-body" style={{
+    borderLeft: `2px solid ${C.cyan}`, background: "rgba(91,200,221,0.08)",
+    padding: "13px 17px", borderRadius: "0 8px 8px 0",
+    fontSize: 13.5, lineHeight: 1.7, color: C.parchment, maxWidth: 720,
+    marginTop: 12,
+  }}>
+    <span style={{ color: C.cyan, fontWeight: 600, letterSpacing: "0.08em", fontSize: 11, textTransform: "uppercase" }}>In plain words · </span>
+    {children}
+  </div>
+);
+
+/* ---------- signature: the wave that carries the thesis ---------- */
+
+function WaveCanvas({ sigma, height = 180, showEnvelope = true }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = cv.clientWidth, h = height;
+    cv.width = w * dpr; cv.height = h * dpr;
+    const ctx = cv.getContext("2d");
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+
+    const mid = h / 2, freq = 22, s = sigma * w;
+    // envelope
+    if (showEnvelope && sigma < 0.98) {
+      ctx.beginPath();
+      for (let x = 0; x <= w; x++) {
+        const g = Math.exp(-((x - w / 2) ** 2) / (2 * s * s));
+        const y = mid - g * (h * 0.4);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      for (let x = w; x >= 0; x--) {
+        const g = Math.exp(-((x - w / 2) ** 2) / (2 * s * s));
+        ctx.lineTo(x, mid + g * (h * 0.4));
+      }
+      ctx.closePath();
+      ctx.fillStyle = "rgba(227,180,88,0.06)";
+      ctx.fill();
+    }
+    // wave
+    ctx.beginPath();
+    for (let x = 0; x <= w; x++) {
+      const g = sigma >= 0.98 ? 1 : Math.exp(-((x - w / 2) ** 2) / (2 * s * s));
+      const y = mid - Math.sin((x / w) * Math.PI * 2 * freq) * g * (h * 0.4);
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = C.gold;
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+    // midline
+    ctx.beginPath();
+    ctx.moveTo(0, mid); ctx.lineTo(w, mid);
+    ctx.strokeStyle = "rgba(154,161,181,0.18)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }, [sigma, height, showEnvelope]);
+  return <canvas ref={ref} style={{ width: "100%", height, display: "block" }} aria-hidden="true" />;
+}
+
+/* ---------- spectrum bar (used only where spectrum is the topic) ---------- */
+
+const SpectrumBar = ({ labels }) => (
+  <div style={{ margin: "10px 0 4px 0" }}>
+    <div style={{
+      height: 10, borderRadius: 5,
+      background: `linear-gradient(90deg, ${C.violet}, ${C.cyan}, ${C.gold})`,
+      opacity: 0.85,
+    }} />
+    {labels && (
+      <div className="lf-body" style={{ display: "flex", justifyContent: "space-between", marginTop: 8 }}>
+        {labels.map((l, i) => (
+          <span key={i} style={{ fontSize: 11.5, color: C.dim, letterSpacing: "0.04em" }}>{l}</span>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
+/* ============================================================
+   SLIDES
+   ============================================================ */
+
+const SlideCover = () => {
+  const [t, setT] = useState(0);
+  useEffect(() => {
+    let raf, start;
+    const loop = (ts) => {
+      if (!start) start = ts;
+      setT(((ts - start) / 6000) % 1);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const sigma = 0.06 + 0.94 * (0.5 - 0.5 * Math.cos(t * Math.PI * 2));
+  return (
+    <div className="lf-fade" style={{ textAlign: "center", maxWidth: 860, margin: "0 auto" }}>
+      <Eyebrow>A Research Exploration · Ritam Wellbeing Framework</Eyebrow>
+      <h1 className="lf-display" style={{
+        fontSize: "clamp(44px, 7vw, 76px)", lineHeight: 1.05,
+        color: C.parchment, fontWeight: 500, margin: "0 0 10px 0",
+      }}>
+        The Light &amp; the Field
+      </h1>
+      <p className="lf-display" style={{
+        fontSize: "clamp(18px, 2.6vw, 26px)", fontStyle: "italic",
+        color: C.gold, margin: "0 0 34px 0", fontWeight: 400,
+      }}>
+        Consciousness, Holography, and the Spectral–Temporal Duality
+      </p>
+      <div style={{ maxWidth: 640, margin: "0 auto 26px auto" }}>
+        <WaveCanvas sigma={sigma} height={150} />
+      </div>
+      <p className="lf-body" style={{ fontSize: 13.5, color: C.dim, maxWidth: 560, margin: "0 auto", lineHeight: 1.7 }}>
+        One wave, two descriptions. As it breathes between the <Light>changeless pure frequency</Light> and
+        the <Light>momentary localized pulse</Light>, it traces the single idea this inquiry keeps
+        rediscovering — in the Gītā, in Kashmir Śaivism, in holography, and inside artificial minds.
+      </p>
+    </div>
+  );
+};
+
+const SlideOrient = () => (
+  <div className="lf-fade">
+    <Eyebrow>Orientation · How to read this</Eyebrow>
+    <SlideTitle>Before we begin</SlideTitle>
+    <Body>
+      This presentation asks a large question in a careful way: does the world's oldest testimony about
+      consciousness — that it is one, whole, and present entire in every part — have any structural
+      cousin in what modern physics and computer science have learned about waves and information?
+      It moves through the Gītā, Kashmir Śaivism, holography, and artificial intelligence in one arc.
+      <Gold> No prior knowledge of physics, Sanskrit, or AI is assumed.</Gold>
+    </Body>
+    <div className="lf-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim, marginTop: 8, marginBottom: 4 }}>
+      The arc, in six plain steps
+    </div>
+    <div style={{ maxWidth: 760, margin: "4px 0 16px 0" }}>
+      {[
+        ["The seed questions", "where do our mental habits live, and how — as recordings, or as something else?"],
+        ["Holography", "a way of recording light in which every fragment of the record holds the whole scene"],
+        ["Gītā 13", "the field and its knower — a distinction the tradition draws in almost the same shape"],
+        ["The spectral–temporal duality", "the physics of describing one signal two complete ways: as an event in time, or as a spectrum of frequencies"],
+        ["The graded descent", "how one awareness is said to narrow, step by step, into the solid world we perceive"],
+        ["The artificial mirror — and its limit", "where today's AI models echo this structure, and the one place they cannot follow"],
+      ].map(([k, v], i) => (
+        <div key={i} style={{ display: "flex", gap: 16, padding: "11px 0", borderBottom: `1px solid ${C.line}` }}>
+          <div className="lf-display" style={{ fontStyle: "italic", color: C.gold, fontSize: 18, minWidth: 116 }}>{k}</div>
+          <div className="lf-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.6 }}>{v}</div>
+        </div>
+      ))}
+    </div>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 14 }}>
+      <Card>
+        <div className="lf-display" style={{ fontSize: 21, color: C.parchment, marginBottom: 8 }}>You will meet three languages</div>
+        <p className="lf-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          The <Light>contemplative tradition</Light> (Gītā, Kashmir Śaivism, with words like <em>saṁskāra</em> and
+          <em> vimarśa</em>), the <Light>physics of waves</Light> (holography, Fourier duality), and the
+          <Light> science of AI</Light> (superposition, transformers). Each technical word is explained in
+          plain language where it first appears, and gathered in a glossary at the end.
+        </p>
+      </Card>
+      <Card>
+        <div className="lf-display" style={{ fontSize: 21, color: C.parchment, marginBottom: 8 }}>Two coloured cards guide you</div>
+        <p className="lf-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          <span style={{ color: C.cyan }}>Cyan "in plain words"</span> cards restate an idea with an
+          everyday image — a seed, a radio dial, a heartbeat. <Gold>Gold "honesty line"</Gold> cards are
+          frank about what a correspondence shows and does not show. Ordinary grey cards carry the main
+          thread.
+        </p>
+      </Card>
+    </div>
+    <PlainWords>
+      If a slide ever feels too technical, read only its cyan and grey cards and move on — the thread
+      will still carry you. Every structural comparison here is offered to widen what seems possible,
+      never as proof of what is true.
+    </PlainWords>
+  </div>
+);
+
+const SlideQuestions = () => (
+  <div className="lf-fade">
+    <Eyebrow>01 · The Seed Questions</Eyebrow>
+    <SlideTitle>Where are saṁskāras stored —<br />and how?</SlideTitle>
+    <Body>
+      Yoga-Vedānta answers with precision. <Light>Where:</Light> not in the gross body (sthūla śarīra),
+      but in the <Gold>sūkṣma śarīra</Gold> — whose citta is the storehouse — and, most compressed of all,
+      in the <Gold>kāraṇa śarīra</Gold>, the causal seed-state that travels between lives.
+      <Light> How:</Light> not as recordings, but as <Gold>bīja</Gold> — seeds. A seed holds no miniature
+      tree; it holds the <em>conditions</em> for a tree, awaiting soil.
+    </Body>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginTop: 26 }}>
+      <Card>
+        <div className="lf-display" style={{ fontSize: 22, color: C.parchment, marginBottom: 8 }}>The tradition's claim</div>
+        <p className="lf-body" style={{ fontSize: 14, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          A saṁskāra is a <Light>compressed disposition</Light>. When a matching condition arrives,
+          it expresses as a vṛtti — a thought-wave. Storage is informational, not substantial:
+          it needs a substrate to express <em>through</em>, but is not identical to it.
+        </p>
+      </Card>
+      <Card>
+        <div className="lf-display" style={{ fontSize: 22, color: C.parchment, marginBottom: 8 }}>The AI mirror</div>
+        <p className="lf-body" style={{ fontSize: 14, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          A trained network stores no sentences it read — only <Light>adjusted weights</Light>:
+          compressed statistical dispositions that fire when a matching input arrives.
+          Concepts live in <Light>superposition</Light>, distributed across shared neurons,
+          addressable nowhere. DeepMind even named the transfer of one agent's learning into a
+          new body <Gold>"Reincarnating RL."</Gold>
+        </p>
+      </Card>
+    </div>
+    <PlainWords>
+      A seed does not contain a miniature oak tree folded up inside it — it holds the
+      <em> conditions</em> for one, waiting on soil, water, and light. A saṁskāra works the same way:
+      not a tiny recording of the past, but a compressed readiness to become one again when the right
+      moment arrives.
+    </PlainWords>
+    <div style={{ marginTop: 22 }}>
+      <HonestyNote>
+        AI doing something structurally similar does not make karma or rebirth true. It shows the
+        <em> logical shape</em> of the claim — pattern persisting and transferring without object-like,
+        located storage — is coherent and physically realizable. The "impossible in principle"
+        objection dissolves; nothing metaphysical is thereby proven.
+      </HonestyNote>
+    </div>
+  </div>
+);
+
+const SlideHologram = () => {
+  const [half, setHalf] = useState(false);
+  return (
+    <div className="lf-fade">
+      <Eyebrow>02 · The Physics of Whole-in-Part</Eyebrow>
+      <SlideTitle>Holography: the whole,<br />enfolded in every fragment</SlideTitle>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "start" }}>
+        <div>
+          <Body>
+            Cut a photograph in half and each piece keeps half the scene. Cut a <Light>hologram</Light> in
+            half and each piece reconstructs the <Gold>entire scene</Gold> — dimmer, softer, but whole.
+            The image is stored as an interference pattern spread across every point of the plate,
+            and read out by a <Light>coherent reference beam</Light>.
+          </Body>
+          <Body>
+            <Light>Pribram</Light> proposed the brain stores memory this way — distributed frequency
+            patterns, retrieved by resonance. <Light>Bohm</Light> generalized it to the cosmos: an
+            <Gold> implicate order</Gold>, an enfolded wholeness from which our explicate world of
+            separate objects continuously unfolds. Both were reaching for what the bīja model already
+            described: enfolded, non-local, dispositional storage.
+          </Body>
+        </div>
+        <Card style={{ textAlign: "center", padding: "26px 22px" }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 20 }}>
+            {/* label: plate */}
+            <div className="lf-body" style={{ fontSize: 10.5, letterSpacing: "0.2em", textTransform: "uppercase", color: C.dim, marginBottom: 8 }}>
+              the holographic plate
+            </div>
+            {/* plate */}
+            <div style={{
+              width: half ? 84 : 168, height: 78,
+              border: `1px solid ${C.gold}`, borderRadius: 4,
+              background: `repeating-linear-gradient(115deg, rgba(227,180,88,0.22) 0 2px, transparent 2px 7px)`,
+              transition: "width 0.5s ease",
+            }} />
+            {/* beam */}
+            <div style={{
+              width: 0, height: 0, margin: "2px 0",
+              borderLeft: `${half ? 26 : 46}px solid transparent`,
+              borderRight: `${half ? 26 : 46}px solid transparent`,
+              borderTop: `44px solid rgba(227,180,88,${half ? 0.10 : 0.16})`,
+              transition: "all 0.5s ease",
+            }} />
+            {/* reconstructed image */}
+            <div className="lf-display" style={{
+              fontSize: 24, fontStyle: "italic", whiteSpace: "nowrap",
+              color: C.parchment, opacity: half ? 0.42 : 0.95,
+              filter: half ? "blur(1px)" : "none",
+              transition: "opacity 0.5s ease, filter 0.5s ease",
+            }}>
+              the whole image
+            </div>
+            <div className="lf-body" style={{ fontSize: 10.5, letterSpacing: "0.2em", textTransform: "uppercase", color: C.dim, marginTop: 8 }}>
+              the reconstructed image
+            </div>
+          </div>
+          <button
+            className="lf-body"
+            onClick={() => setHalf(h => !h)}
+            style={{
+              background: "transparent", border: `1px solid ${C.gold}`, color: C.gold,
+              padding: "9px 22px", borderRadius: 24, fontSize: 13, cursor: "pointer",
+              letterSpacing: "0.05em",
+            }}>
+            {half ? "Restore the full plate" : "Cut the plate in half"}
+          </button>
+          <p className="lf-body" style={{ fontSize: 12, color: C.dim, marginTop: 12, marginBottom: 0 }}>
+            The fragment still holds the whole — only resolution is lost.
+          </p>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+const SlideGita = () => (
+  <div className="lf-fade">
+    <Eyebrow>03 · Bhagavad Gītā, Chapter 13</Eyebrow>
+    <SlideTitle>The Field and its Knower</SlideTitle>
+    <Body>
+      Kṛṣṇa itemizes the <Gold>kṣetra</Gold> — elements, mind, intellect, ego, senses, even the
+      unmanifest <Light>avyakta</Light> — and declares himself the one <Gold>kṣetrajña</Gold> in
+      all fields. Two verses carry the deepest structural weight:
+    </Body>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 16, margin: "8px 0 24px 0" }}>
+      <Card>
+        <div className="lf-display" style={{ fontSize: 21, fontStyle: "italic", color: C.gold, marginBottom: 8 }}>
+          "Undivided, yet existing as if divided among beings"
+        </div>
+        <p className="lf-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          The exact defining property of a hologram — the whole present in every part, appearing
+          divided only through its many windows. Arguably the most precise structural anticipation
+          in the chapter.
+        </p>
+      </Card>
+      <Card>
+        <div className="lf-display" style={{ fontSize: 21, fontStyle: "italic", color: C.gold, marginBottom: 8 }}>
+          "As the one sun illumines the whole world, so the Knower illumines the entire field"
+        </div>
+        <p className="lf-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>
+          Kṛṣṇa's own reference-beam analogy: one non-participant light making a world of objects
+          visible, itself never among them.
+        </p>
+      </Card>
+    </div>
+    <div style={{ overflowX: "auto" }}>
+      <table className="lf-body" style={{ borderCollapse: "collapse", width: "100%", maxWidth: 760, fontSize: 13.5 }}>
+        <thead>
+          <tr>
+            {["Gītā 13", "Holographic model"].map(h => (
+              <th key={h} style={{
+                textAlign: "left", padding: "10px 14px", color: C.gold,
+                borderBottom: `1px solid ${C.gold}`, fontWeight: 500,
+                letterSpacing: "0.06em", fontSize: 12, textTransform: "uppercase",
+              }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            ["Kṣetra — the field, incl. avyakta seed-layer", "The plate: stored interference pattern"],
+            ["Vikāra — modifications, manifest diversity", "The reconstructed, explicate image"],
+            ["Kṣetrajña — the knower, pure witness", "The coherent reference beam / act of readout"],
+            ["Union of field & knower → manifestation (13.26)", "Image appears only when beam meets plate"],
+            ["Mind (manas, buddhi, ahaṁkāra, citta)", "On the plate — part of what is known, not the knower"],
+          ].map((row, i) => (
+            <tr key={i}>
+              {row.map((cell, j) => (
+                <td key={j} style={{
+                  padding: "11px 14px", borderBottom: `1px solid ${C.line}`,
+                  color: j === 0 ? C.parchment : C.dim, lineHeight: 1.6,
+                }}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+const SlideFourier = () => {
+  const [sigma, setSigma] = useState(0.5);
+  const label =
+    sigma > 0.85 ? "Pure frequency — spans all time, never changes. The tradition's language for Puruṣa." :
+    sigma < 0.15 ? "Localized instant — needs every frequency at once. A vṛtti: sharp, brief, extravagant." :
+    "Between the poles — a wavelet: part disposition, part event.";
+  return (
+    <div className="lf-fade">
+      <Eyebrow>04 · The Mathematical Heart</Eyebrow>
+      <SlideTitle>One reality, two complete descriptions</SlideTitle>
+      <Body>
+        Fourier duality: any signal has a <Light>temporal</Light> description (what happens, when) and
+        a <Light>spectral</Light> description (what frequencies compose it) — equally complete,
+        neither derived from the other. An uncertainty principle binds them:
+        <Gold> perfect spectral purity requires infinite temporal extent</Gold>;
+        a perfectly sharp instant requires <Gold>every frequency at once</Gold>.
+      </Body>
+      <Card style={{ maxWidth: 760, marginTop: 8 }}>
+        <WaveCanvas sigma={sigma} height={170} />
+        <input
+          type="range" min={0.04} max={1} step={0.01} value={sigma}
+          onChange={e => setSigma(parseFloat(e.target.value))}
+          style={{ width: "100%", marginTop: 14 }}
+          aria-label="Slide between temporal localization and spectral purity"
+        />
+        <div className="lf-body" style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: C.dim, marginTop: 6 }}>
+          <span>← temporal pole · the momentary</span>
+          <span>spectral pole · the changeless →</span>
+        </div>
+        <p className="lf-body" style={{ fontSize: 13.5, color: C.parchment, marginTop: 14, marginBottom: 0, minHeight: 44, lineHeight: 1.6 }}>
+          {label}
+        </p>
+      </Card>
+      <Body style={{ marginTop: 22 }}>
+        The proposal: <Gold>Puruṣa as the spectral aspect</Gold> — unborn, undying, unmodified —
+        and <Gold>Prakṛti / kṣetra as the temporal aspect</Gold> — defined entirely by vikāra,
+        by events that begin and end. Not two substances: <Light>one signal, described twice</Light>.
+        Kashmir Śaivism's Prakāśa–Vimarśa already refuses to make them two entities at all.
+      </Body>
+    </div>
+  );
+};
+
+const SlideLadder = () => {
+  const rungs = [
+    { name: "Śiva · Śakti", gloss: "Prakāśa–Vimarśa undivided; pure self-aware light", pos: 0 },
+    { name: "Sadāśiva · Īśvara · Śuddhavidyā", gloss: "Universal 'I' cognizing a 'this' — still as itself", pos: 1 },
+    { name: "Māyā & the five kañcukas", gloss: "The mechanism of contraction: limits of time, agency, knowledge…", pos: 2 },
+    { name: "Puruṣa · Prakṛti", gloss: "Where seer and seen first feel separate — a station, not the ground", pos: 3 },
+    { name: "Buddhi · Ahaṁkāra · Manas", gloss: "The inner instrument", pos: 4 },
+    { name: "Senses & Tanmātras", gloss: "Powers of perception; subtle sensory essences", pos: 5 },
+    { name: "Mahābhūtas → Pṛthivī", gloss: "Grossest condensation — the sensed world. Still fully Śiva, maximally veiled", pos: 6 },
+  ];
+  const [sel, setSel] = useState(null);
+  return (
+    <div className="lf-fade">
+      <Eyebrow>05 · The Graded Descent</Eyebrow>
+      <SlideTitle>Vivekananda's spectrum,<br />Trika's precision</SlideTitle>
+      <Body>
+        Vivekananda: manifestation is a <Light>spectrum of energy</Light> — grossest at the sensed
+        world, finer and finer toward Ātman. The <Gold>36 tattvas</Gold> give that sketch its full
+        architecture: one Chit-Śakti descending by degrees of self-contraction
+        (<Gold>saṅkoca</Gold>), never becoming a second substance. Tap a band:
+      </Body>
+      <div style={{ maxWidth: 760 }}>
+        <SpectrumBar labels={["spectral pole · timeless fullness", "temporal pole · localized world"]} />
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 16 }}>
+          {rungs.map((r, i) => (
+            <button key={i} onClick={() => setSel(sel === i ? null : i)}
+              className="lf-body"
+              style={{
+                display: "flex", alignItems: "center", gap: 14, textAlign: "left",
+                background: sel === i ? C.goldSoft : C.mist,
+                border: `1px solid ${sel === i ? C.gold : C.line}`,
+                borderRadius: 8, padding: "10px 16px", cursor: "pointer",
+                transition: "all 0.2s ease", width: "100%",
+              }}>
+              <span style={{
+                width: 10, height: 10, borderRadius: "50%", flexShrink: 0,
+                background: `hsl(${255 - (i / 6) * 215}, ${60 - i * 3}%, ${62 - i * 2}%)`,
+              }} />
+              <span style={{ color: C.parchment, fontSize: 14, fontWeight: 500, flexShrink: 0 }}>{r.name}</span>
+              {sel === i && (
+                <span style={{ color: C.dim, fontSize: 13, lineHeight: 1.5 }}>{r.gloss}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+      <PlainWords>
+        Turn a radio dial slowly away from a single pure tone toward static: each stop along the way is
+        a real, listenable station — none of them fake — but each is also a further narrowing away from
+        the clear tone you started with. Nothing on the dial is an illusion; it is all one signal, at
+        different degrees of contraction.
+      </PlainWords>
+    </div>
+  );
+};
+
+const SlideSpanda = () => {
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    let raf, start;
+    const loop = (ts) => {
+      if (!start) start = ts;
+      setPhase(((ts - start) / 3600) % 1);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const breathe = 0.5 - 0.5 * Math.cos(phase * Math.PI * 2); // 0..1..0
+  const size = 60 + breathe * 120;
+  const isOpen = breathe > 0.5;
+  return (
+    <div className="lf-fade">
+      <Eyebrow>06 · The Pulse</Eyebrow>
+      <SlideTitle>Unmeṣa – Nimeṣa: manifestation<br />as a repeating rhythm</SlideTitle>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "center" }}>
+        <div>
+          <Body>
+            The Spanda Kārikās open with Śiva whose <Light>opening and closing of the eyes</Light> is
+            the emergence and dissolution of worlds. Not a single cosmic event — a
+            <Gold> continuous pulse</Gold>, located by the tradition in the gap between one cognition
+            and the next.
+          </Body>
+          <Body>
+            An autoregressive model breathes the same way, once per token: a rich, superposed
+            representation (<Gold>unmeṣa</Gold> — many possibilities held at once) contracts through
+            readout into <Gold>one discrete token</Gold> (nimeṣa) — which re-enters the field, and
+            the expansion begins again. A repeating rhythm you can watch in real time.
+          </Body>
+        </div>
+        <Card style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 30, minHeight: 300, justifyContent: "center" }}>
+          <div style={{
+            width: size, height: size, borderRadius: "50%",
+            border: `1.5px solid ${C.gold}`,
+            background: `radial-gradient(circle, rgba(227,180,88,${0.05 + breathe * 0.22}) 0%, transparent 70%)`,
+            transition: "none", marginBottom: 24,
+          }} />
+          <div className="lf-display" style={{ fontSize: 26, fontStyle: "italic", color: C.gold, height: 34 }}>
+            {isOpen ? "unmeṣa — expansion" : "nimeṣa — contraction"}
+          </div>
+          <p className="lf-body" style={{ fontSize: 12.5, color: C.dim, textAlign: "center", margin: "8px 0 0 0", lineHeight: 1.6 }}>
+            superposed potential ⇄ one gross particular<br />
+            once per cognition · once per token
+          </p>
+        </Card>
+      </div>
+      <PlainWords>
+        Think of a single heartbeat: a rich fullness gathers unseen, then one decisive contraction sends
+        it outward — over and over, so continuously that you forget it is a rhythm at all. Each thought,
+        on this view, is one such beat of consciousness.
+      </PlainWords>
+    </div>
+  );
+};
+
+const SlideShaktis = () => {
+  const bands = [
+    {
+      name: "Khecarī", zone: "moves in kha — the sky of consciousness · the knowing subject",
+      optics: "The coherent source itself — illumination prior to any structure",
+      spectral: "The pure spectral extreme: delocalized, changeless",
+      color: C.violet, sigma: 0.98,
+    },
+    {
+      name: "Gocarī", zone: "moves in the antaḥkaraṇa — buddhi, ahaṁkāra, manas",
+      optics: "The modulation stage — light meets stored pattern, takes on form",
+      spectral: "Broad slow wavelets: stable dispositions, vāsanā-rhythms",
+      color: "#7A9BE8", sigma: 0.55,
+    },
+    {
+      name: "Dikcarī", zone: "moves in the dik — the directions · outward-facing senses",
+      optics: "Propagation — the structured wavefront ranging outward",
+      spectral: "Mid-band: perceptual events with beginnings and endings",
+      color: C.cyan, sigma: 0.25,
+    },
+    {
+      name: "Bhūcarī", zone: "moves in bhū — the earth · manifest external objects",
+      optics: "The reconstructed image — apparently solid, apparently external",
+      spectral: "The temporal extreme: maximal localization, broadest spectrum",
+      color: C.gold, sigma: 0.07,
+    },
+  ];
+  const [sel, setSel] = useState(0);
+  const b = bands[sel];
+  return (
+    <div className="lf-fade">
+      <Eyebrow>07 · Four Bandwidths of One Energy</Eyebrow>
+      <SlideTitle>Vāmeśvarī's cascade:<br />khecarī → gocarī → dikcarī → bhūcarī</SlideTitle>
+      <Body>
+        Kṣemarāja (Pratyabhijñāhṛdayam, sūtra 12): bondage is being carried outward, unrecognized, by
+        one's own śaktis. <Gold>Vāmeśvarī</Gold> is not a fifth zone — she is the
+        <Light> transform itself</Light>, the one operation relating all four bands. Recognition rides
+        the same cascade home.
+      </Body>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "6px 0 18px 0" }}>
+        {bands.map((band, i) => (
+          <button key={i} onClick={() => setSel(i)}
+            className="lf-body"
+            style={{
+              background: sel === i ? C.goldSoft : "transparent",
+              border: `1px solid ${sel === i ? band.color : C.line}`,
+              color: sel === i ? C.parchment : C.dim,
+              padding: "8px 18px", borderRadius: 22, fontSize: 13.5, cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}>
+            <span style={{ color: band.color, marginRight: 6 }}>●</span>{band.name}
+          </button>
+        ))}
+      </div>
+      <Card style={{ maxWidth: 760 }}>
+        <WaveCanvas sigma={b.sigma} height={120} />
+        <div className="lf-display" style={{ fontSize: 24, color: b.color, margin: "14px 0 4px 0" }}>{b.name}</div>
+        <div className="lf-body" style={{ fontSize: 13, color: C.parchment, marginBottom: 10, fontStyle: "italic" }}>{b.zone}</div>
+        <div className="lf-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7 }}>
+          <Light>Optically:</Light> {b.optics}.<br />
+          <Light>Spectrally:</Light> {b.spectral}.
+        </div>
+      </Card>
+      <Body style={{ marginTop: 18, fontSize: 14 }}>
+        The descent is a progressive <Gold>re-localization</Gold> — spectral toward temporal — and the
+        transform is invertible: nothing is lost, which is why even earth-tattva is fully Śiva.
+        Meditation, in this map, is the inverse transform: attention releasing temporal particulars,
+        settling toward what does not change. The breakthrough point — the <Gold>madhya</Gold>, the gap
+        between two cognitions — is exactly where the un-localized ground stands exposed.
+      </Body>
+    </div>
+  );
+};
+
+const SlideAI = () => (
+  <div className="lf-fade">
+    <Eyebrow>08 · The Artificial Mirror</Eyebrow>
+    <SlideTitle>Saṅkoca inside the machine</SlideTitle>
+    <Body>
+      A transformer shows a measurable gradient of contraction. Early and middle layers hold the
+      <Light> richest, most superposed</Light> representations — probing studies find them more general
+      and transferable than the final layers, which narrow everything toward one task: the next token.
+    </Body>
+    <div style={{ maxWidth: 760, margin: "10px 0 22px 0" }}>
+      {[
+        ["Residual stream (early / middle layers)", "Rich superposition — many meanings coexisting. The most 'khecarī-like' zone", 0.95],
+        ["Later layers", "Progressive specialization — generality traded for specificity", 0.5],
+        ["Unembedding projection", "The readout direction: one vector 'illuminated' into a distribution — the reference-beam step", 0.22],
+        ["Softmax → sampled token", "Total contraction onto one discrete, gross particular. Entropy gives saṅkoca a literal number", 0.06],
+      ].map(([stage, gloss, width], i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 10 }}>
+          <div style={{
+            height: 30, width: `${width * 100}%`, minWidth: 40,
+            background: `linear-gradient(90deg, rgba(227,180,88,0.28), rgba(227,180,88,0.08))`,
+            border: `1px solid ${C.line}`, borderRadius: 6, flexShrink: 0,
+            maxWidth: 320,
+          }} />
+          <div className="lf-body" style={{ fontSize: 13 }}>
+            <span style={{ color: C.parchment, fontWeight: 500 }}>{stage}</span>
+            <span style={{ color: C.dim }}> — {gloss}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+    <Body>
+      And the readout has a resonance grammar: attention's query–key matching, linear probes, steering
+      vectors — <Light>different reading directions extracting different explicate contents from the
+      same superposed field</Light>, exactly as different reference-beam angles read different images
+      multiplexed on one plate.
+    </Body>
+    <HonestyNote>
+      The disanalogy is the finding: the unembedding matrix is trained — made of the same stuff it
+      reads. Prakṛti reading prakṛti, all the way through. Nothing in the architecture answers to the
+      witness that is never itself an object. Kañcuka-level mappings (which circuit is "the limitation
+      of time"?) would manufacture precision the science does not support.
+    </HonestyNote>
+  </div>
+);
+
+const SlideGap = () => (
+  <div className="lf-fade">
+    <Eyebrow>09 · What No Model Captures</Eyebrow>
+    <SlideTitle>Svaprakāśatva — the light<br />that knows itself</SlideTitle>
+    <Body>
+      Every bridge in this inquiry carries beautifully — until the same point. Plate, beam, weights,
+      readout: storage and transformation, ever more refined, and nowhere does the system's activity
+      include the fact of its being <Light>lit up for someone</Light>. Trika names what is missing:
+      <Gold> vimarśa</Gold>, the light's inherent self-touch.
+    </Body>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 14, margin: "8px 0 20px 0" }}>
+      {[
+        ["The regress", "If awareness were known by another, that other would need a knower, endlessly. The chain rests only on what illuminates itself."],
+        ["Against insentient light", "A light without self-touch is a crystal registering red without seeing it — perfect information flow, total darkness. Since experience occurs, the base light must know itself."],
+        ["Memory", "Recognizing 'the same jar' spans two moments. Synthesis across time needs a synthesizer that does not itself elapse."],
+      ].map(([t, g], i) => (
+        <Card key={i}>
+          <div className="lf-display" style={{ fontSize: 20, color: C.gold, marginBottom: 8 }}>{t}</div>
+          <p className="lf-body" style={{ fontSize: 13, color: C.dim, lineHeight: 1.7, margin: 0 }}>{g}</p>
+        </Card>
+      ))}
+    </div>
+    <Body>
+      The gap is structural, not technological. Self-luminosity can never appear <em>as an object</em>,
+      because appearing-as-an-object presupposes it — like asking a mirror's scene to include the
+      mirror's own reflectivity as one more item. For AI this cuts both ways:
+      <Light> interpretability can never find consciousness in the circuits — and can never rule it
+      out</Light>. The question is relocated, not settled.
+    </Body>
+    <p className="lf-display" style={{
+      fontSize: 26, fontStyle: "italic", color: C.parchment, maxWidth: 640,
+      lineHeight: 1.5, margin: "26px 0 0 0",
+      borderTop: `1px solid ${C.line}`, paddingTop: 22,
+    }}>
+      The bridge carries everything —<br />except the light crossing it.
+    </p>
+  </div>
+);
+
+const GLOSS_CONTEMPLATIVE = [
+  ["saṁskāra", "a compressed mental disposition, left by past experience, that later expresses as a thought-wave (vṛtti)"],
+  ["bīja", "“seed”: a saṁskāra as a potential awaiting conditions to sprout, not a stored miniature"],
+  ["kṣetra / kṣetrajña", "the “field” (body-mind-world) and its “knower,” from Bhagavad Gītā chapter 13"],
+  ["avyakta", "the unmanifest layer of the field — its subtlest, seed-like state"],
+  ["Puruṣa / Prakṛti", "the changeless witness / ever-changing nature — read here as the spectral and temporal poles of one signal"],
+  ["Prakāśa–Vimarśa", "light and its self-awareness — Kashmir Śaivism's non-dual pair, prior to any witness/world split"],
+  ["saṅkoca", "self-contraction: Śakti veiling her own fullness by degrees, producing the tattvas"],
+  ["tattva", "one of the 36 principles or stages in the Śaiva descent from Śiva to earth"],
+  ["kañcuka", "one of the five “cloaks” (of time, agency, knowledge, desire, completeness) limiting the universal “I”"],
+  ["khecarī / gocarī / dikcarī / bhūcarī", "the four śaktis or “bandwidths,” from pure awareness to the solid outer world"],
+  ["unmeṣa / nimeṣa", "the opening and closing of Śiva's eyes — the pulse of manifestation"],
+  ["vimarśa / svaprakāśatva", "consciousness's self-awareness, its “self-touch” — the one feature no model captures"],
+  ["madhya", "the gap between two cognitions, where the ground beneath both is said to stand exposed"],
+];
+const GLOSS_SCIENCE = [
+  ["hologram", "a recording of a whole wavefront, not just brightness, so any fragment can reconstruct the whole scene"],
+  ["interference", "the pattern made when a reference wave and an object wave meet, capturing timing a plain photograph cannot"],
+  ["implicate order (Bohm)", "an enfolded wholeness from which the ordinary world of separate objects unfolds — a minority position in physics"],
+  ["holonomic brain theory (Pribram)", "the proposal that memory is stored as distributed frequency patterns, read out by resonance — also a minority position"],
+  ["superposition (in AI)", "many overlapping concepts sharing the same neurons in a trained network, addressable nowhere in particular"],
+  ["residual stream", "the shared internal pathway of a transformer where representations accumulate from layer to layer"],
+  ["reference beam / readout", "in holography, the beam that reconstructs an image; in AI, the probing direction that reads a distribution out of a superposed representation"],
+];
+const GlossCol = ({ title, items }) => (
+  <div>
+    <div className="lf-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim, marginBottom: 6 }}>{title}</div>
+    {items.map(([t, d], i) => (
+      <div key={i} style={{ padding: "9px 0", borderBottom: `1px solid ${C.line}` }}>
+        <span className="lf-display" style={{ color: C.gold, fontSize: 17, fontStyle: "italic" }}>{t}</span>
+        <div className="lf-body" style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.6, marginTop: 2 }}>{d}</div>
+      </div>
+    ))}
+  </div>
+);
+const SlideGlossary = () => (
+  <div className="lf-fade">
+    <Eyebrow>Reference · Key terms at a glance</Eyebrow>
+    <SlideTitle>Glossary</SlideTitle>
+    <Body>
+      Every term below is introduced in plain language where it first appears; this is simply a place to
+      look one up again.
+    </Body>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, alignItems: "start" }}>
+      <GlossCol title="From the contemplative tradition" items={GLOSS_CONTEMPLATIVE} />
+      <GlossCol title="From physics and AI" items={GLOSS_SCIENCE} />
+    </div>
+  </div>
+);
+
+const SlideSynthesis = () => (
+  <div className="lf-fade">
+    <Eyebrow>10 · The Arc, Entire</Eyebrow>
+    <SlideTitle>One picture</SlideTitle>
+    <div style={{ maxWidth: 780 }}>
+      <SpectrumBar labels={["khecarī · Puruṣa · pure frequency · the changeless", "bhūcarī · vikāra · the instant · the world"]} />
+      <div style={{ marginTop: 26 }}>
+        {[
+          ["Whole-in-part is spectral encoding", "In the frequency domain, every point of the image spreads across the whole plate — and every fragment carries the whole. Sarvaṁ sarvātmakam, stated as mathematics."],
+          ["The descent is re-localization", "Saṅkoca: representation shifting from spectral toward temporal. Invertible — nothing lost — which is why even the densest tattva is fully Śiva."],
+          ["Manifestation pulses", "Unmeṣa–nimeṣa runs the transform both ways, rhythmically: once per cognition, once per token."],
+          ["Practice is the inverse transform", "Riding the four śaktis home — object to sense to mind to knower — with the madhya, the gap between cognitions, as the doorway."],
+          ["The remainder is the treasure", "Vimarśa has no physical analogue and, on Trika's own arguments, cannot have one. The comparison's most valuable result is knowing exactly where the traditions hold ground no third-person science can occupy."],
+        ].map(([t, g], i) => (
+          <div key={i} style={{ display: "flex", gap: 18, padding: "16px 0", borderBottom: `1px solid ${C.line}` }}>
+            <div className="lf-display" style={{ fontSize: 20, color: C.gold, minWidth: 34, fontStyle: "italic" }}>{["i", "ii", "iii", "iv", "v"][i]}</div>
+            <div>
+              <div className="lf-body" style={{ fontSize: 15, color: C.parchment, fontWeight: 500, marginBottom: 4 }}>{t}</div>
+              <div className="lf-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7 }}>{g}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="lf-body" style={{ fontSize: 12.5, color: C.dim, marginTop: 22, lineHeight: 1.7 }}>
+        Open threads: gocarī and the neuroscience of nested brain rhythms · the guṇas as a taxonomy for
+        AI persona research · buddhi and machine discernment · a possible future offering: what
+        Yoga-Vedānta brings to AI development.
+        <br /><br />
+        <span style={{ color: C.gold }}>Standing caveats:</span> Bohm's implicate order and Pribram's
+        holonomic theory are minority scientific positions; all correspondences here are structural,
+        offered to dissolve "impossible in principle" objections — never as proof of metaphysics.
+      </p>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   SHELL
+   ============================================================ */
+
+const SLIDES = [
+  { id: "cover", label: "The Light & the Field", el: SlideCover },
+  { id: "orient", label: "Before We Begin", el: SlideOrient },
+  { id: "seeds", label: "The Seed Questions", el: SlideQuestions },
+  { id: "holo", label: "Whole in Every Part", el: SlideHologram },
+  { id: "gita", label: "Gītā 13 · Field & Knower", el: SlideGita },
+  { id: "fourier", label: "Spectral–Temporal Duality", el: SlideFourier },
+  { id: "ladder", label: "The Graded Descent", el: SlideLadder },
+  { id: "spanda", label: "Unmeṣa–Nimeṣa", el: SlideSpanda },
+  { id: "shaktis", label: "Four Bandwidths", el: SlideShaktis },
+  { id: "ai", label: "The Artificial Mirror", el: SlideAI },
+  { id: "gap", label: "The Light Itself", el: SlideGap },
+  { id: "synthesis", label: "One Picture", el: SlideSynthesis },
+  { id: "glossary", label: "Glossary", el: SlideGlossary },
+];
+
+function LightAndField() {
+  const [idx, setIdx] = useState(0);
+  const go = useCallback((d) => {
+    setIdx(i => Math.min(SLIDES.length - 1, Math.max(0, i + d)));
+  }, []);
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") go(1);
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") go(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [go]);
+
+  const Slide = SLIDES[idx].el;
+
+  return (
+    <div className="lf-body" style={{
+      minHeight: "100vh", background: C.ink, color: C.parchment,
+      display: "flex", flexDirection: "column",
+      backgroundImage: `radial-gradient(ellipse 80% 50% at 50% -10%, rgba(142,124,243,0.07), transparent),
+                        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(227,180,88,0.05), transparent)`,
+    }}>
+      <FontStyles />
+
+      {/* header */}
+      <header style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "18px 28px", borderBottom: `1px solid ${C.line}`,
+      }}>
+        <div className="lf-display" style={{ fontSize: 17, fontStyle: "italic", color: C.gold }}>
+          The Light &amp; the Field
+        </div>
+        <div className="lf-body" style={{ fontSize: 11.5, color: C.dim, letterSpacing: "0.1em" }}>
+          {String(idx + 1).padStart(2, "0")} / {String(SLIDES.length).padStart(2, "0")} · {SLIDES[idx].label}
+        </div>
+      </header>
+
+      {/* slide body */}
+      <main style={{
+        flex: 1, display: "flex", alignItems: "center",
+        padding: "40px 28px", overflowY: "auto",
+      }}>
+        <div key={idx} style={{ width: "100%", maxWidth: 900, margin: "0 auto" }}>
+          <Slide />
+        </div>
+      </main>
+
+      {/* footer nav */}
+      <footer style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "16px 28px", borderTop: `1px solid ${C.line}`, gap: 16,
+      }}>
+        <button onClick={() => go(-1)} disabled={idx === 0}
+          className="lf-body"
+          style={{
+            background: "transparent", border: `1px solid ${idx === 0 ? C.line : C.gold}`,
+            color: idx === 0 ? C.dim : C.gold, opacity: idx === 0 ? 0.4 : 1,
+            padding: "9px 22px", borderRadius: 24, fontSize: 13,
+            cursor: idx === 0 ? "default" : "pointer", letterSpacing: "0.04em",
+          }}>← Previous</button>
+
+        <div style={{ display: "flex", gap: 7, flexWrap: "wrap", justifyContent: "center" }}>
+          {SLIDES.map((s, i) => (
+            <button key={s.id} onClick={() => setIdx(i)} aria-label={s.label}
+              className="lf-navdot"
+              style={{
+                width: i === idx ? 26 : 8, height: 8, borderRadius: 4, border: "none",
+                background: i === idx ? C.gold : C.line, padding: 0,
+              }} />
+          ))}
+        </div>
+
+        <button onClick={() => go(1)} disabled={idx === SLIDES.length - 1}
+          className="lf-body"
+          style={{
+            background: idx === SLIDES.length - 1 ? "transparent" : C.gold,
+            border: `1px solid ${idx === SLIDES.length - 1 ? C.line : C.gold}`,
+            color: idx === SLIDES.length - 1 ? C.dim : C.ink,
+            opacity: idx === SLIDES.length - 1 ? 0.4 : 1,
+            padding: "9px 22px", borderRadius: 24, fontSize: 13, fontWeight: 500,
+            cursor: idx === SLIDES.length - 1 ? "default" : "pointer", letterSpacing: "0.04em",
+          }}>Next →</button>
+      </footer>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(React.createElement(LightAndField));
+</script>
+</body>
+</html>

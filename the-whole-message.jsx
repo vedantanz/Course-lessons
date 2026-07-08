@@ -1,0 +1,593 @@
+import React, { useState, useEffect, useRef } from "react";
+
+/* ============================================================
+   THE WHOLE MESSAGE
+   Dennis Gabor — the Signal, the Limit, and the Hologram
+   Science companion to "The Settling Mind" and "The Light and the Field"
+   under the Ritam Wellbeing Framework.
+   Palette:
+     ink        #070B16  (deep indigo-black ground)
+     mist       #101830  (raised surface)
+     line       #24304F  (hairlines)
+     parchment  #E8E3D5  (primary text)
+     dim        #9AA1B5  (secondary text)
+     gold       #E3B458  (accent / equations / honesty)
+     violet→cyan          (the two waves / spectral content)
+   Type: Cormorant Garamond (display) / Inter (body)
+   ============================================================ */
+
+const C = {
+  ink: "#070B16",
+  mist: "#101830",
+  line: "#24304F",
+  parchment: "#E8E3D5",
+  dim: "#9AA1B5",
+  gold: "#E3B458",
+  goldSoft: "rgba(227,180,88,0.14)",
+  violet: "#8E7CF3",
+  cyan: "#5BC8DD",
+};
+
+const reduced = typeof window !== "undefined" && window.matchMedia
+  ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false;
+
+const FontStyles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+    * { box-sizing: border-box; }
+    .wm-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .wm-body { font-family: 'Inter', -apple-system, sans-serif; }
+    .wm-fade { animation: wmFade 0.7s ease both; }
+    @keyframes wmFade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .wm-fade { animation: none; } }
+    .wm-navdot { transition: all 0.25s ease; cursor: pointer; }
+    .wm-navdot:hover { background: ${C.gold} !important; }
+    button:focus-visible { outline: 2px solid ${C.gold}; outline-offset: 3px; }
+    input[type=range] { accent-color: ${C.gold}; width: 100%; }
+  `}</style>
+);
+
+/* ---------- shared atoms ---------- */
+const Eyebrow = ({ children }) => (
+  <div className="wm-body" style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: C.gold, marginBottom: 16, fontWeight: 500 }}>{children}</div>
+);
+const SlideTitle = ({ children, size = 44 }) => (
+  <h2 className="wm-display" style={{ fontSize: `clamp(27px, 5.2vw, ${size}px)`, lineHeight: 1.15, color: C.parchment, fontWeight: 500, margin: "0 0 18px 0", overflowWrap: "break-word" }}>{children}</h2>
+);
+const Body = ({ children, style }) => (
+  <p className="wm-body" style={{ fontSize: 15, lineHeight: 1.75, color: C.dim, marginBottom: 15, maxWidth: 720, ...style }}>{children}</p>
+);
+const Gold = ({ children }) => <span style={{ color: C.gold }}>{children}</span>;
+const Light = ({ children }) => <span style={{ color: C.parchment }}>{children}</span>;
+const Card = ({ children, style }) => (
+  <div style={{ background: C.mist, border: `1px solid ${C.line}`, borderRadius: 10, padding: "18px 20px", ...style }}>{children}</div>
+);
+const CardTitle = ({ children, color }) => (
+  <h3 className="wm-display" style={{ fontWeight: 500, fontSize: 21, marginBottom: 8, color: color || C.parchment }}>{children}</h3>
+);
+const CardText = ({ children }) => (
+  <p className="wm-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.7, margin: 0 }}>{children}</p>
+);
+const Grid = ({ children, style }) => (
+  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, ...style }}>{children}</div>
+);
+const Micro = ({ children }) => (
+  <div className="wm-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim, marginBottom: 4 }}>{children}</div>
+);
+const RangeLabels = ({ left, right }) => (
+  <div className="wm-body" style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: C.dim, marginTop: 5, gap: 8, flexWrap: "wrap" }}>
+    <span>{left}</span><span>{right}</span>
+  </div>
+);
+const PlainWords = ({ label = "In plain words", children }) => (
+  <div className="wm-body" style={{ borderLeft: `2px solid ${C.cyan}`, background: "rgba(91,200,221,0.08)", padding: "13px 17px", borderRadius: "0 8px 8px 0", fontSize: 13.5, lineHeight: 1.7, color: C.parchment, maxWidth: 720, marginTop: 12 }}>
+    <span style={{ color: C.cyan, fontWeight: 600, letterSpacing: "0.08em", fontSize: 11, textTransform: "uppercase" }}>{label} · </span>{children}
+  </div>
+);
+const Note = ({ label = "The bridge to our work", children }) => (
+  <div className="wm-body" style={{ borderLeft: `2px solid ${C.gold}`, background: C.goldSoft, padding: "13px 17px", borderRadius: "0 8px 8px 0", fontSize: 13.5, lineHeight: 1.7, color: C.parchment, maxWidth: 720, marginTop: 12 }}>
+    <span style={{ color: C.gold, fontWeight: 600, letterSpacing: "0.08em", fontSize: 11, textTransform: "uppercase" }}>{label} · </span>{children}
+  </div>
+);
+
+/* ---------- canvas helper ---------- */
+function useCanvas(draw, deps) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    const dpr = window.devicePixelRatio || 1, w = cv.clientWidth || 320;
+    const h = cv._h || 130;
+    cv.width = w * dpr; cv.height = h * dpr;
+    const ctx = cv.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw(ctx, w, h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+  return ref;
+}
+const Canvas = ({ height = 130, drawFn, deps }) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    const render = () => {
+      const dpr = window.devicePixelRatio || 1, w = cv.clientWidth || 320, h = height;
+      cv.width = w * dpr; cv.height = h * dpr;
+      const ctx = cv.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawFn(ctx, w, h);
+    };
+    render();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+  return <canvas ref={ref} style={{ width: "100%", height, display: "block" }} aria-hidden="true" />;
+};
+
+/* ============================================================
+   SLIDES
+   ============================================================ */
+
+/* 00 cover */
+const SlideCover = () => {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    let raf = null, t0 = null;
+    const draw = (phase) => {
+      const dpr = window.devicePixelRatio || 1, w = cv.clientWidth || 320, h = 150;
+      cv.width = w * dpr; cv.height = h * dpr;
+      const ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const mid = h / 2, s = w * 0.16, freq = 22;
+      ctx.clearRect(0, 0, w, h);
+      const cx = w * (0.5 + 0.28 * Math.sin(phase * 0.6));
+      ctx.beginPath();
+      for (let x = 0; x <= w; x++) { const g = Math.exp(-((x - cx) ** 2) / (2 * s * s)); const y = mid - g * (h * 0.4); x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      for (let x = w; x >= 0; x--) { const g = Math.exp(-((x - cx) ** 2) / (2 * s * s)); ctx.lineTo(x, mid + g * (h * 0.4)); }
+      ctx.closePath(); ctx.fillStyle = "rgba(227,180,88,0.06)"; ctx.fill();
+      ctx.beginPath();
+      for (let x = 0; x <= w; x++) { const g = Math.exp(-((x - cx) ** 2) / (2 * s * s)); const y = mid - Math.sin((x / w) * Math.PI * 2 * freq + phase * 2) * g * (h * 0.4); x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      ctx.strokeStyle = C.gold; ctx.lineWidth = 1.6; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(w, mid); ctx.strokeStyle = "rgba(154,161,181,0.18)"; ctx.lineWidth = 1; ctx.stroke();
+    };
+    if (reduced) { draw(0); return; }
+    const loop = (ts) => { if (t0 === null) t0 = ts; draw((ts - t0) / 1000); raf = requestAnimationFrame(loop); };
+    raf = requestAnimationFrame(loop);
+    return () => { if (raf) cancelAnimationFrame(raf); };
+  }, []);
+  return (
+    <div className="wm-fade" style={{ textAlign: "center", maxWidth: 860, margin: "0 auto" }}>
+      <Eyebrow>A Science Companion · Ritam Wellbeing Framework</Eyebrow>
+      <h1 className="wm-display" style={{ fontWeight: 500, fontSize: "clamp(40px,6.6vw,68px)", lineHeight: 1.06, marginBottom: 10 }}>The Whole Message</h1>
+      <div className="wm-display" style={{ fontStyle: "italic", fontSize: "clamp(17px,2.5vw,25px)", color: C.gold, marginBottom: 28 }}>Dennis Gabor — the Signal, the Limit, and the Hologram</div>
+      <div style={{ maxWidth: 600, margin: "0 auto 18px auto" }}>
+        <canvas ref={ref} style={{ width: "100%", height: 150, display: "block" }} aria-hidden="true" />
+      </div>
+      <Body style={{ fontSize: 13.5, maxWidth: 580, margin: "0 auto" }}>
+        One scientist, two discoveries, one idea. In 1946 Gabor found the law that binds time and frequency;
+        in 1947 he invented holography — the recording of a <Light>whole wavefront</Light>. Both grew from a
+        single insight about how information lives in the frequency domain. This is the science beneath our
+        two contemplative presentations.
+      </Body>
+    </div>
+  );
+};
+
+/* orientation */
+const SlideOrient = () => (
+  <div className="wm-fade">
+    <Eyebrow>Orientation · How to read this</Eyebrow>
+    <SlideTitle>Before we begin</SlideTitle>
+    <Body>
+      This is a presentation about one scientist and two of his discoveries — a piece of honest science
+      history, not a piece of Yoga or Vedānta. It stands on its own. But it is also the root beneath our
+      two contemplative presentations, <Light>The Settling Mind</Light> and <Light>The Light and the
+      Field</Light>, so wherever the connection is real, we point it out.
+      <Gold> No prior knowledge of physics or mathematics is assumed.</Gold>
+    </Body>
+    <div className="wm-body" style={{ fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim, marginTop: 8, marginBottom: 4 }}>
+      The arc, in six plain steps
+    </div>
+    <div style={{ maxWidth: 760, margin: "4px 0 16px 0" }}>
+      {[
+        ["The man", "a Hungarian-British engineer, Dennis Gabor, asks how much a telephone line can really carry"],
+        ["The limit", "he proves you cannot be sharp in both timing and pitch at once — a law, not a limitation of equipment"],
+        ["The logon", "he finds the most efficient possible signal: a steady tone inside a bell-shaped envelope"],
+        ["The leap", "a year later he tackles a blurry microscope, and realises every recording loses a wave's timing"],
+        ["The hologram", "he traps that lost timing by letting two waves interfere — and captures a whole scene, not just its brightness"],
+        ["One insight", "both discoveries turn out to be the same idea about information, applied twice"],
+      ].map(([k, v], i) => (
+        <div key={i} style={{ display: "flex", gap: 16, padding: "11px 0", borderBottom: `1px solid ${C.line}` }}>
+          <div className="wm-display" style={{ fontStyle: "italic", color: C.gold, fontSize: 18, minWidth: 116 }}>{k}</div>
+          <div className="wm-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.6 }}>{v}</div>
+        </div>
+      ))}
+    </div>
+    <Grid style={{ marginBottom: 14 }}>
+      <Card>
+        <CardTitle>Two things to notice as you go</CardTitle>
+        <CardText>
+          Every technical word — <em>frequency</em>, <em>phase</em>, <em>coherent</em> — is explained in
+          plain language the moment it first appears, and gathered again in a glossary at the end. And a
+          few Sanskrit words appear too (<em>vṛtti</em>, <em>sarvaṁ sarvātmakam</em>): brief pointers
+          forward to what our other two presentations do with this same science.
+        </CardText>
+      </Card>
+      <Card>
+        <CardTitle>Two coloured cards guide you</CardTitle>
+        <CardText>
+          <span style={{ color: C.cyan }}>Cyan "in plain words"</span> cards restate an idea with an
+          everyday image — a piano key, a photograph. <Gold>Gold cards</Gold> mark either a bridge to our
+          contemplative work or an honest caveat about what the history and physics do, and do not, show.
+        </CardText>
+      </Card>
+    </Grid>
+    <PlainWords>
+      If a slide ever feels too technical, read only its cyan and grey cards and move on — the story of
+      Gabor's two discoveries will still carry you through. The equations are here to make the history
+      precise, never to gatekeep it.
+    </PlainWords>
+  </div>
+);
+
+/* 01 the man */
+const SlideMan = () => (
+  <div className="wm-fade">
+    <Eyebrow>01 · The Man</Eyebrow>
+    <SlideTitle>Gábor Dénes of Budapest</SlideTitle>
+    <Body><Light>Dennis Gabor</Light> (1900–1979) was a Hungarian-British electrical engineer and physicist. Born in Budapest, trained in Berlin in the 1920s, he left Germany when the Nazis rose to power and made his life in Britain — first at the British Thomson-Houston company, later as a professor at Imperial College London.</Body>
+    <Body>He was, by temperament, an engineer who thought like a physicist: drawn to deeply practical problems, but reaching under them for the universal law. That instinct produced two discoveries a year apart, and both sit beneath our contemplative work.</Body>
+    <div style={{ maxWidth: 760 }}>
+      {[
+        ["1900", <>Born in Budapest.</>],
+        ["1946", <><b style={{ color: C.parchment }}>"Theory of Communication."</b> Proves the time–frequency uncertainty limit; defines the minimal signal packet, the <Gold>logon</Gold>.</>],
+        ["1947–48", <><b style={{ color: C.parchment }}>Holography.</b> Invents a way to record a whole wavefront, coining the word from Greek <em>holos</em> (whole) + <em>gramma</em> (message).</>],
+        ["1971", <><b style={{ color: C.parchment }}>Nobel Prize in Physics</b> — for the invention of holography.</>],
+      ].map(([yr, ev], i) => (
+        <div key={i} style={{ display: "flex", gap: 16, padding: "13px 0", borderBottom: `1px solid ${C.line}` }}>
+          <div className="wm-display" style={{ fontStyle: "italic", color: C.gold, fontSize: 20, minWidth: 66 }}>{yr}</div>
+          <div className="wm-body" style={{ fontSize: 13.5, color: C.dim, lineHeight: 1.65 }}>{ev}</div>
+        </div>
+      ))}
+    </div>
+    <PlainWords label="Why he matters here">Both ideas we lean on carry a Nobel-level pedigree — and, more surprisingly, they are two faces of a single insight, which the next slides unfold.</PlainWords>
+  </div>
+);
+
+/* 02 the question */
+const SlideQuestion = () => (
+  <div className="wm-fade">
+    <Eyebrow>02 · The 1946 Question</Eyebrow>
+    <SlideTitle>How much can a channel carry?</SlideTitle>
+    <Body>Gabor's starting question was practical: how much information can a telephone line — or any communication channel — actually carry? To answer it, he did something subtle: he insisted on describing a signal <Light>in time and in frequency at the same time</Light>.</Body>
+    <Grid style={{ margin: "6px 0 16px 0" }}>
+      <Card><CardTitle>The time view</CardTitle><CardText>A signal as it unfolds moment to moment — a voice rising and falling, a pressure wave in the air. This is how we <em>hear</em>.</CardText></Card>
+      <Card><CardTitle>The frequency view</CardTitle><CardText>The same signal as a recipe of steady tones — how much of each pitch it contains. This is how a tuning fork, or a spectrum analyser, <em>reads</em> it.</CardText></Card>
+    </Grid>
+    <Body>Both are complete descriptions of the same signal. The deep question Gabor asked was: can you locate a signal precisely in <em>both</em> at once — know exactly when it happens <em>and</em> exactly what frequency it is?</Body>
+    <PlainWords>Think of a piano. A key struck for a split second gives a sharp "when" but a thud of blurred pitch. A key held for a long time gives a clear pitch but a smeared "when." Gabor asked whether you could ever have both perfectly. His answer was no — and he proved it.</PlainWords>
+  </div>
+);
+
+/* 03 the limit (interactive) */
+const SlideLimit = () => {
+  const [s, setS] = useState(0.35);
+  const dt = s, df = Math.min(1, 0.0625 / s);
+  const label = (s < 0.12 ? "A near-click: pinned in time, its pitch smeared across a wide band."
+    : s > 0.8 ? "A near-pure tone: pitch pinned sharp, but spread out across all time."
+    : "In between: as one spread shrinks, the other grows. Their product never drops below the floor.")
+    + " Notice the two bars always trade off — that is the law made visible.";
+  return (
+    <div className="wm-fade">
+      <Eyebrow>03 · The Uncertainty Limit</Eyebrow>
+      <SlideTitle>Δt · Δf ≥ 1 / 4π</SlideTitle>
+      <Body>Gabor proved that the spread in time (Δt) and the spread in frequency (Δf) can never both be small. Their product has a floor. Sharpen one, and the other must widen — not from clumsy instruments, but as a property of waves and information themselves. Remarkably, this is the same inequality Heisenberg found in quantum physics — but Gabor derived it for ordinary sound and radio, where nothing quantum is involved.</Body>
+      <Card style={{ maxWidth: 760 }}>
+        <Canvas height={130} deps={[s]} drawFn={(ctx, w, h) => {
+          const mid = h / 2, sg = s * w * 0.5, freq = 20;
+          ctx.clearRect(0, 0, w, h);
+          ctx.beginPath();
+          for (let x = 0; x <= w; x++) { const g = Math.exp(-((x - w / 2) ** 2) / (2 * sg * sg)); const y = mid - g * (h * 0.4); x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+          for (let x = w; x >= 0; x--) { const g = Math.exp(-((x - w / 2) ** 2) / (2 * sg * sg)); ctx.lineTo(x, mid + g * (h * 0.4)); }
+          ctx.closePath(); ctx.fillStyle = "rgba(227,180,88,0.06)"; ctx.fill();
+          ctx.beginPath();
+          for (let x = 0; x <= w; x++) { const g = Math.exp(-((x - w / 2) ** 2) / (2 * sg * sg)); const y = mid - Math.sin((x / w) * Math.PI * 2 * freq) * g * (h * 0.4); x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+          ctx.strokeStyle = C.gold; ctx.lineWidth = 1.6; ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(w, mid); ctx.strokeStyle = "rgba(154,161,181,0.18)"; ctx.lineWidth = 1; ctx.stroke();
+        }} />
+        <input type="range" min={0.06} max={1} step={0.01} value={s} onChange={(e) => setS(parseFloat(e.target.value))} style={{ marginTop: 14 }} aria-label="Slide between sharp-in-time and sharp-in-frequency" />
+        <RangeLabels left="← sharp in time (a click)" right="sharp in frequency (a tone) →" />
+        <div style={{ marginTop: 16 }}>
+          <div className="wm-body" style={{ fontSize: 11.5, color: C.dim, marginBottom: 3 }}>Δt — spread in time</div>
+          <div style={{ height: 10, borderRadius: 5, background: C.line }}><div style={{ height: 10, borderRadius: 5, width: `${Math.max(4, dt * 100)}%`, background: C.gold, transition: "width 0.12s ease" }} /></div>
+          <div className="wm-body" style={{ fontSize: 11.5, color: C.dim, margin: "10px 0 3px 0" }}>Δf — spread in frequency</div>
+          <div style={{ height: 10, borderRadius: 5, background: C.line }}><div style={{ height: 10, borderRadius: 5, width: `${Math.max(4, df * 100)}%`, background: C.cyan, transition: "width 0.12s ease" }} /></div>
+        </div>
+        <p className="wm-body" style={{ fontSize: 13, color: C.parchment, marginTop: 14, marginBottom: 0, lineHeight: 1.65 }}>{label}</p>
+      </Card>
+      <PlainWords>You can know <em>when</em> or you can know <em>what pitch</em> — never both to perfect precision. The two kinds of knowing trade off against each other, always.</PlainWords>
+    </div>
+  );
+};
+
+/* 04 the logon */
+const SlideLogon = () => (
+  <div className="wm-fade">
+    <Eyebrow>04 · The Logon</Eyebrow>
+    <SlideTitle>The most efficient grain of information</SlideTitle>
+    <Body>Gabor then asked the creative question: what is the <em>most efficient</em> signal — the one that wastes nothing, sitting exactly at the limit? He proved there is a unique answer: a <Gold>pure tone (a carrier) inside a smooth bell-shaped envelope</Gold>. He called it a <Light>logon</Light>; today we call it a <Light>Gabor atom</Light>.</Body>
+    <Card style={{ maxWidth: 760 }}>
+      <Micro>A logon = carrier × envelope</Micro>
+      <Canvas height={120} deps={[]} drawFn={(ctx, w, h) => {
+        const mid = h / 2, s = w * 0.17, freq = 18;
+        ctx.clearRect(0, 0, w, h);
+        ctx.setLineDash([5, 4]);
+        [1, -1].forEach((sign) => {
+          ctx.beginPath();
+          for (let x = 0; x <= w; x++) { const g = Math.exp(-((x - w / 2) ** 2) / (2 * s * s)); const y = mid - sign * g * (h * 0.42); x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+          ctx.strokeStyle = "rgba(227,180,88,0.6)"; ctx.lineWidth = 1.2; ctx.stroke();
+        });
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        for (let x = 0; x <= w; x++) { const g = Math.exp(-((x - w / 2) ** 2) / (2 * s * s)); const y = mid - Math.sin((x / w) * Math.PI * 2 * freq) * g * (h * 0.42); x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+        ctx.strokeStyle = "rgba(232,227,213,0.9)"; ctx.lineWidth = 1.4; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(w, mid); ctx.strokeStyle = "rgba(154,161,181,0.15)"; ctx.lineWidth = 1; ctx.stroke();
+      }} />
+      <div className="wm-body" style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, marginTop: 8, gap: 8, flexWrap: "wrap" }}>
+        <span style={{ color: C.gold }}>– – envelope (the bell)</span><span style={{ color: C.parchment }}>— carrier (the tone inside)</span>
+      </div>
+    </Card>
+    <Body style={{ marginTop: 16 }}>His radical claim: <Light>any signal whatsoever</Light> can be built from these elementary grains, each filling one irreducible cell of what he called the "information diagram." This is the direct ancestor of modern <Gold>wavelet analysis</Gold> — used today in MP3 audio, speech recognition, and the study of nested brain rhythms in our own Module 3.</Body>
+    <Note>This carrier-in-envelope shape is exactly the form of the <em>resultant</em> in the Ritam Mind Wave Equation: R(t) = envelope × carrier. Every vṛtti, in that model, has the anatomy of a Gabor logon — a theme our companion presentation develops in full.</Note>
+  </div>
+);
+
+/* 05 the leap */
+const SlideLeap = () => (
+  <div className="wm-fade">
+    <Eyebrow>05 · The 1947 Leap</Eyebrow>
+    <SlideTitle>The problem of the lost phase</SlideTitle>
+    <Body>A year later, Gabor was trying to sharpen the blurry electron microscope. He reasoned: if you could record <Light>all</Light> the information in the wave bouncing off an object, you could reconstruct a perfect image afterward. But there is a catch that defeats every camera, every eye, every sensor.</Body>
+    <Grid style={{ margin: "6px 0 16px 0" }}>
+      <Card><CardTitle>What gets recorded</CardTitle><CardText>Every ordinary recording captures only <Light>intensity</Light> — how bright. Brightness alone flattens the world into a picture.</CardText></Card>
+      <Card><CardTitle>What gets lost</CardTitle><CardText>A wave also has <Gold>phase</Gold> — the timing of its crests, which holds the depth, the three-dimensionality. Phase is invisible to any detector. It simply vanishes.</CardText></Card>
+    </Grid>
+    <Body>Gabor's question: how do you record something no detector can see?</Body>
+    <PlainWords>A photograph knows how bright each point is, but not how <em>far</em> — so it is flat. The missing "how far" is hidden in the wave's timing, its phase. Gabor found a way to trap that timing on ordinary film.</PlainWords>
+  </div>
+);
+
+/* 06 interference (interactive) */
+const SlideInterference = () => {
+  const [ph, setPh] = useState(1.2);
+  const label = (ph < 0.6 || ph > 5.7) ? "Nearly in step: the two waves reinforce into one strong wave."
+    : (ph > 2.7 && ph < 3.6) ? "Half a wavelength out of step: they cancel — the fringe goes dark."
+    : "Partly out of step: the combined amplitude records exactly how far apart their crests are — that is the captured phase.";
+  return (
+    <div className="wm-fade">
+      <Eyebrow>06 · The Trick — Interference</Eyebrow>
+      <SlideTitle>Turning timing into a pattern</SlideTitle>
+      <Body>Gabor's solution was elegant. Let the wave from the object meet a clean <Light>reference wave</Light>. Where their crests align they reinforce; where crest meets trough they cancel. The result is a pattern of bright and dark <Gold>interference fringes</Gold> — and the hidden phase is now written into the <em>spacing and shape</em> of those fringes, which film <em>can</em> record. Slide to bring the two waves into and out of step:</Body>
+      <Card style={{ maxWidth: 760 }}>
+        <Micro>object wave (violet) + reference wave (cyan) → interference (gold)</Micro>
+        <Canvas height={140} deps={[ph]} drawFn={(ctx, w, h) => {
+          const mid = h / 2, amp = h * 0.16, freq = 9;
+          ctx.clearRect(0, 0, w, h);
+          ctx.globalAlpha = 0.32;
+          ctx.beginPath();
+          for (let x = 0; x <= w; x++) { const y = mid - Math.sin((x / w) * Math.PI * 2 * freq) * amp; x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+          ctx.strokeStyle = C.violet; ctx.lineWidth = 1; ctx.stroke();
+          ctx.beginPath();
+          for (let x = 0; x <= w; x++) { const y = mid - Math.sin((x / w) * Math.PI * 2 * freq + ph) * amp; x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+          ctx.strokeStyle = C.cyan; ctx.lineWidth = 1; ctx.stroke();
+          ctx.globalAlpha = 1;
+          ctx.beginPath();
+          for (let x = 0; x <= w; x++) { const y = mid - (Math.sin((x / w) * Math.PI * 2 * freq) + Math.sin((x / w) * Math.PI * 2 * freq + ph)) * amp; x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+          ctx.strokeStyle = C.gold; ctx.lineWidth = 1.7; ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(w, mid); ctx.strokeStyle = "rgba(154,161,181,0.15)"; ctx.lineWidth = 1; ctx.stroke();
+        }} />
+        <input type="range" min={0} max={6.28} step={0.01} value={ph} onChange={(e) => setPh(parseFloat(e.target.value))} style={{ marginTop: 14 }} aria-label="Shift the relative phase of the two waves" />
+        <RangeLabels left="← in step (reinforcing)" right="out of step (cancelling) →" />
+        <p className="wm-body" style={{ fontSize: 13, color: C.parchment, marginTop: 12, marginBottom: 0, lineHeight: 1.65 }}>{label}</p>
+      </Card>
+      <Body style={{ marginTop: 16 }}>Shine the reference wave back through the recorded fringes, and the original object wave springs back to life — in full, in three dimensions. Gabor named it from the Greek: <Gold>holos</Gold> (whole) + <Gold>gramma</Gold> (message) — the <Light>hologram</Light>, the whole message, because unlike a photograph it keeps the entire wavefront.</Body>
+    </div>
+  );
+};
+
+/* 07 whole in every part */
+const SlideWhole = () => {
+  const [half, setHalf] = useState(false);
+  return (
+    <div className="wm-fade">
+      <Eyebrow>07 · The Signature Property</Eyebrow>
+      <SlideTitle>The whole in every fragment</SlideTitle>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24, alignItems: "start" }}>
+        <div>
+          <Body>A hologram behaves unlike any photograph. Cut a photo in half and you get half the scene. Cut a hologram in half — and each piece still shows the <Gold>whole scene</Gold>, only a little less sharply.</Body>
+          <Body>The reason is deep: a hologram is, in effect, a recording made in the <Light>frequency domain</Light>. There, information about every point of the image is spread across the entire plate — so any fragment carries the whole, at reduced resolution. "Whole-in-every-part" is simply what spectral encoding looks like.</Body>
+        </div>
+        <Card style={{ textAlign: "center", padding: 24 }}>
+          <Micro>the holographic plate</Micro>
+          <div style={{ width: half ? 84 : 170, height: 80, margin: "10px auto 0 auto", border: `1px solid ${C.gold}`, borderRadius: 4, background: "repeating-linear-gradient(115deg, rgba(227,180,88,0.22) 0 2px, transparent 2px 7px)", transition: "width 0.5s ease" }} />
+          <div style={{ width: 0, height: 0, margin: "2px auto", borderLeft: `${half ? 26 : 44}px solid transparent`, borderRight: `${half ? 26 : 44}px solid transparent`, borderTop: "40px solid rgba(227,180,88,0.16)", transition: "border-width 0.5s ease" }} />
+          <div className="wm-display" style={{ fontSize: 22, fontStyle: "italic", color: C.parchment, whiteSpace: "nowrap", opacity: half ? 0.45 : 0.95, filter: half ? "blur(1px)" : "none", transition: "opacity 0.5s ease, filter 0.5s ease" }}>the whole image</div>
+          <Micro>the reconstructed image</Micro>
+          <button onClick={() => setHalf(!half)} style={{ marginTop: 16, background: "transparent", border: `1px solid ${C.gold}`, color: C.gold, padding: "9px 20px", borderRadius: 24, fontSize: 13, letterSpacing: "0.04em", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}>
+            {half ? "Restore the full plate" : "Cut the plate in half"}
+          </button>
+        </Card>
+      </div>
+      <Note>This is the property behind <em>The Light and the Field</em>: the Gītā's "undivided, yet seeming divided," and Kashmir Śaivism's <em>sarvaṁ sarvātmakam</em> — each part enfolding the whole — are the same structure a hologram displays.</Note>
+    </div>
+  );
+};
+
+/* 08 one insight */
+const SlideUnity = () => (
+  <div className="wm-fade">
+    <Eyebrow>08 · Two Faces, One Insight</Eyebrow>
+    <SlideTitle>Why the two discoveries are one</SlideTitle>
+    <Body>It can seem Gabor simply wandered from telephones to microscopes. He did not. Both discoveries are a <Gold>single idea applied twice</Gold>: that information lives in the relationship between a signal and a reference, and is organised in the frequency domain.</Body>
+    <Grid style={{ margin: "6px 0 16px 0" }}>
+      <Card><CardTitle>1946 — the limit</CardTitle><CardText>Reference: a set of pure tones. Lesson: time and frequency trade off; the efficient grain is a carrier in an envelope.</CardText></Card>
+      <Card><CardTitle>1947 — the hologram</CardTitle><CardText>Reference: a clean coherent wave. Lesson: interference in the frequency domain can store a whole three-dimensional world.</CardText></Card>
+    </Grid>
+    <Body>A hologram is, quite literally, a recording made in the spectral domain — which is exactly why every fragment carries the whole. The same idea about frequency-domain information carried Gabor across both breakthroughs.</Body>
+    <Note label="Why this matters for us">Our two contemplative presentations are not merely themed alike — they are rooted in one scientific vision. <em>The Settling Mind</em> rests on the 1946 limit; <em>The Light and the Field</em> rests on the 1947 hologram. Gabor unifies them.</Note>
+  </div>
+);
+
+/* 09 the wait for light */
+const SlideLaser = () => (
+  <div className="wm-fade">
+    <Eyebrow>09 · An Honest Footnote</Eyebrow>
+    <SlideTitle>The idea that waited for its light</SlideTitle>
+    <Body>Gabor's first holograms, in 1948, were imperfect — muddied by an unavoidable overlapping "twin image." He had the principle, but not the pure, coherent light it truly needed. The field lay almost dormant for over a decade.</Body>
+    <Body>Then, in the 1960s, the <Gold>laser</Gold> arrived — light of a single pure frequency, perfectly in step with itself. With it, <Light>Leith and Upatnieks</Light> (and independently <Light>Denisyuk</Light>) produced the vivid three-dimensional holograms we know today. Gabor invented the principle; the laser let it shine. His Nobel Prize came in 1971.</Body>
+    <PlainWords label="A teaching in itself">A profound idea sometimes must wait a generation for the technology that lets it flourish — and what Gabor's holograms needed was coherent light: a pure, unbroken frequency. The very thing, in our other presentation, that the settled mind becomes.</PlainWords>
+  </div>
+);
+
+/* glossary */
+const GLOSS_PHYSICS = [
+  ["time domain / frequency domain", "the two complete descriptions of any signal — when it happens, versus what steady tones compose it"],
+  ["phase", "the timing of a wave's crests and troughs; it carries depth and shape, and ordinary detectors cannot see it"],
+  ["interference", "the reinforcing-or-cancelling pattern made when two waves meet"],
+  ["coherent light", "light of one pure, steady frequency, perfectly in step with itself — what a laser provides"],
+  ["the Gabor limit", "Δt · Δf ≥ 1/4π — sharpness in time and sharpness in frequency cannot both be had"],
+  ["logon (Gabor atom)", "the most efficient grain of information: a carrier tone inside a bell-shaped envelope"],
+  ["carrier", "the fast, steady tone inside a signal packet"],
+  ["envelope", "the slow curve that shapes a packet, rising and falling around the carrier"],
+  ["hologram", "a recording of a whole wavefront, phase included, so any fragment can reconstruct the whole scene"],
+  ["twin image", "the overlapping ghost image that muddied Gabor's earliest holograms, before the laser"],
+];
+const GLOSS_BRIDGE = [
+  ["vṛtti", "(Yoga) a single thought-wave; in the Ritam Mind Wave Equation it has a logon's own carrier-and-envelope shape"],
+  ["sarvaṁ sarvātmakam", "(Kashmir Śaivism) “everything is in everything” — the whole-in-every-fragment property of holograms, in Tantric language"],
+  ["Ritam Mind Wave Equation", "Swami Tadananda's equation for a lived moment of mind; unfolded fully in The Settling Mind"],
+  ["Puruṣa / Prakṛti", "the changeless witness / the ever-changing field, read in The Light and the Field as the spectral and temporal poles of one signal"],
+];
+const GlossCol = ({ title, items }) => (
+  <div>
+    <Micro>{title}</Micro>
+    {items.map(([t, d], i) => (
+      <div key={i} style={{ padding: "9px 0", borderBottom: `1px solid ${C.line}` }}>
+        <span className="wm-display" style={{ color: C.gold, fontSize: 17, fontStyle: "italic" }}>{t}</span>
+        <div className="wm-body" style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.6, marginTop: 2 }}>{d}</div>
+      </div>
+    ))}
+  </div>
+);
+const SlideGlossary = () => (
+  <div className="wm-fade">
+    <Eyebrow>Reference · Key terms at a glance</Eyebrow>
+    <SlideTitle>Glossary</SlideTitle>
+    <Body>
+      Every term below is introduced in plain language where it first appears; this is simply a place to
+      look one up again.
+    </Body>
+    <Grid style={{ alignItems: "start" }}>
+      <GlossCol title="From the physics of signals" items={GLOSS_PHYSICS} />
+      <GlossCol title="Bridges to the other two decks" items={GLOSS_BRIDGE} />
+    </Grid>
+  </div>
+);
+
+/* 10 close */
+const SlideClose = () => {
+  const arc = [
+    ["One mind, two discoveries", "Dennis Gabor found the time–frequency limit (1946) and invented holography (1947–48), winning the 1971 Nobel Prize."],
+    ["The limit: Δt · Δf ≥ 1/4π", "Sharpness in time and in frequency cannot both be had. The efficient grain of information is a carrier inside an envelope — the logon."],
+    ["The hologram: the whole message", "By recording interference, Gabor captured the lost phase and with it the whole wavefront — so every fragment holds the whole."],
+    ["Both are one insight", "Information lives in the relationship between signal and reference, organised in the frequency domain. That single idea powers both discoveries."],
+    ["The root beneath our work", "The Settling Mind grows from the 1946 limit; The Light and the Field grows from the 1947 hologram. Gabor is the common root — and coherent light, a pure frequency, is what both his holograms and the settled mind require."],
+  ];
+  return (
+    <div className="wm-fade">
+      <Eyebrow>10 · The Whole Message</Eyebrow>
+      <SlideTitle>What Gabor gave us</SlideTitle>
+      <div style={{ maxWidth: 780 }}>
+        {arc.map(([t, g], i) => (
+          <div key={i} style={{ display: "flex", gap: 16, padding: "14px 0", borderBottom: `1px solid ${C.line}` }}>
+            <div className="wm-display" style={{ fontStyle: "italic", fontSize: 20, color: C.gold, minWidth: 32 }}>{["i", "ii", "iii", "iv", "v"][i]}</div>
+            <div>
+              <div className="wm-body" style={{ fontSize: 14.5, color: C.parchment, fontWeight: 500, marginBottom: 4 }}>{t}</div>
+              <div className="wm-body" style={{ fontSize: 13, color: C.dim, lineHeight: 1.7 }}>{g}</div>
+            </div>
+          </div>
+        ))}
+        <p className="wm-body" style={{ fontSize: 12.5, color: C.dim, marginTop: 20, lineHeight: 1.7 }}>
+          Science companion to <em>The Settling Mind</em> and <em>The Light and the Field</em>, under the
+          Ritam Wellbeing Framework. The history and physics here are presented faithfully; the connections
+          drawn to contemplative models are structural bridges offered for insight, not claims that Gabor's
+          mathematics proves any metaphysics. Holography as a model of mind (Pribram) and of cosmos (Bohm)
+          remains a minority scientific position.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   SHELL
+   ============================================================ */
+const SLIDES = [
+  { id: "cover", label: "The Whole Message", el: SlideCover },
+  { id: "orient", label: "Before We Begin", el: SlideOrient },
+  { id: "man", label: "The Man", el: SlideMan },
+  { id: "question", label: "The 1946 Question", el: SlideQuestion },
+  { id: "limit", label: "The Uncertainty Limit", el: SlideLimit },
+  { id: "logon", label: "The Logon", el: SlideLogon },
+  { id: "leap", label: "The 1947 Leap", el: SlideLeap },
+  { id: "interference", label: "Interference", el: SlideInterference },
+  { id: "whole", label: "Whole in Every Part", el: SlideWhole },
+  { id: "unity", label: "Two Faces, One Insight", el: SlideUnity },
+  { id: "laser", label: "The Wait for Light", el: SlideLaser },
+  { id: "close", label: "The Whole Message", el: SlideClose },
+  { id: "glossary", label: "Glossary", el: SlideGlossary },
+];
+
+export default function TheWholeMessage() {
+  const [idx, setIdx] = useState(0);
+  const go = (i) => setIdx(Math.min(SLIDES.length - 1, Math.max(0, i)));
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") go(idx + 1);
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") go(idx - 1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [idx]);
+  const Slide = SLIDES[idx].el;
+  const pad = (n) => String(n).padStart(2, "0");
+  return (
+    <div style={{
+      background: C.ink, color: C.parchment, minHeight: "100vh",
+      display: "flex", flexDirection: "column", fontFamily: "'Inter', -apple-system, sans-serif",
+      backgroundImage: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(142,124,243,0.07), transparent), radial-gradient(ellipse 60% 40% at 80% 110%, rgba(227,180,88,0.05), transparent)",
+    }}>
+      <FontStyles />
+      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "15px 22px", borderBottom: `1px solid ${C.line}`, flexWrap: "wrap", gap: 6 }}>
+        <div className="wm-display" style={{ fontStyle: "italic", fontSize: 17, color: C.gold }}>The Whole Message</div>
+        <div className="wm-body" style={{ fontSize: 11, color: C.dim, letterSpacing: "0.08em" }}>{pad(idx + 1)} / {pad(SLIDES.length)} · {SLIDES[idx].label}</div>
+      </header>
+      <main style={{ flex: 1, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "32px 20px", overflowY: "auto" }}>
+        <div style={{ width: "100%", maxWidth: 920 }}><Slide /></div>
+      </main>
+      <footer style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 20px", borderTop: `1px solid ${C.line}`, gap: 10, flexWrap: "wrap" }}>
+        <button onClick={() => go(idx - 1)} disabled={idx === 0}
+          style={{ background: "transparent", border: `1px solid ${idx === 0 ? C.line : C.gold}`, color: idx === 0 ? C.dim : C.gold, padding: "9px 20px", borderRadius: 24, fontSize: 13, letterSpacing: "0.04em", cursor: idx === 0 ? "default" : "pointer", opacity: idx === 0 ? 0.4 : 1, fontFamily: "'Inter', sans-serif" }}>← Previous</button>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center" }}>
+          {SLIDES.map((s, j) => (
+            <button key={s.id} className="wm-navdot" aria-label={s.label} onClick={() => go(j)}
+              style={{ width: j === idx ? 24 : 8, height: 8, borderRadius: 4, border: "none", background: j === idx ? C.gold : C.line, padding: 0 }} />
+          ))}
+        </div>
+        <button onClick={() => go(idx + 1)} disabled={idx === SLIDES.length - 1}
+          style={{ background: idx === SLIDES.length - 1 ? "transparent" : C.gold, border: `1px solid ${idx === SLIDES.length - 1 ? C.line : C.gold}`, color: idx === SLIDES.length - 1 ? C.dim : C.ink, fontWeight: 500, padding: "9px 20px", borderRadius: 24, fontSize: 13, letterSpacing: "0.04em", cursor: idx === SLIDES.length - 1 ? "default" : "pointer", opacity: idx === SLIDES.length - 1 ? 0.4 : 1, fontFamily: "'Inter', sans-serif" }}>Next →</button>
+      </footer>
+    </div>
+  );
+}
