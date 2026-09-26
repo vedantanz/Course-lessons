@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#070B16">
+<title>The Inherited Mind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#070B16; --mist:#101830; --line:#24304F;
+  --parchment:#E8E3D5; --dim:#9AA1B5;
+  --gold:#E3B458; --violet:#8E7CF3; --cyan:#5BC8DD;
+  --serif:'Spectral',Georgia,'Times New Roman',serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  box-sizing:border-box;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit;}
+html,body{height:100%;margin:0;background-color:#070B16;}
+body{
+  background-color:#070B16; color:var(--parchment);
+  font-family:var(--sans); font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  overflow:hidden;
+}
+#deck{position:relative;height:100%;width:100%;background-color:#070B16;}
+.slide{
+  position:absolute; inset:0; display:none;
+  background-color:#070B16;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:clamp(22px,4vw,54px) clamp(18px,5vw,64px) 92px;
+}
+.slide.on{display:block;animation:fade .38s ease both;}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+.wrap{max-width:760px;margin:0 auto;}
+.wrap.wide{max-width:980px;}
+
+h1{font-family:var(--serif);font-weight:300;font-size:clamp(2.1rem,6.4vw,3.9rem);line-height:1.06;margin:0 0 .5em;letter-spacing:-.015em;}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,4vw,2.3rem);line-height:1.16;margin:0 0 .7em;letter-spacing:-.01em;}
+p{margin:0 0 1.05em;max-width:66ch;}
+.lede{font-family:var(--serif);font-size:clamp(1.12rem,2.6vw,1.42rem);line-height:1.6;font-weight:300;}
+.dim{color:var(--dim);}
+.small{font-size:.92rem;line-height:1.5;}
+em{font-style:italic;}
+strong{font-weight:600;color:#fff;}
+
+.kicker{
+  font-family:var(--serif);font-style:italic;font-size:1rem;
+  color:var(--gold);margin:0 0 1.4em;
+}
+.rule{height:1px;background:var(--line);border:0;margin:1.8em 0;}
+
+.card{
+  border:1px solid var(--line);background:var(--mist);
+  border-radius:3px;padding:1.05em 1.2em;margin:1.3em 0;
+}
+.card h3{
+  margin:0 0 .45em;font-family:var(--sans);font-weight:600;
+  font-size:.83rem;letter-spacing:.06em;color:var(--cyan);
+}
+.card p:last-child{margin-bottom:0;}
+.card.honesty{border-color:rgba(227,180,88,.42);background:rgba(227,180,88,.05);}
+.card.honesty h3{color:var(--gold);}
+.card.plain{border-color:rgba(91,200,221,.34);background:rgba(91,200,221,.05);}
+.card.guard{border-color:rgba(142,124,243,.42);background:rgba(142,124,243,.06);}
+.card.guard h3{color:var(--violet);}
+
+blockquote{
+  margin:1.5em 0;padding:0 0 0 1.15em;border-left:2px solid var(--gold);
+  font-family:var(--serif);font-size:clamp(1.05rem,2.5vw,1.3rem);
+  line-height:1.52;font-weight:300;
+}
+blockquote cite{
+  display:block;margin-top:.7em;font-family:var(--sans);font-style:normal;
+  font-size:.83rem;color:var(--dim);letter-spacing:.02em;
+}
+
+.devanagari{font-size:1.28rem;line-height:1.75;color:var(--parchment);margin-bottom:.25em;}
+.translit{font-family:var(--serif);font-style:italic;color:var(--cyan);font-size:1.02rem;margin-bottom:.55em;}
+
+/* ---------- the inflow lab ---------- */
+.lab{margin:1.2em 0 .6em;}
+.panel{
+  border:1px solid var(--line);background:var(--mist);
+  border-radius:3px;margin-bottom:10px;overflow:hidden;
+}
+.panel .cap{
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  padding:.5em .85em;border-bottom:1px solid var(--line);
+  font-size:.79rem;color:var(--dim);
+}
+.panel .cap b{font-weight:600;color:var(--parchment);font-size:.84rem;}
+canvas{display:block;width:100%;height:auto;}
+
+.controls{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:14px 22px;margin:14px 0 4px;
+}
+.ctrl label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--dim);margin-bottom:5px;}
+.ctrl label span{color:var(--cyan);font-variant-numeric:tabular-nums;}
+.ctrl .gloss{font-style:italic;color:var(--parchment);}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:2px;
+  background:var(--line);border-radius:2px;outline:none;margin:8px 0 2px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:17px;height:17px;border-radius:50%;
+  background:var(--gold);cursor:pointer;border:0;
+}
+input[type=range]::-moz-range-thumb{
+  width:17px;height:17px;border-radius:50%;background:var(--gold);
+  cursor:pointer;border:0;
+}
+input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(227,180,88,.3);}
+
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 6px;}
+.presets button{
+  font-family:var(--sans);font-size:.81rem;color:var(--parchment);
+  background:transparent;border:1px solid var(--line);border-radius:2px;
+  padding:.5em .85em;cursor:pointer;transition:border-color .18s,color .18s;
+}
+.presets button:hover,.presets button:focus-visible{border-color:var(--gold);color:var(--gold);}
+.presets button[aria-pressed=true]{border-color:var(--gold);color:var(--gold);background:rgba(227,180,88,.09);}
+.readout{
+  font-family:var(--serif);font-style:italic;color:var(--gold);
+  font-size:1.02rem;margin:.9em 0 0;min-height:2.6em;
+}
+.mixbar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:10px 0 4px;border:1px solid var(--line);}
+.mixbar span{display:block;height:100%;}
+.mixlegend{display:flex;flex-wrap:wrap;gap:14px;font-size:.76rem;color:var(--dim);margin-bottom:6px;}
+.mixlegend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
+
+/* ---------- nav ---------- */
+#nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:20;
+  display:flex;align-items:center;gap:12px;
+  padding:.55em clamp(14px,4vw,28px);
+  padding-bottom:calc(.55em + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(to top,var(--ink) 62%,rgba(7,11,22,0));
+}
+#nav button{
+  font-family:var(--sans);font-size:.85rem;color:var(--parchment);
+  background:transparent;border:1px solid var(--line);border-radius:2px;
+  padding:.44em .9em;cursor:pointer;
+}
+#nav button:hover:not(:disabled),#nav button:focus-visible{border-color:var(--gold);color:var(--gold);}
+#nav button:disabled{opacity:.3;cursor:default;}
+#dots{display:flex;flex:1;gap:5px;justify-content:center;flex-wrap:wrap;}
+#dots i{width:5px;height:5px;border-radius:50%;background:var(--line);display:block;transition:background .2s;}
+#dots i.on{background:var(--gold);}
+#count{font-size:.8rem;color:var(--dim);font-variant-numeric:tabular-nums;min-width:3.4em;text-align:right;}
+
+.series{font-size:.79rem;color:var(--dim);letter-spacing:.03em;margin:0 0 2.2em;}
+ul.tight{margin:0 0 1.1em;padding-left:1.15em;}
+ul.tight li{margin-bottom:.5em;max-width:62ch;}
+
+.diagram{width:100%;height:auto;display:block;margin:1.2em auto 1.5em;max-width:520px;}
+.diagram .lbl{font-family:'Inter',sans-serif;font-size:15px;fill:#E8E3D5;font-weight:600;}
+.diagram .gls{font-family:'Inter',sans-serif;font-size:12.5px;fill:#9AA1B5;}
+.diagram .cap{font-family:'Spectral',serif;font-style:italic;font-size:15px;fill:#E3B458;}
+.diagram .node{fill:#101830;stroke:#24304F;stroke-width:1.4;}
+</style>
+</head>
+<body>
+<main id="deck">
+
+<!-- 1 -->
+<section class="slide on"><div class="wrap">
+  <p class="series">The Ritam Wellbeing Programme &middot; The signal series</p>
+  <h1>The Inherited Mind</h1>
+  <p class="lede">The essay <em>The Groove That Runs Itself</em> asked why your reaction arrives before you do. This one asks where the filter came from, and what you are feeding it right now.</p>
+  <hr class="rule">
+  <p class="small dim">Move through with the arrows, the buttons below, or by swiping. This deck's centre is not a filter you set. It is one you build, day by day.</p>
+</div></section>
+
+<!-- 2 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">What we left open</p>
+  <h2>A filter, and no history for it</h2>
+  <p>The essay <em>The Groove That Runs Itself</em> gave you three numbers: overshoot, settling time, residual ripple. It let you set them by hand and watch what each combination did to an ordinary day.</p>
+  <p>It never asked how a real filter gets its settings. Nobody chooses their own overshoot. Nobody decides, on purpose, to carry residual ripple, a hum with no trigger, through an otherwise ordinary afternoon.</p>
+  <p class="lede">So where do the numbers come from, and is anything about that still in your hands?</p>
+</div></section>
+
+<!-- 3 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">Nothing has happened to him</p>
+  <h2>Arun's ordinary Tuesday</h2>
+  <p>Arun is thirty-six. His job is fine. His marriage is fine. He wakes most mornings already faintly braced, for what he could not say. He checks his phone before his feet are on the floor, works through a feed in every gap of the day, and ends most nights the same way, close to midnight, the last thing his eyes do before they close.</p>
+  <p>There was no roster incident. No sharp word he regrets. Just a low hum of unease with nothing obvious attached to it, and no memory of when that became true.</p>
+  <p class="lede">That is residual ripple. This essay is about how a person arrives there with nothing dramatic to blame.</p>
+</div></section>
+
+<!-- 4 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">The first mechanism</p>
+  <h2>Repetition, spaced, not massed</h2>
+  <p>One of the most robust findings in memory research is the <strong>spacing effect</strong>: the same amount of repetition produces a far stronger, more durable trace when spread across time than when delivered all at once. Thirty-eight repetitions over three days can outlast sixty-eight crammed into one sitting.</p>
+  <p>Arun's morning unease was not caused by one bad morning. It was caused by the same low-grade input, delivered the same way, at spaced intervals, for months. That is exactly the schedule that produces the strongest trace of all.</p>
+</div></section>
+
+<!-- 5 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">The second mechanism</p>
+  <h2>Why the cue never resembles the cause</h2>
+  <p>A cue reopens an old disposition not by resembling its content, but by overlapping the state the disposition was formed in. A tone of voice. A kind of silence. A particular hour of the evening.</p>
+  <p>This is why Arun cannot point to what set off any one bad day. The cue was never going to look like the cause. It only had to match it.</p>
+</div></section>
+
+<!-- 6 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">The third mechanism</p>
+  <h2>A thousand small waves, one shape</h2>
+  <p>Psychologists call the structure that forms from many particular experiences a <strong>schema</strong>: an abstraction that organises how every new experience is met, before it is consciously processed.</p>
+  <p>Arun does not have a thousand separate memories of checking his phone. Those small acts stopped being separate long ago. They became one structure, a schema for how a day begins, met before he has any chance to notice it operating.</p>
+  <div class="card plain">
+    <h3>In plain words</h3>
+    <p>A disposition is not one groove. It is many grooves that have fused into a single orientation.</p>
+  </div>
+</div></section>
+
+<!-- 7 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">Honesty line</p>
+  <h2>What kind of claim this is</h2>
+  <p>The spacing effect, cue-dependent retrieval, and schema formation are established science, each with named researchers behind it.</p>
+  <div class="card honesty">
+    <h3>Structural model</h3>
+    <p>What follows, reading this science alongside a fifteen-hundred-year-old account of how disposition accumulates, is a bridge this course draws for insight. It is not a claim that either side proves the other.</p>
+  </div>
+</div></section>
+
+<!-- 8 INTERACTIVE setup -->
+<section class="slide"><div class="wrap wide">
+  <p class="kicker">Now build one</p>
+  <h2>The Inflow</h2>
+  <p class="small dim">Last time, three numbers were dials you moved by hand. This time, they are not inputs. They are what a stretch of days leaves behind. Set the mix of what a month is made of, and watch the filter assemble itself.</p>
+
+  <div class="mixlegend">
+    <span><i style="background:var(--gold)"></i>Rajasic &middot; <em>agitating</em></span>
+    <span><i style="background:#6C7690"></i>Tamasic &middot; <em>dulling</em></span>
+    <span><i style="background:var(--cyan)"></i>Sattvic &middot; <em>steadying</em></span>
+  </div>
+  <div class="mixbar" id="mixbar"><span id="mixR"></span><span id="mixT"></span><span id="mixS"></span></div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label for="sRaj"><span class="gloss">Rajasic</span> <span id="vRaj">34%</span></label>
+      <input type="range" id="sRaj" min="0" max="100" value="34">
+    </div>
+    <div class="ctrl">
+      <label for="sTam"><span class="gloss">Tamasic</span> <span id="vTam">33%</span></label>
+      <input type="range" id="sTam" min="0" max="100" value="33">
+    </div>
+    <div class="ctrl">
+      <label for="sSat"><span class="gloss">Sattvic</span> <span id="vSat">33%</span></label>
+      <input type="range" id="sSat" min="0" max="100" value="33">
+    </div>
+  </div>
+
+  <div class="presets" id="presets">
+    <button type="button" data-p="conflict">A month of conflict</button>
+    <button type="button" data-p="scroll">A month of scrolling</button>
+    <button type="button" data-p="practice">A month of practice</button>
+    <button type="button" data-p="mixed">A mixed month</button>
+  </div>
+</div></section>
+
+<!-- 9 INTERACTIVE main -->
+<section class="slide"><div class="wrap wide">
+  <p class="kicker">Thirty days, running</p>
+  <h2>What this month is building</h2>
+
+  <div class="lab">
+    <div class="panel">
+      <div class="cap"><b>Overshoot forming</b><span>gain, day by day</span></div>
+      <canvas id="cGain" height="90"></canvas>
+    </div>
+    <div class="panel">
+      <div class="cap"><b>Settling time forming</b><span>how long it runs on</span></div>
+      <canvas id="cTau" height="90"></canvas>
+    </div>
+    <div class="panel">
+      <div class="cap"><b>Residual ripple forming</b><span>the hum with nothing arriving</span></div>
+      <canvas id="cRip" height="90"></canvas>
+    </div>
+  </div>
+  <p class="readout" id="readout">Move the sliders above, or try a preset.</p>
+</div></section>
+
+<!-- 10 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">The point of the last two slides</p>
+  <h2>Not settings. Results.</h2>
+  <p>In the essay <em>The Groove That Runs Itself</em>, overshoot, settling time and residual ripple were dials you moved. Here they are outcomes, the end of thirty days of a particular mix, and nobody sat down and chose to build a filter like that.</p>
+  <p class="lede">A month of quiet, steady input and a month of conflict do not produce two moods. They produce two different filters, and the filter is what meets every day after.</p>
+</div></section>
+
+<!-- 11 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">Vivekananda, on the wave</p>
+  <h2>It only becomes fine. It does not disappear.</h2>
+  <blockquote>
+    Whatever work we do, the mind is thrown into a wave, and after the work is finished, we think the wave is gone. No. It has only become fine, but it is still there.
+    <cite>Swami Vivekananda, on Yoga S&#363;tra II.12</cite>
+  </blockquote>
+  <p>This is the intuition the interactive just overturned. What you are not thinking about has not finished. It becomes fine, below the threshold of notice, and it waits.</p>
+</div></section>
+
+<!-- 12 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">Yoga S&#363;tra IV.9</p>
+  <h2>Experiences becoming fine, become impressions</h2>
+  <p class="translit">jāti-deśa-kāla-vyavahitānām apy ānantaryaṁ smṛti-saṁskārayor eka-rūpatvāt</p>
+  <blockquote>
+    There is consecutiveness in desires, even though separated by species, space, and time, there being identification of memory and impressions.
+    <cite>Vivekananda's rendering</cite>
+  </blockquote>
+  <p>Memory and impression share one form. That is why a cue with no resemblance to the original event can still reopen it. The trigger was never going to look like the cause.</p>
+</div></section>
+
+<!-- 13 -->
+<section class="slide"><div class="wrap wide">
+  <p class="kicker">Four conditions an impression can be in</p>
+  <h2>Dormant. Attenuated. Overpowered. Expanded.</h2>
+
+  <svg class="diagram" viewBox="0 0 420 330" role="img" aria-label="Four states of an impression in a two by two grid. Dormant: a flat faint line. Attenuated: a small contained wave. Overpowered: a wave held down by a bar pressing on it. Expanded: a full wave radiating outward.">
+    <circle cx="105" cy="65" r="32" fill="none" stroke="#24304F" stroke-width="1.5"/>
+    <line x1="82" y1="65" x2="128" y2="65" stroke="#9AA1B5" stroke-width="1.8" opacity="0.45"/>
+    <text x="105" y="122" text-anchor="middle" class="lbl">Dormant</text>
+    <text x="105" y="140" text-anchor="middle" class="gls">present, wholly inactive</text>
+
+    <circle cx="315" cy="65" r="32" fill="none" stroke="#24304F" stroke-width="1.5"/>
+    <path d="M 293 65 Q 300 56 307 65 T 321 65 T 337 65" fill="none" stroke="#5BC8DD" stroke-width="2" stroke-linecap="round"/>
+    <text x="315" y="122" text-anchor="middle" class="lbl">Attenuated</text>
+    <text x="315" y="140" text-anchor="middle" class="gls">fine, controlled</text>
+
+    <circle cx="105" cy="212" r="32" fill="none" stroke="#24304F" stroke-width="1.5"/>
+    <path d="M 82 224 Q 89 207 96 224 T 110 224 T 128 224" fill="none" stroke="#E3B458" stroke-width="2" stroke-linecap="round"/>
+    <rect x="78" y="190" width="54" height="6" rx="2" fill="#8E7CF3"/>
+    <line x1="90" y1="196" x2="90" y2="205" stroke="#8E7CF3" stroke-width="1.8"/>
+    <line x1="105" y1="196" x2="105" y2="205" stroke="#8E7CF3" stroke-width="1.8"/>
+    <line x1="120" y1="196" x2="120" y2="205" stroke="#8E7CF3" stroke-width="1.8"/>
+    <text x="105" y="269" text-anchor="middle" class="lbl">Overpowered</text>
+    <text x="105" y="287" text-anchor="middle" class="gls">held down, ready to return</text>
+
+    <circle cx="315" cy="212" r="32" fill="none" stroke="#24304F" stroke-width="1.5"/>
+    <path d="M 288 212 Q 299 190 310 212 T 332 212 T 344 212" fill="none" stroke="#E3B458" stroke-width="2.6" stroke-linecap="round"/>
+    <line x1="315" y1="172" x2="315" y2="162" stroke="#E3B458" stroke-width="1.8" opacity="0.75"/>
+    <line x1="287" y1="183" x2="280" y2="175" stroke="#E3B458" stroke-width="1.8" opacity="0.75"/>
+    <line x1="343" y1="183" x2="350" y2="175" stroke="#E3B458" stroke-width="1.8" opacity="0.75"/>
+    <text x="315" y="269" text-anchor="middle" class="lbl">Expanded</text>
+    <text x="315" y="287" text-anchor="middle" class="gls">fully active</text>
+
+    <text x="210" y="320" text-anchor="middle" class="cap">One impression, four conditions</text>
+  </svg>
+
+  <blockquote>
+    "Overpowered" means that sometimes one set of impressions is held down for a while by those that are stronger, but they come out when that repressing cause is removed.
+    <cite>Vivekananda, on Yoga S&#363;tra II.4</cite>
+  </blockquote>
+  <p><strong>Dormant</strong>, present but wholly inactive. <strong>Attenuated</strong>, weakened by sustained practice. <strong>Overpowered</strong>, held down by something stronger, ready to return the moment that pressure lifts. <strong>Expanded</strong>, given the conditions it needs, and fully active.</p>
+  <p class="dim">Hold on to <em>overpowered</em>. It is not the same as changed, and the difference matters later in this series.</p>
+</div></section>
+
+<!-- 14 -->
+<section class="slide"><div class="wrap wide">
+  <p class="kicker">Yoga S&#363;tra IV.10</p>
+  <h2>No traceable beginning, and no need for one</h2>
+
+  <svg class="diagram" viewBox="0 0 420 150" role="img" aria-label="A row of circles shrinking and fading toward the left with no visible starting point, ending in one bright circle labelled now on the right.">
+    <defs>
+      <linearGradient id="fadeMist" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#070B16" stop-opacity="1"/>
+        <stop offset="1" stop-color="#070B16" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <line x1="10" y1="62" x2="405" y2="62" stroke="#24304F" stroke-width="1" stroke-dasharray="2 5"/>
+    <circle cx="378" cy="62" r="17" fill="#E3B458"/>
+    <circle cx="316" cy="62" r="12.5" fill="none" stroke="#E3B458" stroke-width="1.8" opacity="0.8"/>
+    <circle cx="262" cy="62" r="10" fill="none" stroke="#E3B458" stroke-width="1.6" opacity="0.6"/>
+    <circle cx="216" cy="62" r="8" fill="none" stroke="#9AA1B5" stroke-width="1.4" opacity="0.5"/>
+    <circle cx="177" cy="62" r="6.4" fill="none" stroke="#9AA1B5" stroke-width="1.2" opacity="0.4"/>
+    <circle cx="144" cy="62" r="5" fill="none" stroke="#9AA1B5" stroke-width="1.1" opacity="0.32"/>
+    <circle cx="116" cy="62" r="4" fill="none" stroke="#9AA1B5" stroke-width="1" opacity="0.24"/>
+    <circle cx="93" cy="62" r="3" fill="none" stroke="#9AA1B5" stroke-width="0.9" opacity="0.17"/>
+    <circle cx="74" cy="62" r="2.2" fill="none" stroke="#9AA1B5" stroke-width="0.8" opacity="0.11"/>
+    <rect x="0" y="0" width="150" height="120" fill="url(#fadeMist)"/>
+    <text x="378" y="104" text-anchor="middle" class="lbl">now</text>
+    <text x="14" y="28" text-anchor="start" class="gls">no floor in sight</text>
+    <text x="210" y="140" text-anchor="middle" class="cap">Each impression rests on the one before it</text>
+  </svg>
+
+  <blockquote>
+    Thirst for happiness being eternal, desires are without beginning. All experience is preceded by desire for happiness. There was no beginning of experience, as each fresh experience is built upon the tendency generated by past experience.
+    <cite>Vivekananda's rendering</cite>
+  </blockquote>
+  <p>Go looking for the first impression and you will not find it, not because it is hidden, but because the looking itself presupposes a mind already shaped enough to look. Arun does not need to locate where this began. There may not be a beginning to find.</p>
+</div></section>
+
+<!-- 15 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">Yoga S&#363;tra IV.8</p>
+  <h2>The great check on your own history</h2>
+
+  <svg class="diagram" viewBox="0 0 420 320" role="img" aria-label="The same row of six stored impressions, shown twice. In surroundings of conflict, the agitating ones light up. In quiet surroundings, the steadying ones light up.">
+    <defs>
+      <marker id="arrE" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9AA1B5"/></marker>
+    </defs>
+    <text x="210" y="22" text-anchor="middle" class="gls">the same stored impressions</text>
+    <circle cx="142" cy="50" r="6" fill="none" stroke="#E3B458" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="169" cy="50" r="6" fill="none" stroke="#5BC8DD" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="196" cy="50" r="6" fill="none" stroke="#6C7690" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="223" cy="50" r="6" fill="none" stroke="#E3B458" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="250" cy="50" r="6" fill="none" stroke="#5BC8DD" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="277" cy="50" r="6" fill="none" stroke="#6C7690" stroke-width="1.4" opacity="0.4"/>
+    <path d="M 175 70 Q 140 88 110 116" fill="none" stroke="#9AA1B5" stroke-width="1.4" marker-end="url(#arrE)"/>
+    <path d="M 245 70 Q 280 88 310 116" fill="none" stroke="#9AA1B5" stroke-width="1.4" marker-end="url(#arrE)"/>
+
+    <rect x="12" y="124" width="190" height="130" rx="6" class="node"/>
+    <text x="107" y="152" text-anchor="middle" class="lbl">Conflict around you</text>
+    <circle cx="40" cy="192" r="8" fill="#E3B458"/>
+    <circle cx="40" cy="192" r="12" fill="none" stroke="#E3B458" stroke-width="1" opacity="0.5"/>
+    <circle cx="67" cy="192" r="6" fill="none" stroke="#5BC8DD" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="94" cy="192" r="6" fill="none" stroke="#6C7690" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="121" cy="192" r="8" fill="#E3B458"/>
+    <circle cx="121" cy="192" r="12" fill="none" stroke="#E3B458" stroke-width="1" opacity="0.5"/>
+    <circle cx="148" cy="192" r="6" fill="none" stroke="#5BC8DD" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="175" cy="192" r="6" fill="none" stroke="#6C7690" stroke-width="1.4" opacity="0.4"/>
+    <text x="107" y="236" text-anchor="middle" class="gls">agitating ones activate</text>
+
+    <rect x="218" y="124" width="190" height="130" rx="6" class="node"/>
+    <text x="313" y="152" text-anchor="middle" class="lbl">Quiet around you</text>
+    <circle cx="246" cy="192" r="6" fill="none" stroke="#E3B458" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="273" cy="192" r="8" fill="#5BC8DD"/>
+    <circle cx="273" cy="192" r="12" fill="none" stroke="#5BC8DD" stroke-width="1" opacity="0.5"/>
+    <circle cx="300" cy="192" r="6" fill="none" stroke="#6C7690" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="327" cy="192" r="6" fill="none" stroke="#E3B458" stroke-width="1.4" opacity="0.4"/>
+    <circle cx="354" cy="192" r="8" fill="#5BC8DD"/>
+    <circle cx="354" cy="192" r="12" fill="none" stroke="#5BC8DD" stroke-width="1" opacity="0.5"/>
+    <circle cx="381" cy="192" r="6" fill="none" stroke="#6C7690" stroke-width="1.4" opacity="0.4"/>
+    <text x="313" y="236" text-anchor="middle" class="gls">steadying ones activate</text>
+
+    <text x="210" y="296" text-anchor="middle" class="cap">Same history, different surroundings,</text>
+    <text x="210" y="314" text-anchor="middle" class="cap">a different day</text>
+  </svg>
+
+  <blockquote>
+    Desires can only manifest themselves in proper environments. Only those desires will come out for which the environment is fitted; the rest will remain stored up. This shows that the power of environment is the great check to control even Karma itself.
+    <cite>Vivekananda's rendering</cite>
+  </blockquote>
+  <p>Not every stored impression gets to act at once. Which ones become active depends on what the surroundings permit. Change the environment, and you change which parts of your own history get a chance to run.</p>
+</div></section>
+
+<!-- 16 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">The honest second half</p>
+  <h2>Not the building. The people.</h2>
+  <blockquote>
+    Every day people go there, and the more they go the holier they get, and the holier that place becomes... But you must remember that their holiness depends on holy people congregating there. It is not the building, but the people that make a church.
+    <cite>Vivekananda, on Yoga S&#363;tra II.19</cite>
+  </blockquote>
+  <p>Environment shapes disposition, and environment is itself made by people, so the causation runs both ways. This is not superstition about a place having power in itself. It is a claim about sustained exposure, over time, to a certain quality of surroundings.</p>
+</div></section>
+
+<!-- 17 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">Before this goes further</p>
+  <h2>This is not a verdict</h2>
+  <div class="card guard">
+    <h3>Please read this one carefully</h3>
+    <p>This is an account of how disposition forms through ordinary, repeated, unremarkable input. It is not an account of why any particular person is suffering, and it is not a diagnosis. If you live with depression, anxiety, or any other condition, you did not simply feed it to yourself.</p>
+  </div>
+  <p>Disposition is shaped by biology, circumstance, and events entirely outside anyone's choosing. What this essay offers is a lever available to you now, among many other things not fully within your control. It is not a verdict on your past.</p>
+</div></section>
+
+<!-- 18 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">The one hour that matters most</p>
+  <h2>What you carry into sleep</h2>
+
+  <svg class="diagram" viewBox="0 0 420 220" role="img" aria-label="A timeline of Arun's day with small inputs scattered across it. The final hour before sleep is highlighted and flows into a block labelled sleep, where it is consolidated first.">
+    <defs>
+      <marker id="arrS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8E7CF3"/></marker>
+    </defs>
+    <text x="20" y="30" class="gls">Arun&#8217;s day, morning to night</text>
+    <rect x="20" y="58" width="258" height="14" rx="3" fill="#101830" stroke="#24304F"/>
+    <rect x="34" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="52" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="63" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="88" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="104" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="131" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="150" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="166" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="189" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="208" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="226" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="248" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/><rect x="262" y="58" width="2.5" height="14" fill="#E3B458" opacity="0.45"/>
+    <rect x="280" y="48" width="44" height="34" rx="4" fill="#E3B458"/>
+    <path d="M 327 65 L 346 65" stroke="#8E7CF3" stroke-width="2" marker-end="url(#arrS)"/>
+    <rect x="350" y="42" width="60" height="46" rx="6" fill="rgba(142,124,243,0.18)" stroke="#8E7CF3" stroke-width="1.4"/>
+    <text x="380" y="70" text-anchor="middle" class="lbl">sleep</text>
+    <text x="20" y="100" class="gls">morning</text>
+    <text x="302" y="104" text-anchor="middle" class="lbl" style="fill:#E3B458">last hour</text>
+    <text x="210" y="140" text-anchor="middle" class="gls">sleep consolidates what came last,</text>
+    <text x="210" y="158" text-anchor="middle" class="gls">and emotional material first</text>
+    <text x="210" y="200" text-anchor="middle" class="cap">The last hour gets the longest hearing</text>
+  </svg>
+
+  <p>Sleep does not pause the day. It actively consolidates whatever was encoded just before it, and this process prioritises emotionally charged material over neutral material.</p>
+  <p>Whatever occupies the last portion of your attention before sleep is not one input among many. It is the input your mind is about to spend several hours strengthening, with less competition and with emotional material given priority.</p>
+  <p class="lede">Of everything changeable in Arun's day, the last hour is very likely the highest-leverage one to change first.</p>
+</div></section>
+
+<!-- 19 -->
+<section class="slide"><div class="wrap">
+  <p class="kicker">Yoga S&#363;tra IV.11</p>
+  <h2>Why this is ongoing, not a fix</h2>
+  <blockquote>
+    So long as the senses receive the external objects, fresh desires will arise... the mind-stuff is the great storehouse, the support of all past desires reduced to Samsk&#257;ra form; until they have worked themselves out, they will not die.
+    <cite>Vivekananda's rendering</cite>
+  </blockquote>
+  <p>The inflow never stops on its own, because a mind with senses will always be receiving something. This is not a reason to give up on managing it. It is the reason the practice continues.</p>
+</div></section>
+
+<!-- 20 -->
+<section class="slide"><div class="wrap">
+  <h2>What to carry out of this</h2>
+  <p class="lede">The filter was not born fully formed. It is being built, today, by what you take in and when.</p>
+
+  <svg class="diagram" viewBox="0 0 420 300" role="img" aria-label="A loop of four steps. What you take in, impressions accumulate, the filter forms, and the filter meets the next day, which returns to what you take in. In the centre: still being built.">
+    <defs>
+      <marker id="arrL" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E3B458"/></marker>
+    </defs>
+    <rect x="120" y="18" width="180" height="42" rx="6" class="node" style="stroke:#E3B458"/>
+    <text x="210" y="45" text-anchor="middle" class="lbl">What you take in</text>
+
+    <rect x="286" y="124" width="124" height="54" rx="6" class="node"/>
+    <text x="348" y="147" text-anchor="middle" class="lbl">Impressions</text>
+    <text x="348" y="166" text-anchor="middle" class="lbl">accumulate</text>
+
+    <rect x="120" y="240" width="180" height="42" rx="6" class="node"/>
+    <text x="210" y="267" text-anchor="middle" class="lbl">The filter forms</text>
+
+    <rect x="10" y="124" width="124" height="54" rx="6" class="node"/>
+    <text x="72" y="147" text-anchor="middle" class="lbl">It meets the</text>
+    <text x="72" y="166" text-anchor="middle" class="lbl">next day</text>
+
+    <path d="M 300 44 Q 348 52 348 118" fill="none" stroke="#E3B458" stroke-width="1.6" marker-end="url(#arrL)"/>
+    <path d="M 348 182 Q 348 250 306 260" fill="none" stroke="#E3B458" stroke-width="1.6" marker-end="url(#arrL)"/>
+    <path d="M 120 262 Q 72 252 72 184" fill="none" stroke="#E3B458" stroke-width="1.6" marker-end="url(#arrL)"/>
+    <path d="M 72 120 Q 72 50 114 42" fill="none" stroke="#E3B458" stroke-width="1.6" marker-end="url(#arrL)"/>
+
+    <text x="210" y="146" text-anchor="middle" class="cap">still being</text>
+    <text x="210" y="166" text-anchor="middle" class="cap">built</text>
+  </svg>
+
+  <hr class="rule">
+  <ul class="tight">
+    <li>Repetition, spaced across time, is what a disposition is made of.</li>
+    <li>A cue reopens the past by matching its form, not by resembling its content.</li>
+    <li>There is no findable beginning, and none is needed to begin working with it.</li>
+    <li>Environment governs which of your stored tendencies get to act.</li>
+    <li>What formed you is not a verdict on you.</li>
+    <li>The last hour before sleep is the highest-leverage hour to change first.</li>
+  </ul>
+  <p class="small dim">Some part of what shaped this filter, you did not choose. Some part of what feeds it now, you do. The essay titled <em>Grooves in the Machine</em> asks what it takes to actually remake a groove, once it is there, and why force is the wrong instrument. It turns out that question bears as much on how character is formed in the systems now being built to think alongside us as it does on an ordinary life like Arun's.</p>
+</div></section>
+
+</main>
+
+<nav id="nav">
+  <button id="prev" type="button" aria-label="Previous slide">Back</button>
+  <div id="dots" aria-hidden="true"></div>
+  <span id="count"></span>
+  <button id="next" type="button" aria-label="Next slide">Next</button>
+</nav>
+
+<script>
+(function(){
+  'use strict';
+  /* ---------------- deck navigation ---------------- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dots   = document.getElementById('dots');
+  var count  = document.getElementById('count');
+  var prevB  = document.getElementById('prev');
+  var nextB  = document.getElementById('next');
+  var i = 0;
+
+  slides.forEach(function(){ dots.appendChild(document.createElement('i')); });
+  var pips = Array.prototype.slice.call(dots.children);
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function(s,k){ s.classList.toggle('on', k === i); });
+    pips.forEach(function(p,k){ p.classList.toggle('on', k === i); });
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    prevB.disabled = (i === 0);
+    nextB.disabled = (i === slides.length - 1);
+    slides[i].scrollTop = 0;
+    if (i === 7 || i === 8) { sizeAll(); draw(); }
+  }
+  prevB.addEventListener('click', function(){ show(i - 1); });
+  nextB.addEventListener('click', function(){ show(i + 1); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { show(i + 1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'PageUp')   { show(i - 1); }
+  });
+  var tx = null, ty = null;
+  document.addEventListener('touchstart', function(e){
+    tx = e.changedTouches[0].clientX; ty = e.changedTouches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (tx === null) { return; }
+    var dx = e.changedTouches[0].clientX - tx;
+    var dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 62 && Math.abs(dx) > Math.abs(dy) * 1.7) {
+      show(dx < 0 ? i + 1 : i - 1);
+    }
+    tx = null; ty = null;
+  }, {passive:true});
+
+  /* ---------------- the inflow lab ---------------- */
+  var C = {
+    line:'#24304F', dim:'#9AA1B5',
+    gold:'#E3B458', violet:'#8E7CF3', cyan:'#5BC8DD', tam:'#6C7690'
+  };
+  var DAYS = 30;
+
+  var sRaj = document.getElementById('sRaj');
+  var sTam = document.getElementById('sTam');
+  var sSat = document.getElementById('sSat');
+  var vRaj = document.getElementById('vRaj');
+  var vTam = document.getElementById('vTam');
+  var vSat = document.getElementById('vSat');
+  var mixR = document.getElementById('mixR');
+  var mixT = document.getElementById('mixT');
+  var mixS = document.getElementById('mixS');
+  var readout = document.getElementById('readout');
+  var presetWrap = document.getElementById('presets');
+
+  var cGain = document.getElementById('cGain');
+  var cTau  = document.getElementById('cTau');
+  var cRip  = document.getElementById('cRip');
+
+  function dpr(){ return Math.min(window.devicePixelRatio || 1, 2); }
+  function sizeOne(cv, cssH){
+    var w = cv.parentNode.clientWidth;
+    var r = dpr();
+    cv.width  = Math.max(1, Math.round(w * r));
+    cv.height = Math.round(cssH * r);
+    cv.style.height = cssH + 'px';
+    var ctx = cv.getContext('2d');
+    ctx.setTransform(r, 0, 0, r, 0, 0);
+    return {ctx:ctx, w:w, h:cssH};
+  }
+  var G = {};
+  function sizeAll(){
+    G.gain = sizeOne(cGain, 90);
+    G.tau  = sizeOne(cTau, 90);
+    G.rip  = sizeOne(cRip, 90);
+  }
+
+  /* targets per guna, on [0,1] normalised sliders */
+  var TARGET = {
+    gain: { raj: 3.1, tam: 0.75, sat: 0.55 },   // overshoot multiplier target
+    tau:  { raj: 34,  tam: 118,  sat: 16  },    // settling samples target
+    rip:  { raj: 0.30, tam: 0.24, sat: 0.02 }   // residual ripple target
+  };
+  var BASE = { gain: 1.0, tau: 22, rip: 0.02 };
+
+  function mix(){
+    var r = parseInt(sRaj.value,10), t = parseInt(sTam.value,10), s = parseInt(sSat.value,10);
+    var sum = Math.max(1, r + t + s);
+    return { r:r/sum, t:t/sum, s:s/sum, pr:r, pt:t, ps:s };
+  }
+
+  function series(key){
+    var m = mix();
+    var target = m.r*TARGET[key].raj + m.t*TARGET[key].tam + m.s*TARGET[key].sat;
+    var arr = new Float64Array(DAYS);
+    var v = BASE[key];
+    for (var d = 0; d < DAYS; d++){
+      /* spaced accumulation: diminishing step, consolidation-like curve */
+      var step = 0.16 / Math.sqrt(d + 1);
+      v += (target - v) * step;
+      arr[d] = v;
+    }
+    return arr;
+  }
+
+  function drawSeries(g, arr, colour, fmt){
+    var ctx = g.ctx, n = arr.length, i2;
+    var lo = Math.min.apply(null, arr), hi = Math.max.apply(null, arr);
+    if (hi - lo < 1e-6) { hi = lo + 1; }
+    var padTop = 12, padBot = 10;
+    ctx.clearRect(0,0,g.w,g.h);
+    ctx.strokeStyle = C.line;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, g.h - padBot + 0.5);
+    ctx.lineTo(g.w, g.h - padBot + 0.5);
+    ctx.stroke();
+    ctx.beginPath();
+    for (i2 = 0; i2 < n; i2++){
+      var x = (i2/(n-1)) * g.w;
+      var y = (g.h - padBot) - ((arr[i2]-lo)/(hi-lo)) * (g.h - padTop - padBot);
+      if (i2 === 0) { ctx.moveTo(x,y); } else { ctx.lineTo(x,y); }
+    }
+    ctx.strokeStyle = colour;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.lineTo(g.w, g.h - padBot);
+    ctx.lineTo(0, g.h - padBot);
+    ctx.closePath();
+    ctx.fillStyle = colour + '22';
+    ctx.fill();
+    ctx.fillStyle = C.dim;
+    ctx.font = '10px Inter, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('day 1', 4, 11);
+    ctx.textAlign = 'right';
+    ctx.fillText('day 30', g.w - 4, 11);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = colour;
+    ctx.font = '600 11px Inter, sans-serif';
+    ctx.fillText(fmt(arr[n-1]), 4, g.h - padBot - 6);
+  }
+
+  function draw(){
+    if (!G.gain) { sizeAll(); }
+    var g = series('gain'), t = series('tau'), r = series('rip');
+
+    drawSeries(G.gain, g, C.gold, function(v){ return v.toFixed(1) + '\u00d7 overshoot'; });
+    drawSeries(G.tau,  t, C.violet, function(v){
+      return (v < 30 ? 'short' : (v < 75 ? 'medium' : 'long')) + ' settling';
+    });
+    drawSeries(G.rip,  r, C.cyan, function(v){
+      return (v < 0.08 ? 'near none' : (v < 0.20 ? 'slight' : 'constant')) + ' ripple';
+    });
+
+    var m = mix();
+    vRaj.textContent = m.pr + '%';
+    vTam.textContent = m.pt + '%';
+    vSat.textContent = m.ps + '%';
+    mixR.style.width = m.r*100 + '%'; mixR.style.background = C.gold;
+    mixT.style.width = m.t*100 + '%'; mixT.style.background = C.tam;
+    mixS.style.width = m.s*100 + '%'; mixS.style.background = C.cyan;
+
+    var finalGain = g[g.length-1], finalTau = t[t.length-1], finalRip = r[r.length-1];
+    var msg;
+    if (m.ps >= 0.55){
+      msg = 'Mostly steadying input. The filter that forms is quick to settle and quiet when nothing is happening.';
+    } else if (m.pr >= 0.55 && m.pt < 0.3){
+      msg = 'Mostly agitating input. What forms is a filter that overshoots, the way Meera\u2019s did.';
+    } else if (m.pt >= 0.45){
+      msg = 'A heavy share of dulling input. What forms is slow to let go, still running long after the day has ended.';
+    } else if (finalRip > 0.18 && finalGain < 1.6){
+      msg = 'Nothing dramatic in this mix, and that is the point. What forms is a quiet, constant hum with no trigger, this is Arun\u2019s filter.';
+    } else {
+      msg = 'A mixed month produces a mixed filter, some overshoot, some drag, some background hum, none of it dominant.';
+    }
+    readout.textContent = msg;
+  }
+
+  var PRESETS = {
+    conflict: {r:78, t:12, s:10},
+    scroll:   {r:52, t:38, s:10},
+    practice: {r:10, t:10, s:80},
+    mixed:    {r:34, t:33, s:33}
+  };
+  function applyPreset(name){
+    var p = PRESETS[name];
+    if (!p) { return; }
+    sRaj.value = p.r; sTam.value = p.t; sSat.value = p.s;
+    Array.prototype.forEach.call(presetWrap.children, function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-p') === name ? 'true' : 'false');
+    });
+    draw();
+  }
+  presetWrap.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-p]');
+    if (b) { applyPreset(b.getAttribute('data-p')); }
+  });
+  [sRaj, sTam, sSat].forEach(function(s){
+    s.addEventListener('input', function(){
+      Array.prototype.forEach.call(presetWrap.children, function(b){
+        b.setAttribute('aria-pressed', 'false');
+      });
+      draw();
+    });
+  });
+
+  var rt;
+  window.addEventListener('resize', function(){
+    clearTimeout(rt);
+    rt = setTimeout(function(){ sizeAll(); draw(); }, 140);
+  });
+
+  sizeAll();
+  draw();
+  show(0);
+})();
+</script>
+</body>
+</html>
