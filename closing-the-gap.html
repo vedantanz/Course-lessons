@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Closing the Gap · The Mind Space in Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#F3EEE3; --mist:#FBF8F1; --line:#DACDB3; --parchment:#1D1913;
+    --dim:#5C5446; --gold:#946412; --gold-soft:rgba(148,100,18,0.10);
+    --violet:#5443C2; --cyan:#1B7489; --rose:#A33A2E; --lake:#E7EEF0;
+    --cyan-soft:rgba(27,116,137,0.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#070B16; --mist:#101830; --line:#24304F; --parchment:#E8E3D5;
+      --dim:#9AA1B5; --gold:#E3B458; --gold-soft:rgba(227,180,88,0.14);
+      --violet:#8E7CF3; --cyan:#5BC8DD; --rose:#E07A6A; --lake:#0C1428;
+      --cyan-soft:rgba(91,200,221,0.08);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#070B16; --mist:#101830; --line:#24304F; --parchment:#E8E3D5;
+    --dim:#9AA1B5; --gold:#E3B458; --gold-soft:rgba(227,180,88,0.14);
+    --violet:#8E7CF3; --cyan:#5BC8DD; --rose:#E07A6A; --lake:#0C1428;
+    --cyan-soft:rgba(91,200,221,0.08);
+  }
+  :root{box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0; padding:0; height:100%;}
+  body{background:var(--ink); color:var(--parchment); font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+  .shell{height:100%; display:flex; flex-direction:column;}
+  header.bar{display:flex; align-items:center; justify-content:space-between; padding:14px 22px; border-bottom:1px solid var(--line); flex-wrap:wrap; gap:6px;}
+  header.bar .deck{font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; font-size:17px; color:var(--gold);}
+  header.bar .count{font-size:11px; color:var(--dim); letter-spacing:0.06em; font-variant-numeric:tabular-nums;}
+  main.stage{flex:1; overflow-y:auto; padding:30px 18px 36px;}
+  main.stage > div{width:100%; max-width:940px; margin:0 auto;}
+  footer.bar{display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-top:1px solid var(--line); gap:10px;}
+  .btn{background:transparent; border:1px solid var(--gold); color:var(--gold); padding:9px 18px; border-radius:24px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif; white-space:nowrap;}
+  .btn.solid{background:var(--gold); color:var(--ink); font-weight:500;}
+  .btn:disabled{border-color:var(--line); color:var(--dim); background:transparent; opacity:0.45; cursor:default;}
+  .chip{background:transparent; border:1px solid var(--line); color:var(--parchment); padding:7px 13px; border-radius:18px; font-size:12.5px; cursor:pointer; font-family:'Inter',sans-serif;}
+  .chip.on{border-color:var(--gold); color:var(--gold); background:var(--gold-soft);}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 4px;}
+  .dots{display:flex; gap:5px; flex-wrap:wrap; justify-content:center; flex:1;}
+  .dot{width:7px; height:7px; border-radius:4px; border:none; background:var(--line); padding:0; cursor:pointer; transition:all .25s ease;}
+  .dot.on{width:20px; background:var(--gold);}
+  button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+  .fade{animation:fadeIn .6s ease both;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion:reduce){.fade{animation:none;}}
+  .eyebrow{font-size:11px; letter-spacing:0.24em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; font-weight:500;}
+  h1.cover-title{font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(42px,7vw,72px); line-height:1.04; margin:0 0 10px;}
+  .cover-sub{font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; font-size:clamp(18px,2.6vw,26px); color:var(--gold); margin-bottom:22px;}
+  h2.slide-title{font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(28px,5vw,44px); line-height:1.12; font-weight:500; margin:0 0 16px;}
+  p.body{font-size:15px; line-height:1.75; color:var(--dim); margin:0 0 14px; max-width:720px;}
+  .gold{color:var(--gold);} .light{color:var(--parchment);} .vio{color:var(--violet);} .cy{color:var(--cyan);}
+  .card{background:var(--mist); border:1px solid var(--line); border-radius:10px; padding:18px 20px;}
+  h3.card-title{font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:21px; margin:0 0 6px; color:var(--parchment);}
+  p.card-text{font-size:13.5px; color:var(--dim); line-height:1.7; margin:0;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;}
+  .grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px;}
+  .micro{font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:var(--dim); margin-bottom:6px;}
+  .nc{text-transform:none; letter-spacing:0.02em;}
+  .plain,.note,.warn{padding:12px 16px; border-radius:0 8px 8px 0; font-size:13.5px; line-height:1.7; color:var(--parchment); max-width:720px; margin-top:12px;}
+  .plain{border-left:2px solid var(--cyan); background:var(--cyan-soft);}
+  .note{border-left:2px solid var(--gold); background:var(--gold-soft);}
+  .warn{border-left:2px solid var(--rose); background:rgba(163,58,46,0.08);}
+  .plain .tag{color:var(--cyan); font-weight:600; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;}
+  .note .tag{color:var(--gold); font-weight:600; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;}
+  .warn .tag{color:var(--rose); font-weight:600; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;}
+  .live{font-size:13.5px; color:var(--parchment); margin:12px 0 0; line-height:1.65; min-height:44px;}
+  canvas{width:100%; display:block;}
+  input[type=range]{accent-color:var(--gold); width:100%; margin:8px 0 0;}
+  .range-labels{display:flex; justify-content:space-between; font-size:11px; color:var(--dim); margin-top:3px; gap:8px;}
+  .ctl{margin-top:10px;}
+  .ctl .lab{display:flex; justify-content:space-between; font-size:12.5px; color:var(--parchment);}
+  .ctl .lab span.v{color:var(--gold); font-variant-numeric:tabular-nums;}
+  .ctl .hint{font-size:11px; color:var(--dim); margin-top:2px; line-height:1.45;}
+  .ctlgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:4px 22px;}
+  .readout{display:flex; flex-wrap:wrap; gap:8px 24px; margin-top:12px;}
+  .readout .k{font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--dim); display:block; margin-bottom:2px;}
+  .readout .v{font-size:18px; font-family:'Cormorant Garamond',Georgia,serif; color:var(--parchment); font-variant-numeric:tabular-nums;}
+  .readout .v.hi{color:var(--gold);}
+  .meter-row{display:grid; grid-template-columns:150px 1fr 54px; gap:10px; align-items:center; margin:6px 0;}
+  .meter-row .ml{font-size:12px; color:var(--parchment);}
+  .meter-row .mv{font-size:12px; color:var(--dim); text-align:right; font-variant-numeric:tabular-nums;}
+  .meter{height:9px; border-radius:5px; background:var(--line); overflow:hidden;}
+  .meter > span{display:block; height:9px; border-radius:5px; transition:width .15s ease;}
+  .rule-row{display:flex; gap:16px; padding:12px 0; border-bottom:1px solid var(--line);}
+  .rule-row:last-child{border-bottom:none;}
+  .rule-key{font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; color:var(--gold); font-size:20px; min-width:120px;}
+  .rule-val{font-size:13.5px; color:var(--dim); line-height:1.65;}
+  .arc-row{display:flex; gap:16px; padding:13px 0; border-bottom:1px solid var(--line);}
+  .arc-num{font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; font-size:20px; color:var(--gold); min-width:32px;}
+  .arc-t{font-size:14.5px; color:var(--parchment); font-weight:500; margin-bottom:4px;}
+  .arc-g{font-size:13px; color:var(--dim); line-height:1.7;}
+  .eq{font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; font-size:19px; color:var(--parchment); line-height:1.6; overflow-x:auto;}
+  .eq .op{font-style:normal; color:var(--dim);}
+  .dev{font-size:20px; color:var(--parchment); line-height:1.6;}
+  .foot-note{font-size:12.5px; color:var(--dim); margin-top:18px; line-height:1.7;}
+  .sim{display:grid; grid-template-columns:1.25fr 1fr; gap:14px;}
+  @media (max-width:760px){ .sim{grid-template-columns:1fr;} .meter-row{grid-template-columns:118px 1fr 46px;} .rule-key{min-width:90px; font-size:18px;} }
+  .stepbox{min-height:120px;}
+  .tiny{font-size:11.5px; color:var(--dim);}
+  .scroll-x{overflow-x:auto;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="bar">
+    <div class="deck">Closing the Gap</div>
+    <div class="count" id="count"></div>
+  </header>
+  <main class="stage" id="stageWrap"><div id="stage"></div></main>
+  <footer class="bar">
+    <button class="btn" id="prev">Previous</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn solid" id="next">Next</button>
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var rafs = [];
+var TAU = Math.PI*2;
+
+/* ---------- theme-aware colours for canvas ---------- */
+function cv(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function rgba(hex,a){
+  hex = hex.replace("#","");
+  if(hex.length===3) hex = hex.split("").map(function(c){return c+c;}).join("");
+  var n = parseInt(hex,16);
+  return "rgba("+((n>>16)&255)+","+((n>>8)&255)+","+(n&255)+","+a+")";
+}
+function C(){ return {ink:cv("--ink"), mist:cv("--mist"), line:cv("--line"), text:cv("--parchment"), dim:cv("--dim"),
+  gold:cv("--gold"), violet:cv("--violet"), cyan:cv("--cyan"), rose:cv("--rose"), lake:cv("--lake")}; }
+
+function setup(cvEl, h){
+  var dpr = window.devicePixelRatio||1, w = cvEl.clientWidth||320;
+  cvEl.style.height = h+"px"; cvEl.width = w*dpr; cvEl.height = h*dpr;
+  var ctx = cvEl.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx:ctx, w:w, h:h};
+}
+function label(ctx,t,x,y,col,align,size){
+  ctx.fillStyle=col; ctx.font=(size||11)+"px Inter, system-ui, sans-serif";
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(t,x,y);
+}
+function baseline(ctx,w,y,col){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.strokeStyle=rgba(col,0.25); ctx.lineWidth=1; ctx.stroke(); }
+function loop(fn){
+  if(reduced){ fn(0); return; }
+  var t0=null;
+  function step(ts){ if(t0===null) t0=ts; fn((ts-t0)/1000); rafs.push(requestAnimationFrame(step)); }
+  rafs.push(requestAnimationFrame(step));
+}
+function el(id){ return document.getElementById(id); }
+function fmt(x,d){ return (Math.round(x*Math.pow(10,d))/Math.pow(10,d)).toFixed(d); }
+
+/* ---------- shared wave drawing ---------- */
+/* Draws object wave, attention wave, resultant and envelope.
+   p: {fs, fm, G, dphi, gate(t), noise(t), span, t0, show:{obj,att,res,env,car}} */
+function drawWaves(ctx,w,h,p,col){
+  ctx.clearRect(0,0,w,h);
+  var mid=h/2, amp=h*0.22, i, t, x;
+  var span=p.span||3, t0=p.t0||0;
+  function X(k){ return t0 + (k/w)*span; }
+  var s = p.show||{obj:1,att:1,res:1,env:1};
+  if(s.obj){
+    ctx.beginPath();
+    for(i=0;i<=w;i+=1){ t=X(i); var y=mid-amp*0.5*Math.cos(TAU*p.fs*t); i===0?ctx.moveTo(i,y):ctx.lineTo(i,y); }
+    ctx.strokeStyle=rgba(col.cyan,0.45); ctx.lineWidth=1; ctx.stroke();
+  }
+  if(s.att){
+    ctx.beginPath();
+    for(i=0;i<=w;i+=1){ t=X(i); var g=p.gate?p.gate(t):1; var nz=p.noise?p.noise(t):0;
+      var y2=mid-amp*0.5*p.G*g*Math.cos(TAU*p.fm*t+p.dphi+nz); i===0?ctx.moveTo(i,y2):ctx.lineTo(i,y2); }
+    ctx.strokeStyle=rgba(col.violet,0.45); ctx.lineWidth=1; ctx.stroke();
+  }
+  if(s.env){
+    [1,-1].forEach(function(sg){
+      ctx.beginPath();
+      for(i=0;i<=w;i+=1){ t=X(i); var g=p.gate?p.gate(t):1; var nz=p.noise?p.noise(t):0;
+        var ph=TAU*(p.fm-p.fs)*t+p.dphi+nz, G=p.G*g;
+        var e=Math.sqrt(1+G*G+2*G*Math.cos(ph))*0.5;
+        var y3=mid-sg*amp*e; i===0?ctx.moveTo(i,y3):ctx.lineTo(i,y3); }
+      ctx.strokeStyle=rgba(col.gold,0.95); ctx.lineWidth=1.4; ctx.stroke();
+    });
+  }
+  if(s.res){
+    ctx.beginPath();
+    for(i=0;i<=w;i+=1){ t=X(i); var g2=p.gate?p.gate(t):1; var nz2=p.noise?p.noise(t):0;
+      var r=0.5*(Math.cos(TAU*p.fs*t)+p.G*g2*Math.cos(TAU*p.fm*t+p.dphi+nz2));
+      var y4=mid-amp*r; i===0?ctx.moveTo(i,y4):ctx.lineTo(i,y4); }
+    ctx.strokeStyle=rgba(col.text,0.85); ctx.lineWidth=1.3; ctx.stroke();
+  }
+  if(s.car){
+    ctx.beginPath();
+    var fc=(p.fs+p.fm)/2;
+    for(i=0;i<=w;i+=1){ t=X(i); var y5=mid-amp*Math.cos(TAU*fc*t+p.dphi/2); i===0?ctx.moveTo(i,y5):ctx.lineTo(i,y5); }
+    ctx.strokeStyle=rgba(col.text,0.85); ctx.lineWidth=1.3; ctx.stroke();
+  }
+  baseline(ctx,w,mid,col.dim);
+}
+
+/* ---------- lake (the chitta) ---------- */
+/* st: {swirl, form, meaning, noise, tint, dull, plane(0..1)} */
+function drawLake(ctx,w,h,st,time,col){
+  ctx.clearRect(0,0,w,h);
+  var cx=w/2, cy=h/2, R=Math.min(w,h)*0.44, i, k;
+  /* water */
+  var grd=ctx.createRadialGradient(cx,cy,R*0.1,cx,cy,R);
+  grd.addColorStop(0,rgba(col.cyan,0.10+0.10*st.plane));
+  grd.addColorStop(1,rgba(col.cyan,0.03));
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,TAU); ctx.fillStyle=grd; ctx.fill();
+  ctx.strokeStyle=rgba(col.dim,0.35); ctx.lineWidth=1; ctx.stroke();
+  /* saṃskāra tint */
+  if(st.tint>0.02){ ctx.beginPath(); ctx.arc(cx,cy,R,0,TAU); ctx.fillStyle=rgba(col.rose,0.10*st.tint); ctx.fill(); }
+  /* noise ripples */
+  var nr=Math.round(3+st.noise*10);
+  for(k=0;k<nr;k++){
+    var a=(k*2.399)+time*0.3*(1+st.noise), rr=R*(0.25+0.7*((k*0.618)%1));
+    var px=cx+Math.cos(a)*rr*0.9, py=cy+Math.sin(a*1.3)*rr*0.6;
+    var rad=4+8*((time*0.6+k*0.37)%1);
+    ctx.beginPath(); ctx.arc(px,py,rad,0,TAU);
+    ctx.strokeStyle=rgba(col.cyan,0.30*st.noise*(1-((time*0.6+k*0.37)%1))); ctx.stroke();
+  }
+  /* whirlpool arms: the form (śabda) */
+  var arms=3, rot=time*(0.4+st.swirl*2.2);
+  for(k=0;k<arms;k++){
+    ctx.beginPath();
+    for(i=0;i<=80;i++){
+      var u=i/80, ang=rot+k*TAU/arms+u*4.2, rad2=R*0.12+u*R*0.72;
+      var x=cx+Math.cos(ang)*rad2, y=cy+Math.sin(ang)*rad2*0.62;
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=rgba(col.gold,0.08+0.75*st.form); ctx.lineWidth=1+2.2*st.form; ctx.stroke();
+  }
+  /* meaning (artha): the steady light at the centre */
+  var m=st.meaning*(st.dull?0.15:1);
+  var g2=ctx.createRadialGradient(cx,cy,0,cx,cy,R*(0.15+0.55*m));
+  g2.addColorStop(0,rgba(col.gold,0.15+0.75*m));
+  g2.addColorStop(1,rgba(col.gold,0));
+  ctx.beginPath(); ctx.arc(cx,cy,R*(0.15+0.55*m),0,TAU); ctx.fillStyle=g2; ctx.fill();
+  if(st.dull){ ctx.beginPath(); ctx.arc(cx,cy,R,0,TAU); ctx.fillStyle=rgba(col.ink,0.55); ctx.fill(); }
+}
+
+var SLIDES=[];
+
+/* ===== 00 cover ===== */
+SLIDES.push({label:"Closing the Gap", html:`
+<div class="fade" style="text-align:center;max-width:860px;margin:0 auto;">
+  <div class="eyebrow">Ritam Wellbeing Framework &middot; Vedanta and Science</div>
+  <h1 class="cover-title">Closing the Gap</h1>
+  <div class="cover-sub">The mind space in motion: attention, meaning and the sense of self</div>
+  <div style="max-width:560px;margin:0 auto 16px auto;"><canvas id="coverCv" aria-hidden="true"></canvas></div>
+  <p class="body" style="font-size:14px;max-width:600px;margin:0 auto;">
+  Every moment of experience is a meeting: something is there, and the mind turns toward it. This deck lets you watch that meeting
+  as two waves, see what changes when the mind is restless, absorbed, steady or still, and try the controls that practice
+  works on. It is a companion to the technical paper <span class="light">Closing the Gap</span>, Draft 1.2.</p>
+  <p class="tiny" style="margin-top:18px;">Swami Tadananda &middot; Ramakrishna Vedanta Centre NZ</p>
+</div>`,
+init:function(){
+  var c=el("coverCv"); if(!c) return;
+  loop(function(t){
+    var col=C(), s=setup(c,170);
+    var G=1, gap=1.2*Math.max(0,Math.cos(t*0.25))+0.02;
+    var w2=s.w*0.5;
+    drawLake(s.ctx,s.w,170,{swirl:gap/1.2,form:Math.min(1,gap/0.9),meaning:1-Math.min(1,gap/1.2),noise:0.2*gap,tint:0,dull:false,plane:0.3},t,col);
+  });
+}});
+
+/* ===== 01 where this comes from ===== */
+SLIDES.push({label:"Where This Comes From", html:`
+<div class="fade">
+  <div class="eyebrow">01 &middot; Where This Comes From</div>
+  <h2 class="slide-title">One model, drawn from four sources</h2>
+  <p class="body">The model treats a single modification of the mind, a <span class="light">vṛtti</span>, as a meeting of two waves,
+  and asks what happens to it as attention steadies. It is about the structure of experience, not about what ultimately exists.</p>
+  <div class="grid" style="margin:8px 0 14px;">
+    <div class="card"><h3 class="card-title">Swami Vivekananda</h3><p class="card-text">Our primary teacher. His account of Ākāśa and Prāṇa, the planes of vibration,
+    and his reading of the Yoga Sūtras govern wherever commentators differ.</p></div>
+    <div class="card"><h3 class="card-title">Patañjali's Yoga Sūtras</h3><p class="card-text">The vṛtti, the mixture of word, meaning and knowledge,
+    and the three stages of concentration that together are samyama.</p></div>
+    <div class="card"><h3 class="card-title">Kashmir Shaivism</h3><p class="card-text">The mind as consciousness contracted, the one energy appearing as subject and object,
+    and the three powers of will, knowing and action.</p></div>
+    <div class="card"><h3 class="card-title">Signal science</h3><p class="card-text">From Fourier to Gabor's 1946 theory of communication: superposition, beats,
+    carrier and envelope, and the cost of a bounded moment.</p></div>
+  </div>
+  <div class="plain"><span class="tag">In plain words &middot; </span>The science supplies exact pictures of how two rhythms combine. The tradition supplies a precise
+  account of what happens in concentration. The deck shows where the two line up, and says plainly which parts are mathematics,
+  which are bridges, and which are testimony.</div>
+</div>`});
+
+/* ===== 02 the vṛtti ===== */
+var PERC=[
+  ["The instrument","The eye, ear or other outer instrument receives the impression from outside.","external vibration, ψₓ"],
+  ["The organ","The brain centre carries it inward. Past impressions already shape what passes.","inward transmission, ψₓ ∗ h"],
+  ["The mind","The mind receives it and presents it further.","the meeting begins"],
+  ["The reaction","The determinative faculty (buddhi) reacts, and with the reaction flashes the idea of egoism, \"I\".","attention wave G·ψₘ and its tilt Δφ"],
+  ["The perceiver","The mixture is presented to the Puruṣa, who perceives an object in it.","the vṛtti R(t), witnessed"]
+];
+SLIDES.push({label:"A Whirlpool in the Lake", html:`
+<div class="fade">
+  <div class="eyebrow">02 &middot; A Whirlpool in the Lake</div>
+  <h2 class="slide-title">What a vṛtti is</h2>
+  <p class="body">Vivekananda renders Sūtra I.2 as <span class="light">"Yoga is restraining the mind-stuff (Chitta) from taking various forms (Vrittis)."</span>
+  He pictures the chitta as a lake and each vṛtti as a whirlpool in it. Step through his account of how a single perception forms.</p>
+  <div class="card">
+    <div class="chips" id="percChips"></div>
+    <div class="stepbox"><h3 class="card-title" id="percT"></h3><p class="card-text" id="percD"></p>
+    <p class="live" id="percM"></p></div>
+  </div>
+  <div class="note"><span class="tag">The bridge &middot; </span>Two things matter for the model. A vṛtti is a meeting between what comes in and how the mind reacts,
+  and the sense of "I" is present in the reaction from the very start.</div>
+</div>`,
+init:function(){
+  var box=el("percChips"), cur=0;
+  PERC.forEach(function(p,i){ var b=document.createElement("button"); b.className="chip"; b.textContent=(i+1)+". "+p[0];
+    b.addEventListener("click",function(){cur=i;show();}); box.appendChild(b); });
+  function show(){ el("percT").textContent=PERC[cur][0]; el("percD").textContent=PERC[cur][1];
+    el("percM").innerHTML='In the model: <span class="gold">'+PERC[cur][2]+'</span>';
+    Array.prototype.forEach.call(box.children,function(b,i){ b.className=i===cur?"chip on":"chip"; }); }
+  show();
+}});
+
+/* ===== 03 two waves meet ===== */
+SLIDES.push({label:"Two Waves Meet", html:`
+<div class="fade">
+  <div class="eyebrow">03 &middot; Two Waves Meet</div>
+  <h2 class="slide-title">The object, the attention, and their sum</h2>
+  <p class="body">The <span class="cy">object-wave</span> has its own rhythm, fₛ. The <span class="vio">attention wave</span> brings its own, fₘ, with a standing tilt Δφ.
+  Where they meet, the sum (white) rides inside a slow <span class="gold">envelope</span> that swells and fades at the difference between them.</p>
+  <div class="card">
+    <div class="eq" style="margin-bottom:8px;">R(t) <span class="op">=</span> 2A <span class="op">·</span> cos(2π·½(fₛ − fₘ)t − Δφ/2) <span class="op">·</span> cos(2π·½(fₛ + fₘ)t + Δφ/2)</div>
+    <canvas id="twCv" aria-hidden="true"></canvas>
+    <div class="ctlgrid">
+      <div class="ctl"><div class="lab">Object rhythm fₛ <span class="v" id="twFsV"></span></div><input type="range" id="twFs" min="2" max="6" step="0.01" value="4" aria-label="Object frequency"></div>
+      <div class="ctl"><div class="lab">Attention rhythm fₘ <span class="v" id="twFmV"></span></div><input type="range" id="twFm" min="2" max="6" step="0.01" value="4.9" aria-label="Attention frequency"></div>
+      <div class="ctl"><div class="lab">Standing tilt Δφ <span class="v" id="twPhV"></span></div><input type="range" id="twPh" min="0" max="3.1" step="0.01" value="0.6" aria-label="Phase tilt"></div>
+    </div>
+    <div class="readout">
+      <div><span class="k">gap, <span class="nc">Δfₕ</span></span><span class="v hi" id="twGap"></span></div>
+      <div><span class="k">felt beat per unit time</span><span class="v" id="twBeat"></span></div>
+      <div><span class="k">strength at zero gap</span><span class="v" id="twFull"></span></div>
+    </div>
+    <p class="live" id="twMsg"></p>
+  </div>
+  <div class="plain"><span class="tag">In plain words &middot; </span>A piano tuner listens for exactly this. Two strings slightly apart give a
+  flutter. Bring them together and the flutter slows to a swell, then stops, leaving one full tone.</div>
+</div>`,
+init:function(){
+  var c=el("twCv"), fs=el("twFs"), fm=el("twFm"), ph=el("twPh");
+  function txt(){
+    var a=+fs.value, b=+fm.value, d=+ph.value, gap=Math.abs(a-b);
+    el("twFsV").textContent=fmt(a,2); el("twFmV").textContent=fmt(b,2); el("twPhV").textContent=fmt(d,2);
+    el("twGap").textContent=fmt(gap,2); el("twBeat").textContent=fmt(gap,2);
+    el("twFull").textContent=fmt(Math.abs(Math.cos(d/2))*100,0)+"%";
+    var m;
+    if(gap<0.04) m="Zero gap. The envelope is flat, the beat has stopped, and one steady tone remains"+(d>0.3?", but the tilt still holds back part of its strength.":" at full strength.");
+    else if(gap<0.6) m="A narrow gap. The envelope swells and fades slowly. The meeting feels smooth.";
+    else m="A wide gap. The envelope flutters quickly and the content arrives chopped into pieces.";
+    el("twMsg").textContent=m;
+  }
+  [fs,fm,ph].forEach(function(x){x.addEventListener("input",txt);}); txt();
+  loop(function(t){
+    var s=setup(c,170), col=C();
+    drawWaves(s.ctx,s.w,170,{fs:+fs.value,fm:+fm.value,G:1,dphi:+ph.value,span:2.4,t0:t*0.35},col);
+  });
+}});
+
+/* ===== 04 form and meaning ===== */
+SLIDES.push({label:"Form and Meaning", html:`
+<div class="fade">
+  <div class="eyebrow">04 &middot; Form and Meaning</div>
+  <h2 class="slide-title">The carrier is the meaning, the envelope is the form</h2>
+  <p class="body">The sum has two layers. The fast <span class="light">carrier</span> we read as <span class="light">artha</span>, the meaning.
+  The slow <span class="gold">envelope</span> we read as <span class="gold">śabda</span>, the form. In samādhi, says Vivekananda on Sūtra III.3,
+  the form is given up and the meaning alone remains: the envelope goes flat and the carrier is left.</p>
+  <div class="card">
+    <div class="chips" id="fmChips"></div>
+    <canvas id="fmCv" aria-hidden="true"></canvas>
+    <div class="ctl"><div class="lab">Gap between attention and object <span class="v" id="fmGapV"></span></div>
+    <input type="range" id="fmGap" min="0" max="1.6" step="0.01" value="0.9" aria-label="Gap"></div>
+    <p class="live" id="fmMsg"></p>
+  </div>
+  <div class="note"><span class="tag">Vivekananda on Sūtra I.27 &middot; </span>"The external part of one and the same thing is what we call word
+  and the internal part is what we call thought."</div>
+  <div class="plain"><span class="tag">For engineers &middot; </span>In radio the carrier is a fixed frequency that carries no message. Here the
+  carrier's frequency is itself the unknown: at zero gap it equals the object's own rhythm. Recovering the meaning is closer to
+  frequency estimation than to demodulation.</div>
+</div>`,
+init:function(){
+  var c=el("fmCv"), g=el("fmGap"), mode=0, box=el("fmChips");
+  var MODES=[["The whole vṛtti",{res:1,env:1}],["Only the meaning (carrier)",{car:1}],["Only the form (envelope)",{env:1}]];
+  MODES.forEach(function(m,i){ var b=document.createElement("button"); b.className="chip"; b.textContent=m[0];
+    b.addEventListener("click",function(){mode=i;mark();}); box.appendChild(b); });
+  function mark(){ Array.prototype.forEach.call(box.children,function(b,i){b.className=i===mode?"chip on":"chip";}); txt(); }
+  function txt(){
+    var v=+g.value; el("fmGapV").textContent=fmt(v,2);
+    el("fmMsg").textContent = v<0.04 ? "The form is at rest. Only the meaning is moving: artha-mātra-nirbhāsa, the meaning alone shining."
+      : (mode===2 ? "This is the form on its own: the rise and fall that gives the experience its shape and its sense of two." :
+         mode===1 ? "This is the meaning on its own: one steady rhythm, the jointly carried content." :
+         "Here both are mixed, as in ordinary cognition (Sūtra I.42).");
+  }
+  g.addEventListener("input",txt); mark();
+  loop(function(t){ var s=setup(c,150), col=C(); var gap=+g.value;
+    drawWaves(s.ctx,s.w,150,{fs:4,fm:4+gap,G:1,dphi:0,span:2.4,t0:t*0.35,show:MODES[mode][1]},col); });
+}});
+
+/* ===== 05 the dials ===== */
+SLIDES.push({label:"The Dials of Practice", html:`
+<div class="fade">
+  <div class="eyebrow">05 &middot; The Dials of Practice</div>
+  <h2 class="slide-title">What sādhana works on</h2>
+  <p class="body">The course's wave equation of mental experience names the parts of every moment:</p>
+  <div class="card" style="margin-bottom:14px;"><div class="eq">ψₑₓₚ(t) <span class="op">=</span> [ψₓ(t) <span class="op">∗</span> h(t)] <span class="op">+</span> G(t)·ψₘ(t) <span class="op">+</span> n(t)</div></div>
+  <p class="body">Each term is something practice can change. These are the controls you will use in the simulator.</p>
+  <div class="grid3">
+    <div class="card"><h3 class="card-title">Steadiness, G(t)</h3><p class="card-text">How strongly and evenly the attention is held. Too little and the meeting dims; practice steadies it.</p></div>
+    <div class="card"><h3 class="card-title">Tuning, fₘ</h3><p class="card-text">The rhythm the attention brings. Bringing it onto the object's own rhythm closes the gap.</p></div>
+    <div class="card"><h3 class="card-title">The I-tilt, Δφ</h3><p class="card-text">The standing posture of "I and mine" in every meeting. Relaxing it lets the full strength reach the object.</p></div>
+    <div class="card"><h3 class="card-title">Impressions, h(t)</h3><p class="card-text">Saṃskāras colour and delay what comes in, shifting the object away from what is there. Purification lightens them.</p></div>
+    <div class="card"><h3 class="card-title">Restlessness, n(t)</h3><p class="card-text">The noise floor of a scattered mind. Calm conduct and breath lower it.</p></div>
+    <div class="card"><h3 class="card-title">Continuity</h3><p class="card-text">How long attention stays unbroken. Sūtra I.14: practice "becomes firmly grounded by long constant efforts with great love."</p></div>
+  </div>
+</div>`});
+
+/* ===== 06 three stages ===== */
+var STAGES={
+  d:{name:"Dhāraṇā",gap:1.1,cont:0.35,txt:"Holding the mind on one object (III.1). The attention keeps breaking off and returning; the gap is wide and the form dominates."},
+  y:{name:"Dhyāna",gap:0.35,cont:0.9,txt:"An unbroken flow (III.2). Continuity sharpens what can be seen, and sustained tuning narrows the gap. The beat slows and softens."},
+  s:{name:"Samādhi",gap:0.0,cont:1,txt:"The form is given up and only the meaning shines (III.3). The gap is closed; the envelope is flat."}
+};
+SLIDES.push({label:"Three Stages", html:`
+<div class="fade">
+  <div class="eyebrow">06 &middot; Three Stages</div>
+  <h2 class="slide-title">Dhāraṇā, dhyāna, samādhi</h2>
+  <p class="body">Patañjali names the three together on one object <span class="light">samyama</span> (III.4). Choose a stage and watch the attention,
+  its interruptions, and the gap.</p>
+  <div class="card">
+    <div class="chips" id="stChips"></div>
+    <canvas id="stCv" aria-hidden="true"></canvas>
+    <div class="readout">
+      <div><span class="k">gap, <span class="nc">Δfₕ</span></span><span class="v hi" id="stGap"></span></div>
+      <div><span class="k">continuity</span><span class="v" id="stCont"></span></div>
+    </div>
+    <p class="live" id="stMsg"></p>
+  </div>
+  <div class="note"><span class="tag">The bridge &middot; </span>On this model samyama is a training procedure: the gain is steadied, the tuning is brought
+  onto the object, and the tilt is relaxed, sustained long enough to take effect. Its fruit, says Vivekananda, is perfect knowledge of the object,
+  applied first to gross things and then to finer ones (III.5-6).</div>
+</div>`,
+init:function(){
+  var c=el("stCv"), box=el("stChips"), cur="d", G=STAGES[cur].gap, Cn=STAGES[cur].cont;
+  ["d","y","s"].forEach(function(k){ var b=document.createElement("button"); b.className="chip"; b.textContent=STAGES[k].name; b.dataset.k=k;
+    b.addEventListener("click",function(){cur=k;mark();}); box.appendChild(b); });
+  function mark(){ Array.prototype.forEach.call(box.children,function(b){b.className=b.dataset.k===cur?"chip on":"chip";});
+    el("stMsg").textContent=STAGES[cur].txt; }
+  mark();
+  loop(function(t){
+    G+= (STAGES[cur].gap-G)*0.04; Cn+=(STAGES[cur].cont-Cn)*0.04;
+    el("stGap").textContent=fmt(G,2); el("stCont").textContent=fmt(Cn*100,0)+"%";
+    var s=setup(c,160), col=C(), thr=-2.2+3.6*(1-Cn);
+    function gate(tt){ var v=Math.sin(TAU*0.37*tt)+Math.sin(TAU*0.61*tt+1.3); var x=(v-thr)*3; return Math.max(0,Math.min(1,x)); }
+    drawWaves(s.ctx,s.w,160,{fs:4,fm:4+G,G:1,dphi:0,gate:gate,span:3,t0:t*0.35,show:{res:1,env:1}},col);
+  });
+}});
+
+/* ===== 07 bounded moment ===== */
+SLIDES.push({label:"The Bounded Moment", html:`
+<div class="fade">
+  <div class="eyebrow">07 &middot; The Bounded Moment</div>
+  <h2 class="slide-title">A glimpse cannot certify itself</h2>
+  <p class="body">A real moment begins, lasts and passes. Telling two nearby rhythms apart takes about as long as one cycle of their beat,
+  so the finer the gap, the longer the unbroken attention needed to see it. Shorten the moment and watch the two poles of the
+  spectrum merge into one, even though the gap is still there.</p>
+  <div class="card">
+    <div class="micro">the spectrum of one bounded moment</div>
+    <canvas id="bmCv" aria-hidden="true"></canvas>
+    <div class="ctl"><div class="lab">Length of the moment, T <span class="v" id="bmTV"></span></div>
+    <input type="range" id="bmT" min="0.12" max="1.6" step="0.005" value="0.75" aria-label="Length of the moment"></div>
+    <div class="range-labels"><span>brief glimpse</span><span>long unbroken attention</span></div>
+    <div class="readout"><div><span class="k nc">T · Δfₕ</span><span class="v hi" id="bmP"></span></div>
+    <div><span class="k">threshold, <span class="nc">1/π</span></span><span class="v">0.318</span></div>
+    <div><span class="k">the two poles</span><span class="v" id="bmS"></span></div></div>
+    <p class="live" id="bmMsg"></p>
+  </div>
+  <div class="plain"><span class="tag">In plain words &middot; </span>A brief moment of stillness is worth attending to, but it cannot tell you
+  how deep it went. In a moment too short, a real gap and no gap look the same. This is why the path asks for continuity rather than intensity.</div>
+</div>`,
+init:function(){
+  var c=el("bmCv"), sl=el("bmT");
+  function render(){
+    var T=+sl.value, Df=1, col=C(), s=setup(c,150), ctx=s.ctx, w=s.w, h=150;
+    var pad={l:14,r:14,t:16,b:22}, iw=w-pad.l-pad.r, ih=h-pad.t-pad.b, by=pad.t+ih, i;
+    var k=2*Math.PI*Math.PI*T*T, span=3.4*Math.max(Df,2.2/(2*Math.PI*T));
+    function E(f){ var a=Math.exp(-k*Math.pow(f-Df/2,2))+Math.exp(-k*Math.pow(f+Df/2,2)); return a*a; }
+    var vals=[],pk=0; for(i=0;i<=iw;i++){ var v=E(-span+(i/iw)*2*span); vals.push(v); if(v>pk)pk=v; }
+    ctx.beginPath(); ctx.moveTo(pad.l,by); for(i=0;i<=iw;i++) ctx.lineTo(pad.l+i,by-(vals[i]/pk)*ih); ctx.lineTo(w-pad.r,by); ctx.closePath();
+    ctx.fillStyle=rgba(col.violet,0.16); ctx.fill();
+    ctx.beginPath(); for(i=0;i<=iw;i++){ var y=by-(vals[i]/pk)*ih; i===0?ctx.moveTo(pad.l+i,y):ctx.lineTo(pad.l+i,y);} ctx.strokeStyle=col.violet; ctx.lineWidth=1.7; ctx.stroke();
+    baseline(ctx,w,by,col.dim);
+    var sep=T*Df>1/Math.PI;
+    el("bmTV").textContent=fmt(T,2); el("bmP").textContent=fmt(T*Df,3);
+    el("bmS").textContent=sep?"separable":"merged"; el("bmS").style.color=sep?col.violet:col.dim;
+    el("bmMsg").textContent=sep?"The moment is long enough to hold the gap it contains. Duality is visible as duality."
+      :"The moment is too short to hold its own gap. A real gap is indistinguishable from none.";
+  }
+  sl.addEventListener("input",render); render(); c._r=render;
+}});
+
+/* ===== 08 felt time ===== */
+SLIDES.push({label:"Felt Time", html:`
+<div class="fade">
+  <div class="eyebrow">08 &middot; Felt Time</div>
+  <h2 class="slide-title">Time is counted by the envelope</h2>
+  <p class="body">The carrier is the same at every instant, so it marks no succession. Only the envelope makes one instant differ from the next.
+  If each swell is one felt transition, felt duration scales with the gap: <span class="light">D ≈ κ · Δfₕ · Tₖ</span>.</p>
+  <div class="card">
+    <canvas id="ftCv" aria-hidden="true"></canvas>
+    <div class="ctl"><div class="lab">Gap between attention and object <span class="v" id="ftGV"></span></div>
+    <input type="range" id="ftG" min="0" max="2" step="0.01" value="1.3" aria-label="Gap"></div>
+    <div class="range-labels"><span>absorbed</span><span>misaligned</span></div>
+    <div style="margin-top:14px;">
+      <div class="meter-row"><span class="ml">How long it feels now</span><div class="meter"><span id="ftPro" style="background:var(--gold);"></span></div><span class="mv" id="ftProV"></span></div>
+      <div class="meter-row"><span class="ml">How long it seems later</span><div class="meter"><span id="ftRet" style="background:var(--cyan);"></span></div><span class="mv" id="ftRetV"></span></div>
+    </div>
+    <p class="live" id="ftMsg"></p>
+  </div>
+  <div class="plain"><span class="tag">In plain words &middot; </span>Boredom drags because attention and object are out of step, and each flicker
+  registers. In absorption the flicker slows and time vanishes, yet the coherent content laid down makes the episode seem long afterwards.
+  One signal, read at its two layers, gives both.</div>
+</div>`,
+init:function(){
+  var c=el("ftCv"), g=el("ftG");
+  function txt(){ var v=+g.value; el("ftGV").textContent=fmt(v,2);
+    var pro=Math.min(1,v/2), ret=Math.exp(-v/0.6);
+    el("ftPro").style.width=Math.max(2,pro*100)+"%"; el("ftRet").style.width=Math.max(2,ret*100)+"%";
+    el("ftProV").textContent=fmt(pro*100,0); el("ftRetV").textContent=fmt(ret*100,0);
+    el("ftMsg").textContent = v<0.03 ? "No transitions: time is not generated. Not time passing quickly, but time not being made."
+      : v<0.5 ? "Few transitions. Time passes unnoticed, as in flow; the memory will be rich." : "Many transitions. Time drags, and little coherent content is laid down."; }
+  g.addEventListener("input",txt); txt();
+  loop(function(t){
+    var s=setup(c,150), col=C(), v=+g.value;
+    drawWaves(s.ctx,s.w,150,{fs:4,fm:4+v,G:1,dphi:0,span:3,t0:t*0.35,show:{env:1,res:1}},col);
+    if(v>0.02){ /* tick marks at envelope nulls */
+      var span=3, t0=t*0.35, period=1/v, first=Math.ceil((t0-0.5*period)/period)*period+0.5*period, ctx=s.ctx;
+      for(var tt=first; tt<t0+span; tt+=period){ var x=(tt-t0)/span*s.w; ctx.beginPath(); ctx.moveTo(x,8); ctx.lineTo(x,20); ctx.strokeStyle=col.rose; ctx.lineWidth=2; ctx.stroke(); }
+      label(ctx,"felt transitions",8,30,col.rose,"left",10);
+    }
+  });
+}});
+
+/* ===== 09 simulator ===== */
+var OBJ=[["A gross object",2],["A subtle element",4],["A thought",6],["The I-sense",8],["Om, the absolute",10]];
+var PRE={
+  scattered:{n:"Scattered mind",obj:0,G:0.7,fm:1.6,ph:1.2,h:0.6,nz:0.65,c:0.2},
+  craving:{n:"Pravṛtti: absorbed in an object",obj:0,G:1.5,fm:2.5,ph:1.5,h:0.85,nz:0.3,c:0.65},
+  laya:{n:"Laya: dullness",obj:0,G:0.08,fm:2.4,ph:0.6,h:0.3,nz:0.05,c:0.3},
+  dharana:{n:"Dhāraṇā",obj:0,G:0.9,fm:2.9,ph:0.8,h:0.4,nz:0.35,c:0.45},
+  dhyana:{n:"Dhyāna",obj:0,G:1.0,fm:2.25,ph:0.35,h:0.2,nz:0.12,c:0.85},
+  samadhi:{n:"Samyama on the object",obj:0,G:1.0,fm:2.0,ph:0.04,h:0.02,nz:0.02,c:1},
+  japa:{n:"Japa of Om (samyama on the absolute)",obj:4,G:1.0,fm:6.0,ph:0.5,h:0.2,nz:0.1,c:0.9,anim:true}
+};
+SLIDES.push({label:"The Mind Space Simulator", html:`
+<div class="fade">
+  <div class="eyebrow">09 &middot; The Mind Space Simulator</div>
+  <h2 class="slide-title">Try the controls of sādhana</h2>
+  <p class="body">Choose a state of mind, or set the dials yourself. The waves show the meeting; the lake shows the chitta, with the whirlpool of form,
+  the light of meaning at its centre, ripples of restlessness and the colour of impressions.</p>
+  <div class="chips" id="smPre"></div>
+  <div class="sim">
+    <div class="card" style="padding:14px;">
+      <div class="micro">the meeting: <span class="cy nc">object</span>, <span class="vio nc">attention</span>, <span class="gold nc">envelope</span></div>
+      <canvas id="smW" aria-hidden="true"></canvas>
+      <div class="micro" style="margin-top:8px;">the lake of the chitta</div>
+      <canvas id="smL" aria-hidden="true"></canvas>
+    </div>
+    <div class="card" style="padding:14px;">
+      <div class="micro">readings of the model</div>
+      <div class="meter-row"><span class="ml">Gap, Δfₕ</span><div class="meter"><span id="mGap" style="background:var(--violet);"></span></div><span class="mv" id="mGapV"></span></div>
+      <div class="meter-row"><span class="ml">Form (śabda)</span><div class="meter"><span id="mForm" style="background:var(--gold);"></span></div><span class="mv" id="mFormV"></span></div>
+      <div class="meter-row"><span class="ml">Meaning (artha)</span><div class="meter"><span id="mMean" style="background:var(--cyan);"></span></div><span class="mv" id="mMeanV"></span></div>
+      <div class="meter-row"><span class="ml">Felt flicker of time</span><div class="meter"><span id="mTime" style="background:var(--rose);"></span></div><span class="mv" id="mTimeV"></span></div>
+      <div class="meter-row"><span class="ml">Energy reaching object</span><div class="meter"><span id="mEn" style="background:var(--gold);"></span></div><span class="mv" id="mEnV"></span></div>
+      <div class="meter-row"><span class="ml">Plane of attention, ι</span><div class="meter"><span id="mPl" style="background:var(--violet);"></span></div><span class="mv" id="mPlV"></span></div>
+      <div class="readout">
+        <div><span class="k">plane</span><span class="v hi" id="mPlane"></span></div>
+        <div><span class="k">time grain, <span class="nc">τᵥ</span></span><span class="v" id="mGrain"></span></div>
+        <div><span class="k">gap visible in one moment?</span><span class="v" id="mSee"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;">
+    <div class="micro">object of attention</div>
+    <div class="chips" id="smObj"></div>
+    <div class="ctlgrid">
+      <div class="ctl"><div class="lab">Steadiness, G <span class="v" id="vG"></span></div><input type="range" id="sG" min="0" max="1.6" step="0.01" aria-label="Steadiness"><div class="hint">How strongly and evenly attention is held.</div></div>
+      <div class="ctl"><div class="lab">Tuning of attention, fₘ <span class="v" id="vF"></span></div><input type="range" id="sF" min="1.5" max="10" step="0.01" aria-label="Tuning"><div class="hint">Its rhythm also sets the plane on which attention stands.</div></div>
+      <div class="ctl"><div class="lab">The I-tilt, Δφ <span class="v" id="vP"></span></div><input type="range" id="sP" min="0" max="3" step="0.01" aria-label="I-tilt"><div class="hint">The posture of "I and mine".</div></div>
+      <div class="ctl"><div class="lab">Impressions, h <span class="v" id="vH"></span></div><input type="range" id="sH" min="0" max="1" step="0.01" aria-label="Impressions"><div class="hint">Saṃskāras colour the object and shift it.</div></div>
+      <div class="ctl"><div class="lab">Restlessness, n <span class="v" id="vN"></span></div><input type="range" id="sN" min="0" max="1" step="0.01" aria-label="Restlessness"><div class="hint">The noise floor of a scattered mind.</div></div>
+      <div class="ctl"><div class="lab">Continuity <span class="v" id="vC"></span></div><input type="range" id="sC" min="0" max="1" step="0.01" aria-label="Continuity"><div class="hint">How long attention stays unbroken.</div></div>
+    </div>
+    <p class="live" id="smMsg"></p>
+  </div>
+  <div class="warn"><span class="tag">An honest note &middot; </span>These readings are the model's quantities drawn to scale for teaching. They are not measurements of anyone's mind.</div>
+</div>`,
+init:function(){
+  var W=el("smW"), L=el("smL"), S={G:el("sG"),F:el("sF"),P:el("sP"),H:el("sH"),N:el("sN"),C:el("sC")};
+  var st={obj:0}, anim=null, preBox=el("smPre"), objBox=el("smObj");
+  Object.keys(PRE).forEach(function(k){ var b=document.createElement("button"); b.className="chip"; b.textContent=PRE[k].n; b.dataset.k=k;
+    b.addEventListener("click",function(){apply(k);}); preBox.appendChild(b); });
+  OBJ.forEach(function(o,i){ var b=document.createElement("button"); b.className="chip"; b.textContent=o[0];
+    b.addEventListener("click",function(){st.obj=i; anim=null; markPre(null); markObj();}); objBox.appendChild(b); });
+  function markObj(){ Array.prototype.forEach.call(objBox.children,function(b,i){b.className=i===st.obj?"chip on":"chip";}); }
+  function markPre(k){ Array.prototype.forEach.call(preBox.children,function(b){b.className=b.dataset.k===k?"chip on":"chip";}); }
+  function apply(k){ var p=PRE[k]; st.obj=p.obj; S.G.value=p.G; S.F.value=p.fm; S.P.value=p.ph; S.H.value=p.h; S.N.value=p.nz; S.C.value=p.c;
+    anim=p.anim?{t:0}:null; markPre(k); markObj(); }
+  Object.keys(S).forEach(function(k){ S[k].addEventListener("input",function(){ anim=null; markPre(null); }); });
+  apply("scattered");
+  function noiseFn(lvl){ return function(t){ return lvl*(0.9*Math.sin(TAU*0.73*t+0.4)+0.6*Math.sin(TAU*1.91*t+2.1)+0.4*Math.sin(TAU*3.7*t+5.0)); }; }
+  function planeName(f){ return f<3?"gross elements":f<5?"subtle elements":f<7?"thinking organ":f<9.2?"the I-sense":"nearing the absolute"; }
+  function set(id,frac,txt){ el(id).style.width=Math.max(2,Math.min(100,frac*100))+"%"; el(id+"V").textContent=txt; }
+  loop(function(t){
+    if(anim){ /* japa: attention rises toward the absolute, tilt relaxes slowly */
+      anim.t+=1/60; var fmv=+S.F.value; if(fmv<10) S.F.value=Math.min(10,fmv+0.012);
+      var pv=+S.P.value; if(pv>0.02) S.P.value=Math.max(0.02,pv-0.0016);
+      var nv=+S.N.value; if(nv>0.02) S.N.value=Math.max(0.02,nv-0.0006);
+    }
+    var G=+S.G.value, fm=+S.F.value, ph=+S.P.value, h=+S.H.value, nz=+S.N.value, cont=+S.C.value, col=C();
+    var fsTrue=OBJ[st.obj][1], fs=fsTrue+0.9*h; if(st.obj===4) fs=10+0.9*h; /* impressions shift what is met */
+    var gap=Math.abs(fs-fm);
+    var depth = G<=0? 0 : 2*Math.min(1,G)/(1+G);
+    var form = depth*Math.min(1,gap/0.35)*(0.55+0.45*Math.min(1,nz+ (1-cont)));
+    var coh = Math.sqrt(1+G*G+2*G*Math.cos(ph))/(1+G);
+    var meaning = Math.min(1,G*1.4)*coh*Math.exp(-gap/0.5)*(1-0.55*nz)*(0.35+0.65*cont)*(1-0.45*h);
+    var energy=(1+Math.cos(ph))/2;
+    var dv=Math.max(0,10-fm), grain=dv<0.02?"unbounded":fmt(1/dv,2);
+    var T=0.3+3.5*cont, see=T*gap>1/Math.PI;
+    var thr=-2.2+3.6*(1-cont);
+    function gate(tt){ var v=Math.sin(TAU*0.37*tt)+Math.sin(TAU*0.61*tt+1.3); return Math.max(0,Math.min(1,(v-thr)*3)); }
+    var vis=0.45; /* visual frequency scale */
+    var s1=setup(W,150);
+    drawWaves(s1.ctx,s1.w,150,{fs:fs*vis+1.2,fm:fm*vis+1.2,G:G,dphi:ph,gate:gate,noise:noiseFn(nz),span:3,t0:t*0.3},col);
+    var s2=setup(L,210);
+    drawLake(s2.ctx,s2.w,210,{swirl:Math.min(1,gap/2),form:form,meaning:meaning,noise:nz,tint:h,dull:G<0.2,plane:Math.min(1,(fm-1.5)/8.5)},t,col);
+    set("mGap",Math.min(1,gap/4),fmt(gap,2)); set("mForm",form,fmt(form*100,0)); set("mMean",meaning,fmt(meaning*100,0));
+    set("mTime",Math.min(1,gap/4),fmt(gap,2)); set("mEn",energy,fmt(energy*100,0)+"%"); set("mPl",Math.min(1,(fm-1.5)/8.5),fmt(fm,1));
+    el("vG").textContent=fmt(G,2); el("vF").textContent=fmt(fm,2); el("vP").textContent=fmt(ph,2);
+    el("vH").textContent=fmt(h,2); el("vN").textContent=fmt(nz,2); el("vC").textContent=fmt(cont*100,0)+"%";
+    el("mPlane").textContent=planeName(fm); el("mGrain").textContent=grain;
+    el("mSee").textContent=gap<0.03?"closed":(see?"yes":"no, too brief"); el("mSee").style.color=see?col.violet:col.dim;
+    var msg;
+    if(G<0.2) msg="Laya. The meeting has dimmed: few modifications, but no meaning shines either. Quiet is not samādhi; the gap has not closed, the attention has gone slack.";
+    else if(gap<0.12 && ph<0.25 && nz<0.15) msg = st.obj===4 && fm>9.8 ? "The relative I-sense meets the absolute. Both gaps have closed together; what remains is the last of the I-tilt." : "Samyama on this object. The form is at rest and the meaning alone shines.";
+    else if(gap<0.6 && cont>0.7) msg="Dhyāna. An unbroken flow; the beat is slow and soft.";
+    else if(cont>0.4 && G>0.6 && ph<1.2) msg="Dhāraṇā. Attention is held but keeps breaking; the form still dominates.";
+    else if(G>1.2 && ph>1.1) msg="Pravṛtti. Strong attention, a heavy I-tilt and coloured by impressions: the flow halts at the form, which is bondage in Śiva Sūtra I.2.";
+    else msg="A scattered mind. The gap is wide, attention breaks often, and restlessness ripples the lake.";
+    if(h>0.6 && G>=0.2) msg+=" Strong impressions are shifting the object away from what is there.";
+    if(ph>1.0 && G>=0.2 && !(G>1.2)) msg+=" The I-tilt keeps much of the energy from the object.";
+    if(anim) msg+=" (Japa in progress: attention is rising toward the absolute.)";
+    el("smMsg").textContent=msg;
+  });
+}});
+
+/* ===== 10 outward and return ===== */
+SLIDES.push({label:"Outward and Return", html:`
+<div class="fade">
+  <div class="eyebrow">10 &middot; Outward and Return</div>
+  <h2 class="slide-title">Pravṛtti and nivṛtti: one energy, two directions</h2>
+  <p class="body">Trika names three powers of the one energy: will (icchā), knowing (jñāna) and action (kriyā). On this model, will descends
+  from the absolute I-sense to the plane where attention stands; knowing crosses the meeting, carried by the carrier; action completes
+  the flow as word or deed in the envelope. Vivekananda calls each person "only a conduit" for the infinite ocean of knowledge and power.</p>
+  <div class="card">
+    <div class="chips" id="efChips"></div>
+    <canvas id="efCv" aria-hidden="true"></canvas>
+    <p class="live" id="efMsg"></p>
+  </div>
+  <div class="card" style="margin-top:14px;">
+    <div class="micro">Vivekananda's bubble</div>
+    <div class="chips" id="bbChips"></div>
+    <canvas id="bbCv" aria-hidden="true"></canvas>
+    <p class="live" id="bbMsg"></p>
+  </div>
+  <div class="note"><span class="tag">Vivekananda, The Powers of the Mind &middot; </span>"There is a little bubble coming from the bottom of a lake; we do not see it coming all the time,
+  we see it only when it bursts on the surface; so, we can perceive thoughts only after they develop a great deal, or after they become actions."
+  Control comes "if we can get hold of thought at the root, before it has become thought, before it has become action."</div>
+  <div class="note"><span class="tag">Śiva Sūtra I.2 &middot; </span><span class="dev">ज्ञानं बन्धः</span> <em>jñānaṃ bandhaḥ</em>: limited conceptual knowledge is bondage.
+  The flow binds when it halts at labels, not because it flows outward. Pravṛtti is not a fault; an engaged life needs both directions.</div>
+</div>`,
+init:function(){
+  var c=el("efCv"), box=el("efChips"), mode=0;
+  var M=[["Pravṛtti, the outward flow","Will descends to the plane of attention, knowing crosses the meeting, and the flow completes as word and action."],
+         ["Nivṛtti, the return flow","Action is carried back through knowing to will and the source: samyama on the horizontal axis first, then the rise of ι toward I."],
+         ["Halting at the form","The flow stops at the envelope and piles up as labels and reactions. This is the binding of jñānaṃ bandhaḥ."]];
+  M.forEach(function(m,i){ var b=document.createElement("button"); b.className="chip"; b.textContent=m[0];
+    b.addEventListener("click",function(){mode=i;mark();}); box.appendChild(b); });
+  function mark(){ Array.prototype.forEach.call(box.children,function(b,i){b.className=i===mode?"chip on":"chip";}); el("efMsg").textContent=M[mode][1]; }
+  mark();
+  loop(function(t){
+    var s=setup(c,250), ctx=s.ctx, w=s.w, h=250, col=C();
+    ctx.clearRect(0,0,w,h);
+    var I={x:w*0.5,y:28}, io={x:w*0.5,y:118}, kn={x:w*0.5,y:118}, env={x:w*0.86,y:118}, obj={x:w*0.14,y:118}, act={x:w*0.86,y:210};
+    function node(p,txt,c2){ ctx.beginPath(); ctx.arc(p.x,p.y,7,0,TAU); ctx.fillStyle=c2; ctx.fill(); label(ctx,txt,p.x,p.y-17,col.text,"center",11.5); }
+    function seg(a,b,c2){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.strokeStyle=rgba(c2,0.35); ctx.lineWidth=2; ctx.stroke(); }
+    seg(I,io,col.violet); seg(obj,env,col.cyan); seg(env,act,col.gold);
+    node(I,"I, the absolute I-sense",col.gold); node(io,"ι, the plane of attention",col.violet);
+    node(obj,"object",col.cyan); node(env,"envelope (form)",col.gold); node(act,"word and action",col.rose);
+    label(ctx,"icchā, will",I.x+10,(I.y+io.y)/2,col.dim,"left",11); label(ctx,"jñāna, knowing (carrier)",(obj.x+env.x)/2,io.y+20,col.dim,"center",11);
+    label(ctx,"kriyā, action",env.x-8,(env.y+act.y)/2,col.dim,"right",11);
+    /* particles along path: I -> io -> env -> act */
+    var path=[I,io,env,act], lens=[], tot=0, i;
+    for(i=0;i<3;i++){ var d=Math.hypot(path[i+1].x-path[i].x,path[i+1].y-path[i].y); lens.push(d); tot+=d; }
+    function at(u){ var dd=u*tot; for(var j=0;j<3;j++){ if(dd<=lens[j]){ var f=dd/lens[j]; return {x:path[j].x+(path[j+1].x-path[j].x)*f, y:path[j].y+(path[j+1].y-path[j].y)*f}; } dd-=lens[j]; } return path[3]; }
+    var N=14;
+    for(i=0;i<N;i++){
+      var u=((t*0.12)+i/N)%1; if(mode===1) u=1-u;
+      if(mode===2){ var cap=(lens[0]+lens[1])/tot; u=Math.min(u,cap-0.01*((i%5))); }
+      var p=at(u); ctx.beginPath(); ctx.arc(p.x,p.y,3,0,TAU); ctx.fillStyle=mode===2&&u>((lens[0]+lens[1])/tot-0.06)?col.rose:col.gold; ctx.fill();
+    }
+  });
+  var bc=el("bbCv"), bb=el("bbChips"), root=false;
+  [["As it usually happens",false],["Catch it at the root",true]].forEach(function(m){ var b=document.createElement("button"); b.className="chip"; b.textContent=m[0]; b.dataset.r=m[1]?"1":"0";
+    b.addEventListener("click",function(){root=m[1];bmark();}); bb.appendChild(b); });
+  function bmark(){ Array.prototype.forEach.call(bb.children,function(b){b.className=((b.dataset.r==="1")===root)?"chip on":"chip";});
+    el("bbMsg").textContent=root?"Attention rests at the finer levels, so the rising impulse is met at its root, before it has become thought or action. This is the return flow, nivṛtti, begun where the power lies."
+      :"The impulse rises unseen from the depths and is noticed only when it bursts at the surface as a thought or an action. By then it already has momentum."; }
+  bmark();
+  loop(function(t){
+    var s=setup(bc,200), ctx=s.ctx, w=s.w, h=200, col=C(), i;
+    ctx.clearRect(0,0,w,h);
+    var top=26, bot=h-14;
+    var g=ctx.createLinearGradient(0,top,0,bot); g.addColorStop(0,rgba(col.cyan,0.06)); g.addColorStop(1,rgba(col.cyan,0.22));
+    ctx.fillStyle=g; ctx.fillRect(0,top,w,bot-top);
+    ctx.beginPath(); ctx.moveTo(0,top); ctx.lineTo(w,top); ctx.strokeStyle=rgba(col.cyan,0.6); ctx.lineWidth=1.2; ctx.stroke();
+    label(ctx,"surface: thought and action",8,top-12,col.dim,"left",10.5);
+    label(ctx,"the fine: the root",8,bot-8,col.dim,"left",10.5);
+    if(root){ ctx.fillStyle=rgba(col.gold,0.10); ctx.fillRect(0,bot-60,w,60); label(ctx,"attention resting here",w-8,bot-48,col.gold,"right",10.5); }
+    var NB=6;
+    for(i=0;i<NB;i++){
+      var ph=((t*0.11)+i/NB)%1;
+      var x=w*(0.18+0.64*((i*0.37)%1))+6*Math.sin(t*1.3+i);
+      var y=bot-ph*(bot-top), r=2+ph*7;
+      if(root){
+        if(ph<0.28){ var f=1-ph/0.28;
+          ctx.beginPath(); ctx.arc(x,y,r+3,0,TAU); ctx.strokeStyle=rgba(col.gold,0.1+0.8*f); ctx.lineWidth=1.5; ctx.stroke();
+          ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.fillStyle=rgba(col.gold,0.5*f); ctx.fill(); }
+        continue;
+      }
+      if(ph<0.97){ ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.strokeStyle=rgba(col.text,0.12+0.7*ph*ph); ctx.lineWidth=1.2; ctx.stroke(); }
+      else { var k=(ph-0.97)/0.03; ctx.beginPath(); ctx.arc(x,top,9+k*18,0,TAU); ctx.strokeStyle=rgba(col.rose,0.9*(1-k)); ctx.lineWidth=2; ctx.stroke(); }
+    }
+  });
+}});
+
+/* ===== 11 planes ===== */
+SLIDES.push({label:"Planes of Vibration", html:`
+<div class="fade">
+  <div class="eyebrow">11 &middot; The Vertical Axis</div>
+  <h2 class="slide-title">Rising through the planes</h2>
+  <p class="body">Vivekananda describes layer after layer of Prāṇa vibrating at different rates, and says Yoga can bring us to the vibration of another plane.
+  Sūtra I.17 gives the ladder: gross elements, subtle elements, the thinking organ, the sense of ego. We model the relative I-sense and the absolute
+  as two rhythms, fᵣ and fₐ. As ι rises, the felt vibration (their mean) quickens while their beat slows: the <span class="light">time grain</span> τᵥ = 1/Δfᵥ lengthens.</p>
+  <div class="card">
+    <canvas id="plCv" aria-hidden="true"></canvas>
+    <div class="ctl"><div class="lab">Plane of attention, ι <span class="v" id="plV"></span></div>
+    <input type="range" id="plS" min="2" max="9.97" step="0.01" value="4" aria-label="Plane of attention"></div>
+    <div class="range-labels"><span>gross</span><span>subtle</span><span>thinking organ</span><span>I-sense</span><span>absolute</span></div>
+    <div class="readout">
+      <div><span class="k">felt vibration</span><span class="v" id="plMean"></span></div>
+      <div><span class="k">vertical gap, <span class="nc">Δfᵥ</span></span><span class="v" id="plGap"></span></div>
+      <div><span class="k">time grain, <span class="nc">τᵥ</span></span><span class="v hi" id="plGrain"></span></div>
+    </div>
+  </div>
+  <div class="note"><span class="tag">Vivekananda, The Powers of the Mind &middot; </span>"There are no such realities as a physical world, a mental world, a spiritual world.
+  Whatever is, is one. Let us say, it is a sort of tapering existence; the thickest part is here, it tapers and becomes finer and finer.
+  The finest is what we call spirit; the grossest, the body." The planes are one continuum of fineness, tapering, he says, "until it becomes God."</div>
+  <div class="note"><span class="tag">The bridge &middot; </span>Manmatha Nath Ganguli, rising in Vivekananda's presence, saw everything vibrating: a quicker vibration.
+  Yet the gap between relative and absolute was narrowing. Both are true at once, because the mean rises while the difference falls.</div>
+  <div class="warn"><span class="tag">Two registers &middot; </span>The planes, their ordering and the change in the grain of time are the tradition's testimony, from the first-person reports of yogis.
+  Representing the relative and the absolute as two rhythms is our modelling choice, and its conclusions depend only on the ordering and the limit. The absolute enters only as a limit.</div>
+</div>`,
+init:function(){
+  var c=el("plCv"), sl=el("plS");
+  function names(f){ return f<3?"gross elements":f<5?"subtle elements":f<7?"thinking organ":f<9.2?"the I-sense":"nearing the absolute"; }
+  loop(function(t){
+    var fr=+sl.value, fa=10, col=C(), s=setup(c,190), ctx=s.ctx, w=s.w, h=190;
+    ctx.clearRect(0,0,w,h);
+    /* ladder on the left */
+    var lx=60, top=18, bot=h-18;
+    ctx.beginPath(); ctx.moveTo(lx,top); ctx.lineTo(lx,bot); ctx.strokeStyle=rgba(col.dim,0.5); ctx.stroke();
+    [[2,"gross"],[4,"subtle"],[6,"mind"],[8,"I-sense"],[10,"I"]].forEach(function(r){ var y=bot-(r[0]-2)/8*(bot-top);
+      ctx.beginPath(); ctx.moveTo(lx-6,y); ctx.lineTo(lx+6,y); ctx.stroke(); label(ctx,r[1],lx-10,y,col.dim,"right",10.5); });
+    var yi=bot-(fr-2)/8*(bot-top); ctx.beginPath(); ctx.arc(lx,yi,6,0,TAU); ctx.fillStyle=col.violet; ctx.fill(); label(ctx,"ι",lx+12,yi,col.violet,"left",13);
+    /* beat of fr and fa on the right */
+    var x0=110, ww=w-x0-10, mid=h/2, amp=h*0.3, span=2.4, i, dv=fa-fr, mean=(fa+fr)/2, vis=0.55;
+    ctx.save(); ctx.translate(x0,0);
+    [1,-1].forEach(function(sg){ ctx.beginPath(); for(i=0;i<=ww;i++){ var tt=t*0.3+i/ww*span; var e=Math.abs(Math.cos(Math.PI*dv*vis*tt*0.5));
+      var y=mid-sg*amp*e; i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);} ctx.strokeStyle=col.gold; ctx.lineWidth=1.4; ctx.stroke(); });
+    ctx.beginPath(); for(i=0;i<=ww;i++){ var t2=t*0.3+i/ww*span; var r=Math.cos(Math.PI*dv*vis*t2*0.5)*Math.cos(TAU*mean*vis*t2);
+      var y2=mid-amp*r; i===0?ctx.moveTo(i,y2):ctx.lineTo(i,y2);} ctx.strokeStyle=rgba(col.text,0.85); ctx.lineWidth=1.2; ctx.stroke();
+    baseline(ctx,ww,mid,col.dim); ctx.restore();
+    el("plV").textContent=names(fr); el("plMean").textContent=fmt(mean,2); el("plGap").textContent=fmt(dv,2);
+    el("plGrain").textContent=dv<0.05?"nearly unbounded":fmt(1/dv,2);
+  });
+}});
+
+/* ===== 12 samyama on the absolute ===== */
+SLIDES.push({label:"Samyama on the Absolute", html:`
+<div class="fade">
+  <div class="eyebrow">12 &middot; Samyama on the Absolute</div>
+  <h2 class="slide-title">When the object is the absolute, both gaps close together</h2>
+  <p class="body">In japa and meditation the attention is turned toward the inner I or a representation of the absolute. Vivekananda renders Sūtra I.27
+  as "His manifesting word is Om," and I.28 as "The repetition of this (Om) and meditating on its meaning (is the way)." As the word's form drops away,
+  its meaning remains, and that meaning is the absolute. So closing the horizontal gap to such an object also closes the vertical gap.</p>
+  <div class="card">
+    <canvas id="jaCv" aria-hidden="true"></canvas>
+    <div class="ctl"><div class="lab">The I-tilt, Δφ <span class="v" id="jaPV"></span></div>
+    <input type="range" id="jaP" min="0" max="2.5" step="0.01" value="0.9" aria-label="I-tilt"></div>
+    <div style="margin:12px 0 4px;"><button class="btn solid" id="jaGo">Begin japa</button> <button class="btn" id="jaReset">Reset</button></div>
+    <div class="meter-row"><span class="ml">Gap to Om, Δfₕ</span><div class="meter"><span id="jaH" style="background:var(--violet);"></span></div><span class="mv" id="jaHV"></span></div>
+    <div class="meter-row"><span class="ml">Gap to the absolute, Δfᵥ</span><div class="meter"><span id="jaV" style="background:var(--cyan);"></span></div><span class="mv" id="jaVV"></span></div>
+    <div class="meter-row"><span class="ml">Merging allowed by the tilt</span><div class="meter"><span id="jaM" style="background:var(--gold);"></span></div><span class="mv" id="jaMV"></span></div>
+    <p class="live" id="jaMsg"></p>
+  </div>
+  <div class="note"><span class="tag">The bridge &middot; </span>The tilt is the last limit: while the I-posture is held, the relative cannot merge with the absolute
+  even when the rhythms match. In Patañjali Īśvara is a special Puruṣa; merging is the Vedāntic and Trika reading, followed here through Vivekananda.</div>
+</div>`,
+init:function(){
+  var c=el("jaCv"), pS=el("jaP"), fm=5, running=false;
+  el("jaGo").addEventListener("click",function(){ running=true; });
+  el("jaReset").addEventListener("click",function(){ running=false; fm=5; });
+  loop(function(t){
+    if(running && fm<10) fm=Math.min(10,fm+0.01);
+    var ph=+pS.value, gap=10-fm, merge=Math.pow(Math.cos(ph/2),2)*Math.exp(-gap/0.4), col=C();
+    var s=setup(c,190);
+    drawLake(s.ctx,s.w,190,{swirl:gap/5,form:Math.min(1,gap/1.2)*0.9,meaning:merge,noise:0.05,tint:0,dull:false,plane:fm/10},t,col);
+    label(s.ctx,"ι rising: "+fmt(fm,2)+" of 10",10,14,col.violet,"left",11);
+    function set(id,f,v){ el(id).style.width=Math.max(2,f*100)+"%"; el(id+"V").textContent=v; }
+    set("jaH",gap/5,fmt(gap,2)); set("jaV",gap/5,fmt(gap,2)); set("jaM",merge,fmt(merge*100,0)+"%");
+    el("jaPV").textContent=fmt(ph,2);
+    el("jaMsg").textContent = gap>0.05 ? (running?"Japa with meaning: the attention is rising toward its object, and both gaps are closing as one.":"Press Begin japa to turn the attention toward Om and its meaning.")
+      : (ph>0.2 ? "The rhythms now match, but the I-tilt still holds. Relax it to let the relative merge." : "Both gaps are closed and the tilt is relaxed: in the model's terms, the relative meets the absolute.");
+  });
+}});
+
+/* ===== 13 Ganguli ===== */
+var GAN=[
+  ["Withdrawal",0.15,"His mind lost contact with the sense-organs while the discourse continued. The object is still an object; the gap is the ordinary one."],
+  ["A higher plane",0.45,"With open eyes he saw the Math, the trees and everything vibrating, like the air above a large fire. He still asked, \"What is this that I see?\": the observer remained."],
+  ["Form and meaning dissolve",0.7,"Swamiji (Vivekananda) vanished from his sight. He heard the voice but did not follow its meaning. Then a vibration within the brain, and only the void."],
+  ["Recognition",1.0,"He felt himself a bubble in the ocean of māyā, the Swami another, and the difference lost: \"an undivided chit.\" This lies at the edge of the model."],
+  ["Return",0.1,"He re-entered \"the little shell of my own self\" and felt a vast difference again. The gap had reopened, but the shell was now seen as a shell."]
+];
+SLIDES.push({label:"Ganguli's Account", html:`
+<div class="fade">
+  <div class="eyebrow">13 &middot; An Illustration</div>
+  <h2 class="slide-title">Manmatha Nath Ganguli at Belur Math</h2>
+  <p class="body">A disciple of Swami Vivekananda recorded what happened while Swamiji spoke on māyā (<em>Reminiscences of Swami Vivekananda</em>).
+  We read it as movement along the vertical axis. The climb was received, not practised.</p>
+  <div class="card">
+    <div class="chips" id="gaChips"></div>
+    <canvas id="gaCv" aria-hidden="true"></canvas>
+    <h3 class="card-title" id="gaT" style="margin-top:8px;"></h3><p class="card-text" id="gaD"></p>
+  </div>
+  <div class="note"><span class="tag">An open question &middot; </span>In stage 3 the form dropped before the meaning, and then the meaning dropped too.
+  In Trika, paśyantī is the level of speech where object and word are not yet two. At higher planes the carrier and envelope distinction may itself dissolve.</div>
+</div>`,
+init:function(){
+  var c=el("gaCv"), box=el("gaChips"), cur=0, lev=GAN[0][1];
+  GAN.forEach(function(g,i){ var b=document.createElement("button"); b.className="chip"; b.textContent=(i+1)+". "+g[0];
+    b.addEventListener("click",function(){cur=i;mark();}); box.appendChild(b); });
+  function mark(){ Array.prototype.forEach.call(box.children,function(b,i){b.className=i===cur?"chip on":"chip";});
+    el("gaT").textContent=GAN[cur][0]; el("gaD").textContent=GAN[cur][2]; }
+  mark();
+  loop(function(t){
+    lev+=(GAN[cur][1]-lev)*0.05; var col=C(), s=setup(c,180), ctx=s.ctx, w=s.w;
+    var dissolved=cur===2||cur===3;
+    drawLake(ctx,w,180,{swirl:(1-lev)*0.8,form:cur>=2&&cur<=3?0.02:(1-lev)*0.8,meaning:cur===3?1:(cur===2?0.05:0.3+lev*0.4),noise:cur===1?0.6:0.1,tint:0,dull:cur===2,plane:lev},t,col);
+    /* vertical gauge */
+    var x=w-24, top=14, bot=166; ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,bot); ctx.strokeStyle=rgba(col.dim,0.5); ctx.stroke();
+    var y=bot-lev*(bot-top); ctx.beginPath(); ctx.arc(x,y,6,0,TAU); ctx.fillStyle=col.violet; ctx.fill(); label(ctx,"ι",x-12,y,col.violet,"right",13);
+  });
+}});
+
+/* ===== 14 Arjuna and time ===== */
+SLIDES.push({label:"Arjuna and Time", html:`
+<div class="fade">
+  <div class="eyebrow">14 &middot; A Second Illustration</div>
+  <h2 class="slide-title">The war already fought</h2>
+  <p class="body">In the Bhagavad Gītā, Krishna gives Arjuna a divine eye (<em>divyaṃ dadāmi te cakṣuḥ</em>, 11.8) and shows him the universal form.
+  The warriors, he says, are already slain; Arjuna is only the instrument. Back on the ordinary plane, the war has not begun.
+  Each plane reads the whole course of events with its own grain of time. Raise the plane and watch one unit of felt time swallow more of the eighteen days.</p>
+  <div class="card">
+    <canvas id="arCv" aria-hidden="true"></canvas>
+    <div class="ctl"><div class="lab">Plane of attention <span class="v" id="arV"></span></div>
+    <input type="range" id="arS" min="2" max="9.97" step="0.01" value="2" aria-label="Plane of attention"></div>
+    <p class="live" id="arMsg"></p>
+  </div>
+  <div style="text-align:center;margin-top:14px;">
+    <div class="dev">मयैवैते निहताः पूर्वमेव निमित्तमात्रं भव सव्यसाचिन् ॥</div>
+    <div style="font-style:italic;color:var(--dim);font-size:14px;margin-top:4px;">mayaivaite nihatāḥ pūrvam eva nimitta-mātraṃ bhava savya-sācin</div>
+    <div style="font-size:13.5px;margin-top:4px;">"These have already been slain by Me; be you merely the instrument, O Savyasācin." <span class="tiny">Gītā 11.33, team's translation</span></div>
+  </div>
+  <div class="warn"><span class="tag">An honest note &middot; </span>This models how time is experienced from each plane. It makes no claim that the future is physically fixed.</div>
+</div>`,
+init:function(){
+  var c=el("arCv"), sl=el("arS");
+  function render(){
+    var fr=+sl.value, dv=10-fr, grain=1/dv, unitDays=0.6*grain/0.125; /* ordinary plane: about 0.6 day per unit */
+    var col=C(), s=setup(c,120), ctx=s.ctx, w=s.w, h=120, i;
+    ctx.clearRect(0,0,w,h);
+    var x0=14, x1=w-14, days=18, y=70;
+    var dpx=(x1-x0)/days, uw=unitDays*dpx, k=0;
+    for(var x=x0;x<x1;x+=uw){ ctx.fillStyle=k%2?rgba(col.gold,0.10):rgba(col.gold,0.22); ctx.fillRect(x,30,Math.min(uw,x1-x),60); k++; }
+    for(i=0;i<=days;i++){ var xx=x0+i*dpx; ctx.beginPath(); ctx.moveTo(xx,y+22); ctx.lineTo(xx,y+28); ctx.strokeStyle=col.dim; ctx.stroke();
+      if(i%3===0) label(ctx,"day "+i,xx,y+38,col.dim,"center",10); }
+    label(ctx,"each shaded band is one unit of felt time",x0,16,col.dim,"left",10.5);
+    el("arV").textContent=fr<3?"ordinary":fr<7?"higher":fr<9.5?"very high":"near the absolute";
+    el("arMsg").textContent = unitDays>=days ? "One unit of felt time now spans the whole war. Its outcome is present as a single event; there is still a flow, at a coarser grain."
+      : "One unit of felt time spans about "+fmt(unitDays,1)+" days of the ordinary plane.";
+  }
+  sl.addEventListener("input",render); render(); c._r=render;
+}});
+
+/* ===== 15 self ===== */
+SLIDES.push({label:"Consciousness and the Self", html:`
+<div class="fade">
+  <div class="eyebrow">15 &middot; Consciousness and the Self</div>
+  <h2 class="slide-title">Where the model sits, and where it stops</h2>
+  <p class="body">Science uses "consciousness" in at least three ways: <span class="light">access</span> (what is available to report and reason),
+  <span class="light">phenomenal</span> (what it is like), and the <span class="light">minimal self</span> (the sense of being the subject).</p>
+  <div class="card">
+    <div class="rule-row"><div class="rule-key">content</div><div class="rule-val">The vṛtti R(t) and the plane it arises on: what is held in the field of access.</div></div>
+    <div class="rule-row"><div class="rule-key">self</div><div class="rule-val">The I-tilt Δφ in every meeting, and the plane ι on which that I-sense stands. The self is a component of every vṛtti, not a separate object, and it varies by degrees.</div></div>
+    <div class="rule-row"><div class="rule-key">witness</div><div class="rule-val">Not a term in the model but the medium in which it runs. The question of phenomenal experience is left open.</div></div>
+  </div>
+  <div class="note"><span class="tag">Contraction, not construction &middot; </span>Some theorists hold that the self is only a model the brain builds.
+  Trika holds that the I-sense is a contraction of a fuller I. We state this as the tradition's claim. The model adds a measure of how far
+  the self-structure has relaxed, and a method, samyama, for relaxing it.</div>
+</div>`});
+
+/* ===== 16 AI ===== */
+SLIDES.push({label:"Artificial Minds", html:`
+<div class="fade">
+  <div class="eyebrow">16 &middot; Artificial Minds</div>
+  <h2 class="slide-title">A test of structure, not of experience</h2>
+  <p class="body">Gurnee and colleagues (2026) found in language models a small workspace, the J-space, whose contents can be reported, held and used
+  in silent reasoning, inside an intermediate band of layers. It exists in the base model without a point of view; post-training installs the Assistant's perspective.
+  Only the horizontal axis is applied here: the vertical axis rests on testimony of ascent, and nothing in a language model gives it a place to stand.
+  And "attention" in this deck is the contemplative faculty, not the transformer mechanism of the same name.</p>
+  <div class="grid">
+    <div class="card"><h3 class="card-title">The self as structure</h3><p class="card-text">Can the Assistant's point of view be separated from the content it faces, and can its influence be varied, like the I-tilt?</p></div>
+    <div class="card"><h3 class="card-title">A measurable gap</h3><p class="card-text">Inside the model, the prompt's content and the Assistant's stance add as vectors, and the angle between them plays the part of the tilt. Its change from token to token would play the part of Δfₕ. Prediction: grounded answers keep a steady angle; conflicted or sycophantic ones let it swing.</p></div>
+    <div class="card"><h3 class="card-title">Content without succession</h3><p class="card-text">Within one forward pass nothing changes between the poles, so there is content without succession. Across generated tokens each output feeds back in, so an envelope-like structure may exist there. A statement about architecture, not experience.</p></div>
+    <div class="card"><h3 class="card-title">Continuity</h3><p class="card-text">Training that rehearses a principle without interruption may differ from the same amount in bursts, as Sūtra I.14 would predict.</p></div>
+  </div>
+  <div class="note"><span class="tag">The vimarśa boundary &middot; </span>Utpaladeva: light that only reflects, without vimarśa, would be insentient like a crystal.
+  Every method that returns contents returns objects, and vimarśa is never an object. Such evidence can neither establish nor exclude it.</div>
+</div>`});
+
+/* ===== 17 honest note ===== */
+SLIDES.push({label:"An Honest Note", html:`
+<div class="fade">
+  <div class="eyebrow">17 &middot; An Honest Note</div>
+  <h2 class="slide-title">What is proved, what is read, what is testimony</h2>
+  <div class="card">
+    <div class="rule-row"><div class="rule-key" style="min-width:150px;">established</div><div class="rule-val">Superposition and beats, carrier and envelope, Gabor's limit, the threshold T · Δfₕ &gt; 1/π for a Gaussian window, and the energy of a coherent sum. These hold whatever anyone believes.</div></div>
+    <div class="rule-row"><div class="rule-key" style="min-width:150px;">structural model</div><div class="rule-val">Reading the waves as object and attention, the carrier as meaning and the envelope as form, the stages as lengthening moments, felt time as a beat count, and the planes as a pair of rhythms. Useful bridges, offered for insight and test.</div></div>
+    <div class="rule-row"><div class="rule-key" style="min-width:150px;">testimony</div><div class="rule-val">What the tradition and its practitioners report from within. Offered with respect, replicable by trained observers, and not a measurement.</div></div>
+  </div>
+  <div class="note"><span class="tag">Stated plainly &middot; </span>Nothing here claims that mathematics proves a metaphysics. The model describes the structure of experience;
+  what lies beyond experience is left to the tradition's own testimony.</div>
+</div>`});
+
+/* ===== 18 close ===== */
+SLIDES.push({label:"Closing the Gap", html:`
+<div class="fade">
+  <div class="eyebrow">18 &middot; Closing the Gap</div>
+  <h2 class="slide-title">What the meeting teaches</h2>
+  <div style="max-width:780px;">
+    <div class="arc-row"><div class="arc-num">i</div><div><div class="arc-t">Every moment is a meeting</div><div class="arc-g">An object-wave and an attention wave, carrying the sense of "I" from the start.</div></div></div>
+    <div class="arc-row"><div class="arc-num">ii</div><div><div class="arc-t">Form rides on meaning</div><div class="arc-g">The envelope is the form, the carrier is the meaning. Close the gap and the form comes to rest.</div></div></div>
+    <div class="arc-row"><div class="arc-num">iii</div><div><div class="arc-t">Practice works on real dials</div><div class="arc-g">Steadiness, tuning, the I-tilt, impressions, restlessness and continuity: each is something sādhana changes.</div></div></div>
+    <div class="arc-row"><div class="arc-num">iv</div><div><div class="arc-t">Duration is the currency</div><div class="arc-g">A glimpse cannot certify itself. Only unbroken attention resolves a fine gap, and time itself is counted by the gap.</div></div></div>
+    <div class="arc-row"><div class="arc-num">v</div><div><div class="arc-t">Turned to the absolute, both gaps close</div><div class="arc-g">Samyama on the absolute lifts the plane of attention, and the I-tilt is the last thing to let go.</div></div></div>
+  </div>
+  <p class="foot-note">Companion to <em>Closing the Gap: A Wave Model of Attention, Meaning and the Sense of Self</em>, Draft 1.2, Swami Tadananda,
+  Ramakrishna Vedanta Centre NZ, in the Vedanta and Science series under the Ritam Wellbeing Framework. The mathematics is presented faithfully; the
+  connections to contemplative teaching are structural bridges offered for insight. The model describes the meeting; the closing of the gap is still ours to do,
+  one sitting at a time.</p>
+</div>`});
+
+/* ---------- shell ---------- */
+var idx=0, stage=el("stage"), dots=el("dots"), count=el("count"), prev=el("prev"), next=el("next"), wrap=el("stageWrap");
+SLIDES.forEach(function(s,i){ var b=document.createElement("button"); b.className="dot"; b.setAttribute("aria-label",s.label);
+  b.addEventListener("click",function(){go(i);}); dots.appendChild(b); });
+function pad(n){ return n<10?"0"+n:""+n; }
+function render(){
+  rafs.forEach(function(r){cancelAnimationFrame(r);}); rafs=[];
+  var s=SLIDES[idx]; stage.innerHTML=s.html; wrap.scrollTop=0;
+  try{ if(s.init) s.init(); }catch(e){ console.error(e); }
+  count.textContent=pad(idx+1)+" / "+pad(SLIDES.length)+"  "+s.label;
+  Array.prototype.forEach.call(dots.children,function(d,i){ d.className=i===idx?"dot on":"dot"; });
+  prev.disabled=idx===0; next.disabled=idx===SLIDES.length-1; next.className=idx===SLIDES.length-1?"btn":"btn solid";
+}
+function go(i){ idx=Math.max(0,Math.min(SLIDES.length-1,i)); render(); }
+prev.addEventListener("click",function(){go(idx-1);});
+next.addEventListener("click",function(){go(idx+1);});
+window.addEventListener("keydown",function(e){
+  if(e.target && e.target.tagName==="INPUT") return;
+  if(e.key==="ArrowRight") go(idx+1); if(e.key==="ArrowLeft") go(idx-1);
+});
+var sx=null, sy=null;
+wrap.addEventListener("touchstart",function(e){ if(e.target.tagName==="INPUT"||e.target.tagName==="CANVAS"){sx=null;return;} sx=e.touches[0].clientX; sy=e.touches[0].clientY; },{passive:true});
+wrap.addEventListener("touchend",function(e){ if(sx===null) return; var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+  if(Math.abs(dx)>70 && Math.abs(dx)>2*Math.abs(dy)) go(idx+(dx<0?1:-1)); sx=null; },{passive:true});
+var rt=null;
+function rerender(){ Array.prototype.forEach.call(document.querySelectorAll("canvas"),function(c){ if(c._r) c._r(); }); }
+window.addEventListener("resize",function(){ clearTimeout(rt); rt=setTimeout(rerender,120); });
+if(window.matchMedia){ var mq=window.matchMedia("(prefers-color-scheme: dark)"); if(mq.addEventListener) mq.addEventListener("change",rerender); }
+render();
+})();
+</script>
+</body>
+</html>
